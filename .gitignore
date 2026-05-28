@@ -1,0 +1,36 @@
+gitignore
+# --- Android / Gradle Build Files ---# These are generated every time you build the app.
+.gradle/
+build/
+app/build/
+captures/
+.externalNativeBuild
+.cxx
+local.properties
+
+# --- Firebase / Secrets (CRITICAL) ---
+# This prevents your private Firebase config and API keys from leaking
+app/google-services.json
+.secrets
+secrets.properties
+
+# --- IDE Settings (Android Studio / IntelliJ) ---
+# These files change based on YOUR screen size and local path settings.
+# Sharing them often causes merge conflicts for other developers.
+.idea/workspace.xml
+.idea/libraries
+.idea/assetWizardSettings.xml
+.idea/modules.xml
+.idea/navEditor.xml
+*.iml
+*.iws
+.idea/shelf/
+.idea/vcs.xml
+
+# --- Operating System Files ---
+# Junk files created by Windows/macOS in folders
+.DS_Store
+Thumbs.db
+
+# --- Log files ---
+*.log

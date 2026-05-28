@@ -1,0 +1,259 @@
+{
+    "drugs": [
+        {
+            "id": "RIXATHON_ONCO_375",
+            "nome": "Rituximab (Oncologia)",
+            "nomeCommerciale": ["Rixathon"],
+            "indicazione": "Linfoma non-Hodgkin (LNH), Leucemia linfatica cronica (LLC)",
+            "tipoFormula": "PER_M2",
+            "doseUnitaria": 375.0,
+            "unitaMisura": "mg/m²",
+            "doseMassimaMg": 1500.0,
+            "doseMinimaMg": 50.0,
+            "pesoMinimoKg": null,
+            "etaMinimaAnni": 1,
+            "unitaSomministrazioneMg": 500.0,
+            "formaFarmaceuticaSomministrazione": "flaconcino",
+            "strategiaArrotondamento": "NESSUNO",
+            "alerts": [
+                "Premedicare con antipiretico e antistaminico (paracetamolo + difenidramina) prima di ogni somministrazione.",
+                "Eseguire screening HBV obbligatorio prima di iniziare la terapia.",
+                "In pazienti LLC con conta linfocitaria > 25×10⁹/L: premedicare con prednisone 100 mg EV.",
+                "Non somministrare vaccini vivi; completare vaccinazioni non vive almeno 4 settimane prima dell'inizio.",
+                "In caso di reazione grave all'infusione (broncospasmo, ipossia): interrompere immediatamente."
+            ],
+            "rcp": {
+                "controindicazioni": [
+                    "Ipersensibilità al rituximab, alle proteine di origine murina o ad uno qualsiasi degli eccipienti.",
+                    "Infezioni attive severe.",
+                    "Stato di immunocompromissione severa."
+                ],
+                "avvertenzeSpeciali": [
+                    "Tracciabilità: registrare nome commerciale e numero di lotto ad ogni somministrazione.",
+                    "Reazioni correlate all'infusione (IRR): possono essere severe e fatali, tipicamente entro 30 min - 2 ore dalla prima infusione. Includono CRS, TLS e anafilassi. Istituire terapia sintomatica aggressiva se severe.",
+                    "Sindrome da lisi tumorale (TLS): rischio elevato in pazienti con alta massa tumorale o linfociti circolanti ≥ 25×10⁹/L. Idratare adeguatamente e trattare con uricostatici.",
+                    "Disordini cardiaci: segnalati angina, aritmie, insufficienza cardiaca e infarto. Monitorare pazienti con storia cardiaca.",
+                    "Tossicità ematologica: cautela in neutropenia < 1.5×10⁹/L o trombocitopenia < 75×10⁹/L.",
+                    "PML: casi fatali rari. Sospendere in caso di sospetta PML; valutare con RMN e analisi del liquor.",
+                    "Riattivazione HBV: casi fatali riportati. Monitorare pazienti con sierologia positiva per tutta la durata della terapia."
+                ],
+                "interazioni": [
+                    "Dati limitati sulle interazioni. In pazienti con LLC, la co-somministrazione con fludarabina o ciclofosfamide non sembra influenzare la farmacocinetica di nessuno dei farmaci.",
+                    "Pazienti con anticorpi anti-proteina murina (HAMA) o anti-farmaco (ADA): rischio aumentato di reazioni allergiche con altri anticorpi monoclonali."
+                ]
+            },
+            "fonteRcp": "https://www.ema.europa.eu/en/medicines/human/EPAR/rixathon"
+        },
+        {
+            "id": "RIXATHON_AUTO_1000",
+            "nome": "Rituximab (Reumatologia)",
+            "nomeCommerciale": ["Rixathon"],
+            "indicazione": "Artrite reumatoide (RA), Granulomatosi con poliangite (GPA), Poliangite microscopica (MPA), Pemfigo volgare (PV)",
+            "tipoFormula": "FISSA",
+            "doseUnitaria": 1000.0,
+            "unitaMisura": "mg",
+            "doseMassimaMg": null,
+            "doseMinimaMg": null,
+            "pesoMinimoKg": null,
+            "etaMinimaAnni": 18,
+            "unitaSomministrazioneMg": 500.0,
+            "formaFarmaceuticaSomministrazione": "flaconcino",
+            "strategiaArrotondamento": "NESSUNO",
+            "alerts": [
+                "Premedicare con metilprednisolone 100 mg EV 30 minuti prima di ogni infusione.",
+                "In pazienti con GPA/MPA: metilprednisolone 1000 mg/die EV per 1-3 giorni prima della prima infusione.",
+                "Eseguire screening HBV obbligatorio prima di iniziare la terapia.",
+                "Non somministrare vaccini vivi; completare vaccinazioni non vive almeno 4 settimane prima dell'inizio.",
+                "Non raccomandato in pazienti con AR naïve al metotrexato."
+            ],
+            "rcp": {
+                "controindicazioni": [
+                    "Ipersensibilità al rituximab, alle proteine di origine murina o ad uno qualsiasi degli eccipienti.",
+                    "Infezioni attive severe.",
+                    "Stato di immunocompromissione severa.",
+                    "Scompenso cardiaco severo (classe IV NYHA) o malattia cardiaca severa non controllata."
+                ],
+                "avvertenzeSpeciali": [
+                    "Tracciabilità: registrare nome commerciale e numero di lotto ad ogni somministrazione.",
+                    "Reazioni correlate all'infusione (IRR): principalmente alla prima infusione (febbre, brividi, cefalea, orticaria, ipertensione). Possono essere fatali. Rallentare o interrompere in caso di reazioni severe.",
+                    "PML: casi fatali riportati in RA, GPA e MPA. Sospendere immediatamente in caso di sospetta PML.",
+                    "Riattivazione HBV: casi fatali riportati. Monitorare pazienti con sierologia positiva.",
+                    "Neutropenia tardiva: monitorare conta neutrofili prima di ogni ciclo e fino a 6 mesi dopo l'interruzione.",
+                    "Sconsigliato in scompenso cardiaco moderato (classe III NYHA) o malattia cardiaca severa non controllata.",
+                    "Non raccomandato l'uso concomitante con DMARD biologici diversi da quelli specificati nell'indicazione."
+                ],
+                "interazioni": [
+                    "La co-somministrazione con metotrexato non influenza la farmacocinetica di rituximab.",
+                    "Pazienti con anticorpi HAMA o ADA: rischio aumentato di reazioni allergiche con altri anticorpi monoclonali.",
+                    "Successivo impiego di DMARD biologici (es. inibitori TNF): non aumento significativo del rischio infettivo, ma monitorare attentamente."
+                ]
+            },
+            "fonteRcp": "https://www.ema.europa.eu/en/medicines/human/EPAR/rixathon"
+        },
+        {
+            "id": "IVERMECTINA_DIFA_3MG",
+            "nome": "Ivermectina",
+            "nomeCommerciale": ["Ivermectina Difa"],
+            "indicazione": "Trattamento della strongiloidiasi gastrointestinale, della microfilaremia da Wuchereria bancrofti e della scabbia sarcoptica umana",
+            "tipoFormula": "PER_KG",
+            "doseUnitaria": 0.2,
+            "unitaMisura": "mg/kg",
+            "doseMassimaMg": 24.0,
+            "doseMinimaMg": 3.0,
+            "pesoMinimoKg": 15.0,
+            "etaMinimaAnni": null,
+            "unitaSomministrazioneMg": 3.0,
+            "formaFarmaceuticaSomministrazione": "compressa",
+            "strategiaArrotondamento": "MULTIPLO_PIU_VICINO",
+            "alerts": [
+                "Assumere a stomaco vuoto: niente cibo nelle 2 ore prima e nelle 2 ore dopo la somministrazione.",
+                "In scabbia: non ripetere il trattamento prima di 4 settimane. Una seconda dose entro 2 settimane è giustificata solo in caso di nuove lesioni o esame parassitologico positivo.",
+                "Non utilizzare in pazienti con peso corporeo inferiore a 15 kg."
+            ],
+            "rcp": {
+                "controindicazioni": [
+                    "Ipersensibilità al principio attivo (ivermectina) o ad uno qualsiasi degli eccipienti."
+                ],
+                "avvertenzeSpeciali": [
+                    "Reazioni avverse cutanee severe (SCAR, SJS, TEN): sospendere immediatamente il trattamento se compaiono segni o sintomi cutanei gravi. Non ricominciare in alcun momento dopo una reazione di tipo SJS o TEN.",
+                    "Pazienti immunocompromessi: efficacia non pienamente stabilita per strongiloidiasi; possibile persistenza dell'infestazione dopo dose singola.",
+                    "Loa loa: rischio di encefalopatia grave in pazienti con alta densità microfilariale. Adottare misure speciali prima del trattamento in zone endemiche.",
+                    "Tossicità neurologica: segnalati casi di riduzione dello stato di coscienza e coma, generalmente reversibili con terapia di supporto.",
+                    "Gravidanza: usare solo se strettamente necessario; dati limitati suggeriscono possibili effetti avversi nel primo trimestre."
+                ],
+                "interazioni": [
+                    "Non sono stati eseguiti studi formali di interazione farmacologica.",
+                    "Evitare la combinazione con agonisti del GABA."
+                ]
+            },
+            "fonteRcp": "https://www.aifa.gov.it/"
+        },
+        {
+            "id": "FOLINA_15MG_2ML",
+            "nome": "Acido folico (Soluzione iniettabile)",
+            "nomeCommerciale": ["Folina"],
+            "indicazione": "Trattamento delle carenze foliche per aumentata richiesta, insufficiente assorbimento, ridotta utilizzazione o insufficiente apporto dietetico della vitamina.",
+            "tipoFormula": "FISSA",
+            "doseUnitaria": 15.0,
+            "unitaMisura": "mg",
+            "doseMassimaMg": null,
+            "doseMinimaMg": null,
+            "pesoMinimoKg": null,
+            "etaMinimaAnni": null,
+            "unitaSomministrazioneMg": 15.0,
+            "formaFarmaceuticaSomministrazione": "fiala",
+            "strategiaArrotondamento": "NESSUNO",
+            "alerts": [
+                "Somministrare per via intramuscolare.",
+                "Condurre il trattamento sotto controllo ematologico.",
+                "Non somministrare in caso di anemia perniciosa da carenza di vitamina B12: non previene la degenerazione midollare subacuta.",
+                "Non utilizzare come antianemico in pazienti con neoplasie."
+            ],
+            "rcp": {
+                "controindicazioni": [
+                    "Ipersensibilità al principio attivo o ad uno qualsiasi degli eccipienti.",
+                    "Pazienti con tumori.",
+                    "Anemia perniciosa da carenza di vitamina B12."
+                ],
+                "avvertenzeSpeciali": [
+                    "Contiene paraidrossibenzoati (metile, etile, propile, butile, benzile): possono causare reazioni allergiche anche ritardate ed eccezionalmente broncospasmo.",
+                    "Contiene meno di 1 mmol (23 mg) di sodio per dose: praticamente privo di sodio."
+                ],
+                "interazioni": [
+                    "Fenobarbital, fenitoina, primidone: l'acido folico può ridurne l'effetto antiepilettico aumentandone il metabolismo. Uso concomitante non raccomandato; se necessario, monitorare le concentrazioni plasmatiche degli antiepilettici.",
+                    "Metotrexato e sulfasalazina: possono ridurre l'attività dell'acido folico per attività antagonista.",
+                    "Cloramfenicolo: antagonismo nella risposta emopoietica all'acido folico.",
+                    "Etanolo e aspirina: aumentano l'eliminazione di acido folico.",
+                    "Protossido di azoto: può causare carenza acuta di acido folico.",
+                    "Litio: i supplementi di folati migliorano gli effetti della terapia con litio."
+                ]
+            },
+            "fonteRcp": "https://www.aifa.gov.it/"
+        },
+        {
+            "id": "FOLINA_5MG_CAPSULE",
+            "nome": "Acido folico (Capsule molli)",
+            "nomeCommerciale": ["Folina"],
+            "indicazione": "Trattamento delle carenze foliche per aumentata richiesta, insufficiente assorbimento, ridotta utilizzazione o insufficiente apporto dietetico della vitamina.",
+            "tipoFormula": "FISSA",
+            "doseUnitaria": 5.0,
+            "unitaMisura": "mg",
+            "doseMassimaMg": null,
+            "doseMinimaMg": null,
+            "pesoMinimoKg": null,
+            "etaMinimaAnni": null,
+            "unitaSomministrazioneMg": 5.0,
+            "formaFarmaceuticaSomministrazione": "capsula",
+            "strategiaArrotondamento": "NESSUNO",
+            "alerts": [
+                "Condurre il trattamento sotto controllo ematologico.",
+                "Non somministrare in caso di anemia perniciosa da carenza di vitamina B12: non previene la degenerazione midollare subacuta.",
+                "Non utilizzare come antianemico in pazienti con neoplasie.",
+                "Non usare in pazienti allergici alle arachidi o alla soia.",
+                "In gravidanza: non superare 5 mg/die (dati di sicurezza non disponibili per dosi superiori)."
+            ],
+            "rcp": {
+                "controindicazioni": [
+                    "Ipersensibilità al principio attivo o ad uno qualsiasi degli eccipienti.",
+                    "Pazienti con tumori.",
+                    "Anemia perniciosa da carenza di vitamina B12.",
+                    "Allergia alle arachidi o alla soia."
+                ],
+                "avvertenzeSpeciali": [
+                    "Contiene etile e propile paraidrossibenzoato sodico: possono causare reazioni allergiche anche ritardate.",
+                    "Contiene sorbitolo: non usare in pazienti con intolleranza ereditaria al fruttosio."
+                ],
+                "interazioni": [
+                    "Fenobarbital, fenitoina, primidone: l'acido folico può ridurne l'effetto antiepilettico. Uso concomitante non raccomandato; se necessario, monitorare le concentrazioni plasmatiche.",
+                    "Metotrexato e sulfasalazina: possono ridurre l'attività dell'acido folico per attività antagonista.",
+                    "Cloramfenicolo: antagonismo nella risposta emopoietica all'acido folico.",
+                    "Etanolo e aspirina: aumentano l'eliminazione di acido folico."
+                ]
+            },
+            "fonteRcp": "https://www.aifa.gov.it/"
+        },
+        {
+            "id": "PARACETAMOLO_SELLA_FASCE",
+            "nome": "Paracetamolo (Fasce di peso)",
+            "nomeCommerciale": ["Paracetamolo Sella"],
+            "indicazione": "Trattamento sintomatico di affezioni febbrili e dolori di media entità",
+            "tipoFormula": "FASCE",
+            "doseUnitaria": null,
+            "unitaMisura": "mg",
+            "doseMassimaMg": null,
+            "doseMinimaMg": null,
+            "pesoMinimoKg": 21.0,
+            "etaMinimaAnni": 6,
+            "unitaSomministrazioneMg": 500.0,
+            "formaFarmaceuticaSomministrazione": "compressa",
+            "strategiaArrotondamento": "MULTIPLO_PIU_VICINO",
+            "fascePeso": [
+                { "id": "fascia_1", "minKg": 21.0, "maxKg": 25.9, "doseMg": 250.0 },
+                { "id": "fascia_2", "minKg": 26.0, "maxKg": 50.9, "doseMg": 500.0 },
+                { "id": "fascia_3", "minKg": 51.0, "maxKg": null,  "doseMg": 1000.0 }
+            ],
+            "alerts": [
+                "In insufficienza renale grave (CrCl < 10 ml/min): intervallo minimo di 8 ore tra le somministrazioni."
+            ],
+            "rcp": {
+                "controindicazioni": [
+                    "Ipersensibilità al paracetamolo o ad uno qualsiasi degli eccipienti."
+                ],
+                "avvertenzeSpeciali": [
+                    "Cautela in alcolismo cronico, malnutrizione, disidratazione, insufficienza epatica o renale.",
+                    "Rari casi di reazioni cutanee gravi (SJS, TEN): sospendere al primo segno di rash.",
+                    "Non superare la dose massima giornaliera di 3000 mg.",
+                    "Contiene lattosio: sconsigliato in pazienti con intolleranza al galattosio o deficit di lattasi."
+                ],
+                "interazioni": [
+                    "Colestiramina: riduce l'assorbimento del paracetamolo.",
+                    "Cloramfenicolo: il paracetamolo può aumentarne l'emivita.",
+                    "Anticoagulanti orali (warfarin): possibile potenziamento dell'effetto; monitorare INR.",
+                    "Induttori enzimatici (rifampicina, carbamazepina, fenobarbital) e alcol cronico: aumentano il rischio di epatotossicità.",
+                    "Flucloxacillina: rischio di acidosi metabolica con gap anionico elevato."
+                ]
+            },
+            "fonteRcp": "https://www.aifa.gov.it/"
+        }
+    ]
+}
