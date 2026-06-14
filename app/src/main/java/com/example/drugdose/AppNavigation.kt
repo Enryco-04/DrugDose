@@ -26,28 +26,35 @@ fun AppNavigation() {
     NavHost(navController = navController, startDestination = Screen.Loading.route) {
 
         composable(Screen.Loading.route) {
-            LoadingScreen()
+            LoadingScreen(
+                onIniziamoClick = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Loading.route) { inclusive = true } // Rimuove LoadingScreen dalla backstack, non si torna indietro
+                    }
+                }
+            )
         }
 
         composable(Screen.Login.route) {
-            LoginScreen()
-            /*per il futuro, deve essere condizionale, i compose devono prevedere questa cosa, quindi
-            /prendere in input le callback di funzioni, in piu serve sempre ViewModelFactory
             LoginScreen(
-                onLoginSuccesso = { navController.navigate(Screen.Home.route) },
-                onVaiRegistrazione = { navController.navigate(Screen.Registrazione.route) }
-            )*/
-
-
+                onLoginSuccesso = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Loading.route) { inclusive = true } //Rimuove tutto cio che c'era prima
+                    }
+                },
+                onVaiRegistrazione = { navController.navigate(Screen.Register.route) }
+            )
         }
 
         composable(Screen.Register.route) {
-            RegisterScreen()
-            /* per il futuro, deve essere condizionale, i compose devono prevedere questa cosa
             RegisterScreen(
-                onRegistrazioneSuccesso = { navController.navigate(Screen.Home.route) },
-                onVaiLogin = { navController.popBackStack() }
-            )*/
+                onRegistrazioneSuccesso = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Loading.route) { inclusive = true }
+                    }
+                },
+                onVaiLogin = { navController.popBackStack() } //semplice indietro
+            )
         }
     }
 }

@@ -30,7 +30,9 @@ import com.example.drugdose.R
 
 @Composable
 fun LoadingScreen(
-    modifier: Modifier = Modifier) {
+    modifier: Modifier = Modifier,
+    onIniziamoClick: () -> Unit = {}
+) {
     Surface(
         shape = RoundedCornerShape(40.dp),
         color = Color.White,
@@ -68,7 +70,7 @@ fun LoadingScreen(
             Spacer(modifier = Modifier.height(50.dp))
 
             Button(
-                onClick = { /*TODO navigation*/},
+                onClick = { onIniziamoClick()},
                 shape = RoundedCornerShape(15.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
