@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +26,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,12 +45,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.drugdose.AppNavigation
+import com.example.drugdose.di.ViewModelFactory
+import com.example.drugdose.ui.screens.login.LoginViewModel
 
 @Composable
 fun RegisterScreen(
     modifier: Modifier = Modifier,
-    viewModel: RegisterViewModel = viewModel()
+    onRegistrazioneSuccesso : () -> Unit = {},
+    onVaiLogin : () -> Unit = {},
+    viewModel: RegisterViewModel = viewModel(factory = ViewModelFactory())
 ) {
+    LaunchedEffect(viewModel.successo) {
+        if (viewModel.successo) onRegistrazioneSuccesso()
+    }
     Surface(
         shape = RoundedCornerShape(40.dp),
         color = Color.White,
@@ -192,26 +202,37 @@ fun RegisterScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            //Spacer(modifier = Modifier.height(32.dp))
 
+            viewModel.errore?.let {
+                Text(
+                    text = it,
+                    color = Color.Red,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
             Button(
                 onClick = { viewModel.register() },
                 shape = RoundedCornerShape(15.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
-                //TODO enable solo se tutti i dati sono stati inseriti correttamente, non solo privacy
-                enabled = viewModel.privacyAccepted
+                enabled = viewModel.privacyAccepted && !viewModel.isLoading
             ) {
-                Text(
-                    text = "Registrati",
-                    style = MaterialTheme.typography.titleLarge
-                )
+                if (viewModel.isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.size(24.dp), color = Color.White)
+                } else {
+                    Text("Registrati", style = MaterialTheme.typography.titleLarge)
+                }
             }
+
+
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            TextButton(onClick = { /**/ }) {
+            TextButton(onClick = { onVaiLogin() }) {
                 Text(
                     text = buildAnnotatedString {
                         withStyle(style = SpanStyle(
