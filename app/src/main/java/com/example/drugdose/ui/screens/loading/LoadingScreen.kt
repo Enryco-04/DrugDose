@@ -1,4 +1,4 @@
-package com.example.drugdose.ui.screens.apertura
+package com.example.drugdose.ui.screens.loading
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +29,8 @@ import androidx.compose.ui.unit.dp
 import com.example.drugdose.R
 
 @Composable
-fun LoadingScreen(modifier: Modifier = Modifier) {
+fun LoadingScreen(
+    modifier: Modifier = Modifier) {
     Surface(
         shape = RoundedCornerShape(40.dp),
         color = Color.White,
@@ -67,7 +68,7 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(50.dp))
 
             Button(
-                onClick = { },
+                onClick = { /*TODO navigation*/},
                 shape = RoundedCornerShape(15.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,

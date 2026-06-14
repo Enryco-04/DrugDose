@@ -1,4 +1,4 @@
-package com.example.drugdose.ui.screens.accedi
+package com.example.drugdose.ui.screens.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,10 +17,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,12 +31,14 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun SignIn(modifier: Modifier = Modifier) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+fun LoginScreen(
 
+    modifier: Modifier = Modifier,
+    viewModel: LoginViewModel = viewModel()
+) {
     Surface(
         shape = RoundedCornerShape(40.dp),
         color = Color.White,
@@ -63,7 +61,7 @@ fun SignIn(modifier: Modifier = Modifier) {
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.headlineLarge
             )
-            
+
             Text(
                 text = "Siamo contenti di rivederti!",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -79,24 +77,24 @@ fun SignIn(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text("Email o numero d’albo") },
+                    value = viewModel.email,
+                    onValueChange = { viewModel.onEmailChange(it) },
+                    label = { Text("Email") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp)
                 )
-                
+
                 OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
+                    value = viewModel.password,
+                    onValueChange = { viewModel.onPasswordChange(it) },
                     label = { Text("Password") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp)
                 )
             }
-
+            //TODO Delete maybe, too long to setup
             TextButton(
-                onClick = { },
+                onClick = { viewModel.forgotPassword() },
                 modifier = Modifier.align(Alignment.Start)
             ) {
                 Text(
@@ -109,7 +107,7 @@ fun SignIn(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { },
+                onClick = { viewModel.login() },
                 shape = RoundedCornerShape(15.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -123,7 +121,7 @@ fun SignIn(modifier: Modifier = Modifier) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            TextButton(onClick = { }) {
+            TextButton(onClick = { /* TODO navigazione */ }) {
                 Text(
                     text = buildAnnotatedString {
                         withStyle(style = SpanStyle(
@@ -142,6 +140,6 @@ fun SignIn(modifier: Modifier = Modifier) {
 
 @Preview(widthDp = 430, heightDp = 932)
 @Composable
-private fun SignInPreview() {
-    SignIn()
+private fun LoginScreenPreview() {
+    LoginScreen()
 }

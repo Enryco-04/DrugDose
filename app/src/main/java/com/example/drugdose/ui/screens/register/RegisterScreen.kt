@@ -1,4 +1,4 @@
-package com.example.drugdose.ui.screens.registrazione
+package com.example.drugdose.ui.screens.register
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,10 +24,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,20 +40,14 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-// Rest of your CreateNewAccount code...
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.drugdose.AppNavigation
 
 @Composable
-fun CreateNewAccount(modifier: Modifier = Modifier) {
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var albumNumber by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-    var confirmPasswordVisible by remember { mutableStateOf(false) }
-    var privacyAccepted by remember { mutableStateOf(false) }
-
+fun RegisterScreen(
+    modifier: Modifier = Modifier,
+    viewModel: RegisterViewModel = viewModel()
+) {
     Surface(
         shape = RoundedCornerShape(40.dp),
         color = Color.White,
@@ -80,7 +70,7 @@ fun CreateNewAccount(modifier: Modifier = Modifier) {
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.headlineLarge
             )
-            
+
             Text(
                 text = "Benvenuto! Creiamo il tuo account",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -96,55 +86,77 @@ fun CreateNewAccount(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text("Nome completo") },
+                    value = viewModel.name,
+                    onValueChange = { viewModel.onNameChange(it) },
+                    label = { Text("Nome") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp)
                 )
-                
+
                 OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
+                    value = viewModel.surname,
+                    onValueChange = { viewModel.onSurnameChange(it) },
+                    label = { Text("Cognome") },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp)
+                )
+
+                OutlinedTextField(
+                    value = viewModel.email,
+                    onValueChange = { viewModel.onEmailChange(it) },
                     label = { Text("Email") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp)
                 )
 
-                OutlinedTextField(
-                    value = albumNumber,
-                    onValueChange = { albumNumber = it },
-                    label = { Text("Numero d’albo") },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp)
-                )
+                // Numero d'albo + Provincia sulla stessa riga
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        value = viewModel.albumNumber,
+                        onValueChange = { viewModel.onAlbumNumberChange(it) },
+                        label = { Text("Numero d'albo") },
+                        modifier = Modifier.weight(2f),
+                        shape = RoundedCornerShape(10.dp)
+                    )
+
+                    OutlinedTextField(
+                        value = viewModel.province,
+                        onValueChange = { viewModel.onProvinceChange(it.uppercase()) },
+                        label = { Text("Prov.") },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                }
 
                 OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
+                    value = viewModel.password,
+                    onValueChange = { viewModel.onPasswordChange(it) },
                     label = { Text("Password") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    visualTransformation = if (viewModel.passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
-                        val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                            Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide password" else "Show password")
+                        val image = if (viewModel.passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                        IconButton(onClick = { viewModel.togglePasswordVisibility() }) {
+                            Icon(imageVector = image, contentDescription = if (viewModel.passwordVisible) "Hide password" else "Show password")
                         }
                     }
                 )
 
                 OutlinedTextField(
-                    value = confirmPassword,
-                    onValueChange = { confirmPassword = it },
+                    value = viewModel.confirmPassword,
+                    onValueChange = { viewModel.onConfirmPasswordChange(it) },
                     label = { Text("Conferma Password") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
-                    visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    visualTransformation = if (viewModel.confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
-                        val image = if (confirmPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-                        IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
-                            Icon(imageVector = image, contentDescription = if (confirmPasswordVisible) "Hide password" else "Show password")
+                        val image = if (viewModel.confirmPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                        IconButton(onClick = { viewModel.toggleConfirmPasswordVisibility() }) {
+                            Icon(imageVector = image, contentDescription = if (viewModel.confirmPasswordVisible) "Hide password" else "Show password")
                         }
                     }
                 )
@@ -157,8 +169,8 @@ fun CreateNewAccount(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Checkbox(
-                    checked = privacyAccepted,
-                    onCheckedChange = { privacyAccepted = it }
+                    checked = viewModel.privacyAccepted,
+                    onCheckedChange = { viewModel.onPrivacyAcceptedChange(it) }
                 )
                 Text(
                     text = buildAnnotatedString {
@@ -183,12 +195,13 @@ fun CreateNewAccount(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { },
+                onClick = { viewModel.register() },
                 shape = RoundedCornerShape(15.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
-                enabled = privacyAccepted
+                //TODO enable solo se tutti i dati sono stati inseriti correttamente, non solo privacy
+                enabled = viewModel.privacyAccepted
             ) {
                 Text(
                     text = "Registrati",
@@ -198,7 +211,7 @@ fun CreateNewAccount(modifier: Modifier = Modifier) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            TextButton(onClick = { }) {
+            TextButton(onClick = { /**/ }) {
                 Text(
                     text = buildAnnotatedString {
                         withStyle(style = SpanStyle(
@@ -217,6 +230,6 @@ fun CreateNewAccount(modifier: Modifier = Modifier) {
 
 @Preview(widthDp = 430, heightDp = 932)
 @Composable
-private fun CreateNewAccountPreview() {
-    CreateNewAccount()
+private fun RegisterScreenPreview() {
+    RegisterScreen()
 }

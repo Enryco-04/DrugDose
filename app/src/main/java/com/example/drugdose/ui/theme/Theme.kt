@@ -37,7 +37,7 @@ private val LightColorScheme = lightColorScheme(
 fun DrugDoseTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false, // to see the  colors of compose
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
