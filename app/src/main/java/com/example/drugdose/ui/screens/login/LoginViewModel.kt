@@ -16,6 +16,7 @@ class LoginViewModel(
     private val authRepo: AuthRepository
 ) : ViewModel() {
 
+    var passwordVisible by mutableStateOf(false)
     var email by mutableStateOf("")
         //private set serve a rendere impossibile per i @Composable modificare i valori
         private set
@@ -28,20 +29,40 @@ class LoginViewModel(
     var successo by mutableStateOf(false)
         private set
 
-    fun onEmailChange(v: String) { email = v; errore = null }
-    fun onPasswordChange(v: String) { password = v; errore = null }
+    var emailError by mutableStateOf<String?>(null)
+        private set
+    var passwordError by mutableStateOf<String?>(null)
+        private set
+
+    fun onEmailChange(v: String) { email = v; errore = null; emailError = null }
+    fun onPasswordChange(v: String) { password = v; errore = null; passwordError = null }
 
     fun login() {
         //Pattern bouncer
-        if (email.isBlank() || password.isBlank()) {
-            errore = "Compila tutti i campi"
-            return
+        emailError = null
+        passwordError = null
+        errore = null
+
+        var hasError = false
+
+        if (email.isBlank()) {
+            emailError = "Email obbligatoria"
+            hasError = true
         }
 
-        if (!email.contains("@") || !email.contains(".")){
-            errore = "Formato email non valida"
-            return
+        if (password.isBlank()) {
+            passwordError = "Password obbligatoria"
+            hasError = true
         }
+
+        if (!email.isBlank() &&
+            (!email.contains("@") || !email.contains("."))) {
+            emailError = "Formato email non valido"
+            hasError = true
+        }
+
+        if (hasError) return
+
 
         viewModelScope.launch {
             isLoading = true
@@ -52,6 +73,7 @@ class LoginViewModel(
                 },
                 onFailure = { e ->
                     isLoading = false
+                    println(e)
                     errore = handleErrorMessage(e)
                 }
             )
@@ -67,8 +89,11 @@ class LoginViewModel(
             else -> "Email o Password errate"
         }
     }
-
     fun forgotPassword() {
         // TODO
+    }
+
+    fun togglePasswordVisibility() {
+        passwordVisible = !passwordVisible
     }
 }

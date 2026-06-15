@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,6 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,15 +47,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.drugdose.di.ViewModelFactory
 import com.example.drugdose.ui.components.HomeCard  // ← importato da components
 import com.example.drugdose.ui.model.HomeMenuItem
+import com.example.drugdose.ui.screens.login.LoginViewModel
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = viewModel(),
-    onMenuItemClick: (HomeMenuItem) -> Unit = {}
+    viewModel: HomeViewModel = viewModel(factory = ViewModelFactory()),
+    onMenuItemClick: (HomeMenuItem) -> Unit = {},
+    onSessioneNonValida: () -> Unit = {}
+
 ) {
+    LaunchedEffect(viewModel.sessioneNonValida) {
+        if (viewModel.sessioneNonValida) onSessioneNonValida()
+    }
     val menuItems by viewModel.menuItems.collectAsStateWithLifecycle()
     val pages = menuItems.chunked(9)
 
@@ -128,10 +137,11 @@ fun HomeScreen(
                     verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top)
                 ) {
                     Text(
-                        text = "Benvenuto Dottor Stefanazzi",
+                        text = "Benvenuto Dr. ${viewModel.medico?.cognome ?: ""}",
                         color = Color.Black,
                         style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold)
                     )
+
                     Text(
                         text = "Cosa vuole fare oggi?",
                         color = Color.Black,
@@ -150,7 +160,10 @@ fun HomeScreen(
                     val pageItems = pages.getOrElse(page) { emptyList() }
 
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                                modifier = Modifier
+                                .fillMaxSize()
+                            .wrapContentHeight(Alignment.Top)
                     ) {
 
                         pageItems.chunked(3).forEach { rowItems ->
