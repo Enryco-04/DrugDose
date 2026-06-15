@@ -100,7 +100,9 @@ fun RegisterScreen(
                     onValueChange = { viewModel.onNameChange(it) },
                     label = { Text("Nome") },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp)
+                    shape = RoundedCornerShape(10.dp),
+                    isError = viewModel.nameError != null,
+                    supportingText = viewModel.nameError?.let {{Text(it)}}
                 )
 
                 OutlinedTextField(
@@ -108,7 +110,9 @@ fun RegisterScreen(
                     onValueChange = { viewModel.onSurnameChange(it) },
                     label = { Text("Cognome") },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp)
+                    shape = RoundedCornerShape(10.dp),
+                    isError = viewModel.surnameError != null,
+                    supportingText = viewModel.surnameError?.let { { Text(it) } },
                 )
 
                 OutlinedTextField(
@@ -116,7 +120,9 @@ fun RegisterScreen(
                     onValueChange = { viewModel.onEmailChange(it) },
                     label = { Text("Email") },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp)
+                    shape = RoundedCornerShape(10.dp),
+                    isError = viewModel.emailError != null,
+                    supportingText = viewModel.emailError?.let { { Text(it) } }
                 )
 
                 // Numero d'albo + Provincia sulla stessa riga
@@ -129,7 +135,9 @@ fun RegisterScreen(
                         onValueChange = { viewModel.onAlbumNumberChange(it) },
                         label = { Text("Numero d'albo") },
                         modifier = Modifier.weight(2f),
-                        shape = RoundedCornerShape(10.dp)
+                        shape = RoundedCornerShape(10.dp),
+                        isError = viewModel.albumError != null,
+                        supportingText = viewModel.albumError?.let { { Text(it) } }
                     )
 
                     OutlinedTextField(
@@ -137,7 +145,9 @@ fun RegisterScreen(
                         onValueChange = { viewModel.onProvinceChange(it.uppercase()) },
                         label = { Text("Prov.") },
                         modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(10.dp)
+                        shape = RoundedCornerShape(10.dp),
+                        isError = viewModel.provinceError != null,
+                        supportingText = viewModel.provinceError?.let { { Text(it) } }
                     )
                 }
 
@@ -153,7 +163,9 @@ fun RegisterScreen(
                         IconButton(onClick = { viewModel.togglePasswordVisibility() }) {
                             Icon(imageVector = image, contentDescription = if (viewModel.passwordVisible) "Hide password" else "Show password")
                         }
-                    }
+                    },
+                    isError = viewModel.passwordError != null,
+                    supportingText = viewModel.passwordError?.let { { Text(it) } }
                 )
 
                 OutlinedTextField(
@@ -168,7 +180,9 @@ fun RegisterScreen(
                         IconButton(onClick = { viewModel.toggleConfirmPasswordVisibility() }) {
                             Icon(imageVector = image, contentDescription = if (viewModel.confirmPasswordVisible) "Hide password" else "Show password")
                         }
-                    }
+                    },
+                    isError = viewModel.confirmPasswordError != null,
+                    supportingText = viewModel.confirmPasswordError?.let { { Text(it) } }
                 )
             }
 

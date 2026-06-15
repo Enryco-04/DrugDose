@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.drugdose.ui.model.HomeAction
+import com.example.drugdose.ui.screens.home.HomeScreen
 import com.example.drugdose.ui.screens.loading.LoadingScreen
 import com.example.drugdose.ui.screens.login.LoginScreen
 import com.example.drugdose.ui.screens.register.RegisterScreen
@@ -18,12 +20,12 @@ sealed class Screen(val route: String) {
     object Creazione     : Screen("creazione/{farmacoId}")
     object Prescrizioni  : Screen("prescrizioni")
 }
-//TODO PER IL FUTURO, SERVE ViewModelFacotry che fa dependecy injection di AuthRepository, FarmaciRepository, PrescrizioniRepostiory
+//TODO come gestire 3 viewModel in uno screen
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Screen.Loading.route) {
+    NavHost(navController = navController, startDestination = Screen.Login.route) {
 
         composable(Screen.Loading.route) {
             LoadingScreen(
@@ -39,7 +41,7 @@ fun AppNavigation() {
             LoginScreen(
                 onLoginSuccesso = {
                     navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Loading.route) { inclusive = true } //Rimuove tutto cio che c'era prima
+                        popUpTo(Screen.Login.route) { inclusive = true } //Rimuove tutto cio che c'era prima
                     }
                 },
                 onVaiRegistrazione = { navController.navigate(Screen.Register.route) }
@@ -50,10 +52,26 @@ fun AppNavigation() {
             RegisterScreen(
                 onRegistrazioneSuccesso = {
                     navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Loading.route) { inclusive = true }
+                        popUpTo(Screen.Login.route) { inclusive = true }
                     }
                 },
                 onVaiLogin = { navController.popBackStack() } //semplice indietro
+            )
+        }
+
+        composable(Screen.Home.route) {
+            HomeScreen(
+                onSessioneNonValida = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Home.route) { inclusive = true }
+                    }
+                },
+                onMenuItemClick = { menuItem ->
+                    when (menuItem.action) {
+                        HomeAction.DRUG_DOSE -> navController.navigate(Screen.DrugDoseList.route)
+                        HomeAction.PLACEHOLDER -> { /* non fa nulla per ora */ }
+                    }
+                }
             )
         }
     }
