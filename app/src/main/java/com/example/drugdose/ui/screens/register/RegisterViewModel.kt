@@ -26,6 +26,21 @@ class RegisterViewModel(
     var confirmPasswordVisible by mutableStateOf(false)
     var privacyAccepted by mutableStateOf(false)
 
+    var nameError by mutableStateOf<String?>(null)
+        private set
+    var surnameError by mutableStateOf<String?>(null)
+        private set
+    var emailError by mutableStateOf<String?>(null)
+        private set
+    var albumError by mutableStateOf<String?>(null)
+        private set
+    var provinceError by mutableStateOf<String?>(null)
+        private set
+    var passwordError by mutableStateOf<String?>(null)
+        private set
+    var confirmPasswordError by mutableStateOf<String?>(null)
+        private set
+
     var isLoading by mutableStateOf(false)
         private set
     var errore by mutableStateOf<String?>(null)
@@ -33,53 +48,67 @@ class RegisterViewModel(
     var successo by mutableStateOf(false)
         private set
 
-    fun onNameChange(v: String) { name = v; errore = null }
-    fun onSurnameChange(v: String) { surname = v; errore = null }
-    fun onEmailChange(v: String) { email = v; errore = null }
+    fun onNameChange(v: String) { name = v; nameError = null }
+    fun onSurnameChange(v: String) { surname = v; surnameError = null }
+    fun onEmailChange(v: String) { email = v; emailError = null }
     fun onAlbumNumberChange(v: String) {
         albumNumber = v.filter { it.isDigit() }
-        errore = null
+        albumError = null
     }
     fun onProvinceChange(v: String) {
         province = v.uppercase().filter { it.isLetter() }.take(2)
-        errore = null
+        provinceError = null
     }
-    fun onPasswordChange(v: String) { password = v; errore = null }
-    fun onConfirmPasswordChange(v: String) { confirmPassword = v; errore = null }
+    fun onPasswordChange(v: String) {
+        password = v
+        passwordError = null
+        confirmPasswordError = null
+    }
+    fun onConfirmPasswordChange(v: String) {
+        confirmPassword = v
+        confirmPasswordError = null
+    }
     fun togglePasswordVisibility() { passwordVisible = !passwordVisible }
     fun toggleConfirmPasswordVisibility() { confirmPasswordVisible = !confirmPasswordVisible }
     fun onPrivacyAcceptedChange(v: Boolean) { privacyAccepted = v }
 
     fun register() {
-        if (name.isBlank() || surname.isBlank() || email.isBlank() ||
-            albumNumber.isBlank() || province.isBlank() ||
-            password.isBlank() || confirmPassword.isBlank()
-        ) {
-            errore = "Compila tutti i campi"
-            return
+        errore = null
+
+        nameError = if (name.isBlank()) "Campo obbligatorio" else null
+        surnameError = if (surname.isBlank()) "Campo obbligatorio" else null
+        albumError = if (albumNumber.isBlank()) "Campo obbligatorio" else null
+
+        emailError = when {
+            email.isBlank() -> "Campo obbligatorio"
+            !email.contains("@") || !email.contains(".") -> "Formato email non valido"
+            else -> null
         }
 
-        if (password != confirmPassword) {
-            errore = "Le password non coincidono"
-
-            return
+        provinceError = when {
+            province.isBlank() -> "Campo obbligatorio"
+            province.length != 2 -> "Provincia non valida"
+            else -> null
         }
 
-        if (!email.contains("@") || !email.contains(".")) {
-            errore = "Formato email non valido"
-            return
+        passwordError = when {
+            password.isBlank() -> "Campo obbligatorio"
+            password.length < 6 -> "La password deve avere almeno 6 caratteri"
+            else -> null
         }
 
-        if (password.length < 6) {
-            errore = "La password deve avere almeno 6 caratteri"
-            return
+        confirmPasswordError = when {
+            confirmPassword.isBlank() -> "Campo obbligatorio"
+            password != confirmPassword -> "Le password non coincidono"
+            else -> null
         }
 
-        if (province.length != 2){
-            errore = "Provincia non valida" //Add list province valide (110)
-            return
-        }
+        val hasErrors = listOf(
+            nameError, surnameError, emailError, albumError,
+            provinceError, passwordError, confirmPasswordError
+        ).any { it != null }
 
+        if (hasErrors) return
 
         viewModelScope.launch {
             isLoading = true
@@ -98,13 +127,14 @@ class RegisterViewModel(
                 },
                 onFailure = { e ->
                     isLoading = false
-                    errore = when (e) {
-                        is FirebaseAuthUserCollisionException -> "Email già registrata"
-                        is FirebaseAuthWeakPasswordException -> "Password troppo debole"
-                        is FirebaseAuthInvalidCredentialsException -> "Email non valida"
-                        else -> e.message ?: "Errore durante la registrazione"
+                    when (e) {
+                        is FirebaseAuthUserCollisionException -> emailError = "Email già registrata"
+                        is FirebaseAuthWeakPasswordException -> passwordError = "Password troppo debole"
+                        is FirebaseAuthInvalidCredentialsException -> emailError = "Email non valida"
+                        else -> errore = e.message ?: "Errore durante la registrazione"
                     }
-                })
+                }
+            )
         }
     }
 }

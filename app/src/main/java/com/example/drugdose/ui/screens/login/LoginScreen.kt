@@ -11,8 +11,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -29,6 +34,8 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -92,7 +99,10 @@ fun LoginScreen(
                     onValueChange = { viewModel.onEmailChange(it) },
                     label = { Text("Email") },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp)
+                    isError = viewModel.emailError != null,
+                    shape = RoundedCornerShape(10.dp),
+                    supportingText = viewModel.emailError?.let { { Text(it) } }
+
                 )
 
                 OutlinedTextField(
@@ -100,13 +110,21 @@ fun LoginScreen(
                     onValueChange = { viewModel.onPasswordChange(it) },
                     label = { Text("Password") },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp)
+                    isError = viewModel.passwordError != null,
+
+                    shape = RoundedCornerShape(10.dp) ,
+                    supportingText = viewModel.passwordError?.let { { Text(it) } },
+                    visualTransformation = if (viewModel.passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        val image = if (viewModel.passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                        IconButton(onClick = { viewModel.togglePasswordVisibility() }) {
+                            Icon(imageVector = image, contentDescription = if (viewModel.passwordVisible) "Hide password" else "Show password")
+                        }
+                    },
                 )
             }
 
-            viewModel.errore?.let {
-                Text(text = it, color = Color.Red, modifier = Modifier.padding(top = 8.dp))
-            }
+
             //TODO Delete maybe, too long to setup
             TextButton(
                 onClick = { viewModel.forgotPassword() },
@@ -120,6 +138,11 @@ fun LoginScreen(
             }
 
             Spacer(modifier = Modifier.height(24.dp))
+            viewModel.errore?.let {
+                Text(text = it, color = Color.Red, modifier = Modifier.padding(top = 8.dp))
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
 
             Button(
                 onClick = { viewModel.login() },

@@ -20,7 +20,8 @@ interface AuthRepository {
 
     fun logout()
 
-    fun getMedicoIdCorrente(): String?
+    suspend fun getMedicoCorrente(): Result<Medico?> //simile a login
+
 
     fun isLoggato(): Boolean
 }

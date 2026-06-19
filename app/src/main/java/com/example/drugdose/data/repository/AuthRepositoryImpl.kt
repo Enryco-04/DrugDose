@@ -64,7 +64,18 @@ class AuthRepositoryImpl(
         auth.signOut()
     }
 
-    override fun getMedicoIdCorrente(): String? = auth.currentUser?.uid
+    override suspend fun getMedicoCorrente(): Result<Medico?> = runCatching {
+        val uid = auth.currentUser?.uid ?: return@runCatching null
+
+        db.collection(MEDICI_COLLECTION)
+            .document(uid)
+            .get()
+            .await()
+            .toObject(Medico::class.java)
+            ?.copy(id = uid)
+    }
+
+
 
     override fun isLoggato(): Boolean = auth.currentUser != null
 }

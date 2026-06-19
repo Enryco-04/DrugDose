@@ -8,6 +8,7 @@ import com.example.drugdose.data.repository.FarmaciRepository
 import com.example.drugdose.data.repository.FarmaciRepositoryImpl
 import com.example.drugdose.data.repository.PrescrizioniRepository
 import com.example.drugdose.data.repository.PrescrizioniRepositoryImpl
+import com.example.drugdose.ui.screens.home.HomeViewModel
 import com.example.drugdose.ui.screens.login.LoginViewModel
 import com.example.drugdose.ui.screens.register.RegisterViewModel
 
@@ -29,6 +30,10 @@ class ViewModelFactory(
             // futuri ViewModel — aggiungi qui
             // CalcoloViewModel::class.java ->
             //     CalcoloViewModel(farmaciRepo) as T
+
+            HomeViewModel::class.java ->
+                HomeViewModel(authRepo) as T
+
 
             else -> throw IllegalArgumentException("ViewModel non riconosciuto: ${modelClass.name}")
         }
