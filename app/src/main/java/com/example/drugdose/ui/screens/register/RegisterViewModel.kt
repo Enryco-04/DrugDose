@@ -83,6 +83,7 @@ class RegisterViewModel(
 
         viewModelScope.launch {
             isLoading = true
+            email = email.trim()
             authRepo.registraMedico(
                 email = email,
                 password = password,

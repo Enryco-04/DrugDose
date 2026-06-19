@@ -98,7 +98,7 @@ object Calculator {
         // — numero unità da somministrare —
         // es. 15 mg / 3 mg = 5 compresse
         val numeroUnita = if (base > 0) doseArrotondataMg / base else 0.0
-
+        // TODO come gestire mezza pastiglia?
         return RisultatoCalcolo(
             doseRealeMg = doseRealeMg,
             doseArrotondataMg = doseArrotondataMg,
