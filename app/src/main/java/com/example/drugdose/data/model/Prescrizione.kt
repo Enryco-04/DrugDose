@@ -24,7 +24,16 @@ data class Prescrizione(
     val note: String? = null,
     val frequenza: String? = null
 ) {
-
+    @Exclude
+    fun isScaduta(): Boolean =
+        status == "ATTIVA" &&
+                dataScadenza?.toDate()?.before(java.util.Date()) == true
+    @Exclude
+    fun statoVisualizzato(): String = when {
+        status == "ANNULLATA" -> "ANNULLATA"
+        isScaduta() -> "SCADUTA"
+        else -> "ATTIVA"
+    }
 }
 
 data class PazienteEmbedded(
