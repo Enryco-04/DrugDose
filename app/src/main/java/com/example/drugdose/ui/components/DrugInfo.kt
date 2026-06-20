@@ -157,14 +157,6 @@ fun DrugInfo(
                         )
                     }
 
-                    item {
-                        DetailSection(
-                            title = "Avvertenze:",
-                            content = if (farmaco.alerts.isNotEmpty()) {
-                                farmaco.alerts.joinToString("\n")
-                            } else "Nessuna avvertenza specifica."
-                        )
-                    }
 
                     item {
                         DetailSection(
@@ -174,6 +166,7 @@ fun DrugInfo(
                         )
                     }
 
+
                     item {
                         DetailSection(
                             title = "Interazioni",
@@ -182,6 +175,13 @@ fun DrugInfo(
                         )
                     }
 
+                    item {
+                        DetailSection(
+                            title = "Avvertenze speciali:",
+                            content = farmaco.rcp?.avvertenzeSpeciali?.takeIf { it.isNotEmpty() }
+                                ?.joinToString("\n") ?: "Non specificate."
+                        )
+                    }
                     if (farmaco.fonteRcp.isNotBlank()) {
                         item {
                             Text(
@@ -267,7 +267,8 @@ private fun DrugInfoPreview() {
         fonteRcp = "https://farmaci.agenziafarmaco.gov.it/bancadatifarmaci/",
         rcp = Rcp(
             controindicazioni = listOf("Ipersensibilità al principio attivo", "Grave anemia emolitica"),
-            interazioni = listOf("Anticoagulanti", "Zidovudina")
+            interazioni = listOf("Anticoagulanti", "Zidovudina"),
+            avvertenzeSpeciali = listOf("Ciao", "ciaodnj")
         )
     )
 

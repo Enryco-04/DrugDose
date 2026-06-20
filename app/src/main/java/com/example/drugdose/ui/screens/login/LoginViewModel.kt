@@ -66,6 +66,7 @@ class LoginViewModel(
 
         viewModelScope.launch {
             isLoading = true
+            email = email.trim()
             authRepo.login(email, password).fold(
                 onSuccess = {
                     isLoading = false

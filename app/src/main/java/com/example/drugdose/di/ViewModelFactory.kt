@@ -11,6 +11,8 @@ import com.example.drugdose.data.repository.PrescrizioniRepositoryImpl
 import com.example.drugdose.ui.screens.home.HomeViewModel
 import com.example.drugdose.ui.screens.login.LoginViewModel
 import com.example.drugdose.ui.screens.register.RegisterViewModel
+import com.example.drugdose.ui.screens.search.DrugSearchViewModel
+import com.example.drugdose.ui.screens.prescrizioni.PrescriptionsViewModel
 
 class ViewModelFactory(
     private val authRepo: AuthRepository = AuthRepositoryImpl(),
@@ -33,6 +35,13 @@ class ViewModelFactory(
 
             HomeViewModel::class.java ->
                 HomeViewModel(authRepo) as T
+
+            DrugSearchViewModel::class.java ->
+                DrugSearchViewModel(farmaciRepo, authRepo) as T
+
+            //TODO aggiungi authRepo farmaciRepo per backend, ricorda che AppNavigation gestisce il backstack
+            PrescriptionsViewModel::class.java ->
+                PrescriptionsViewModel() as T
 
 
             else -> throw IllegalArgumentException("ViewModel non riconosciuto: ${modelClass.name}")

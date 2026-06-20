@@ -16,6 +16,7 @@ data class Farmaco(
     val formaFarmaceuticaSomministrazione: String = "",
     val strategiaArrotondamento: String = "",
     val fascePeso: List<FasciaPeso>? = null,
+    // puo essere eliminaoìto forse
     val alerts: List<String> = emptyList(),
     val rcp: Rcp? = null,
     val fonteRcp: String = ""
