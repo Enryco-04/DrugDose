@@ -46,13 +46,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.drugdose.R
 import com.example.drugdose.data.model.Farmaco
+import com.example.drugdose.di.ViewModelFactory
 import com.example.drugdose.ui.components.DrugCard
 import com.example.drugdose.ui.components.DrugInfo
 
 @Composable
 fun DrugSearchScreen(
     modifier: Modifier = Modifier,
-    viewModel: DrugSearchViewModel = viewModel(),
+    viewModel: DrugSearchViewModel = viewModel(factory = ViewModelFactory()),
     onBack: () -> Unit = {},
     onCreaPrescrizione: (Farmaco) -> Unit = {}
 ) {

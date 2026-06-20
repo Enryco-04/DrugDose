@@ -1,14 +1,20 @@
 package com.example.drugdose
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.drugdose.di.ViewModelFactory
 import com.example.drugdose.ui.model.HomeAction
 import com.example.drugdose.ui.screens.home.HomeScreen
 import com.example.drugdose.ui.screens.loading.LoadingScreen
 import com.example.drugdose.ui.screens.login.LoginScreen
+import com.example.drugdose.ui.screens.prescrizioni.PrescriptionsViewModel
+import com.example.drugdose.ui.screens.prescrizioni.PrescrizioniScreen
 import com.example.drugdose.ui.screens.register.RegisterScreen
+import com.example.drugdose.ui.screens.search.DrugSearchScreen
 
 // AppNavigation.kt
 sealed class Screen(val route: String) {
@@ -16,16 +22,17 @@ sealed class Screen(val route: String) {
     object Login         : Screen("login")
     object Register : Screen("registrazione")
     object Home          : Screen("home")
-    object DrugDoseList  : Screen("drugdose")
+    object DrugSearchList  : Screen("drugdose")
     object Creazione     : Screen("creazione/{farmacoId}")
     object Prescrizioni  : Screen("prescrizioni")
 }
 //TODO come gestire 3 viewModel in uno screen
+@SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Screen.Login.route) {
+    NavHost(navController = navController, startDestination = Screen.Home.route) {
 
         composable(Screen.Loading.route) {
             LoadingScreen(
@@ -61,19 +68,44 @@ fun AppNavigation() {
 
         composable(Screen.Home.route) {
             HomeScreen(
+                onMenuItemClick = { menuItem ->
+                    when (menuItem.action) {
+                        HomeAction.DRUG_DOSE -> navController.navigate(Screen.DrugSearchList.route)
+                        HomeAction.PLACEHOLDER -> { /* non fa nulla per ora */ }
+                    }
+                },
                 onSessioneNonValida = {
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Home.route) { inclusive = true }
                     }
                 },
-                onMenuItemClick = { menuItem ->
-                    when (menuItem.action) {
-                        HomeAction.DRUG_DOSE -> navController.navigate(Screen.DrugDoseList.route)
-                        HomeAction.PLACEHOLDER -> { /* non fa nulla per ora */ }
-                    }
+                onVaiAPrescrizioniClick = {
+                    navController.navigate(Screen.Prescrizioni.route)
                 }
             )
         }
+
+        composable(Screen.DrugSearchList.route){
+            DrugSearchScreen(
+                onBack = { navController.popBackStack() },
+                onCreaPrescrizione = { navController.navigate(Screen.Creazione.route) }
+            )
+        }
+
+        // ECCEZIONE: Il ViewModel viene legato al ciclo di vita della Home (Screen.Home.route)
+        // invece che a quello di questa destinazione. Questo permette di navigare avanti e indietro
+        // tra Home e Prescrizioni senza perdere i dati caricati e lo stato della UI.
+        composable(Screen.Prescrizioni.route){
+            val viewModel: PrescriptionsViewModel = viewModel(
+                //Assegno l'owner del BackStack di PrescrizioniViewModel a Home, per non uccidere il vecchio ViewModel (Home)
+                viewModelStoreOwner = navController.getBackStackEntry(Screen.Home.route),
+                factory = ViewModelFactory()
+            )
+            PrescrizioniScreen( //Inietto il viewModel creato da qui,
+                viewModel = viewModel,
+                onHomeClick = { navController.popBackStack() }
+            )
+        }
+
     }
 }
-

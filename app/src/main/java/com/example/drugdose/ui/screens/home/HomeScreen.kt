@@ -3,6 +3,7 @@ package com.example.drugdose.ui.screens.home
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,14 +51,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.drugdose.di.ViewModelFactory
 import com.example.drugdose.ui.components.HomeCard  // ← importato da components
 import com.example.drugdose.ui.model.HomeMenuItem
-import com.example.drugdose.ui.screens.login.LoginViewModel
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = ViewModelFactory()),
     onMenuItemClick: (HomeMenuItem) -> Unit = {},
-    onSessioneNonValida: () -> Unit = {}
+    onSessioneNonValida: () -> Unit = {},
+    onVaiAPrescrizioniClick: () -> Unit ={}
 
 ) {
     LaunchedEffect(viewModel.sessioneNonValida) {
@@ -246,7 +247,9 @@ fun HomeScreen(
                 }
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.clickable { onVaiAPrescrizioniClick() }   // ← aggiungi
+
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_stethoscope),
