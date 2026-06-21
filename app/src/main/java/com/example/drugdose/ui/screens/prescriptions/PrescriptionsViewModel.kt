@@ -1,4 +1,4 @@
-package com.example.drugdose.ui.screens.prescrizioni
+package com.example.drugdose.ui.screens.prescriptions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

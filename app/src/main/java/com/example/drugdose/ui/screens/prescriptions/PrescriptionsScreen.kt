@@ -1,4 +1,4 @@
-package com.example.drugdose.ui.screens.prescrizioni
+package com.example.drugdose.ui.screens.prescriptions
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically

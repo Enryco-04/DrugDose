@@ -8,16 +8,22 @@ import com.example.drugdose.data.repository.FarmaciRepository
 import com.example.drugdose.data.repository.FarmaciRepositoryImpl
 import com.example.drugdose.data.repository.PrescrizioniRepository
 import com.example.drugdose.data.repository.PrescrizioniRepositoryImpl
+import com.example.drugdose.ui.screens.create.CreatePrescriptionViewModel
+import com.example.drugdose.ui.screens.search.DrugSearchViewModel
 import com.example.drugdose.ui.screens.home.HomeViewModel
 import com.example.drugdose.ui.screens.login.LoginViewModel
+import com.example.drugdose.ui.screens.prescriptions.PrescriptionsViewModel
 import com.example.drugdose.ui.screens.register.RegisterViewModel
-import com.example.drugdose.ui.screens.search.DrugSearchViewModel
-import com.example.drugdose.ui.screens.prescrizioni.PrescriptionsViewModel
+
+// import per LoginViewModel/RegisterViewModel — mantieni i tuoi import esistenti
 
 class ViewModelFactory(
     private val authRepo: AuthRepository = AuthRepositoryImpl(),
     private val farmaciRepo: FarmaciRepository = FarmaciRepositoryImpl(),
-    private val prescrizioniRepo: PrescrizioniRepository = PrescrizioniRepositoryImpl()
+    private val prescrizioniRepo: PrescrizioniRepository = PrescrizioniRepositoryImpl(),
+    // ↓ parametro extra, usato SOLO quando si crea un CreatePrescriptionViewModel.
+    // Per tutti gli altri ViewModel resta null e viene ignorato.
+    private val farmacoId: String? = null
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
@@ -29,20 +35,21 @@ class ViewModelFactory(
             RegisterViewModel::class.java ->
                 RegisterViewModel(authRepo) as T
 
-            // futuri ViewModel — aggiungi qui
-            // CalcoloViewModel::class.java ->
-            //     CalcoloViewModel(farmaciRepo) as T
-
             HomeViewModel::class.java ->
                 HomeViewModel(authRepo) as T
 
             DrugSearchViewModel::class.java ->
                 DrugSearchViewModel(farmaciRepo, authRepo) as T
 
-            //TODO aggiungi authRepo farmaciRepo per backend, ricorda che AppNavigation gestisce il backstack
+            CreatePrescriptionViewModel::class.java -> {
+                requireNotNull(farmacoId) {
+                    "farmacoId è obbligatorio per CreatePrescriptionViewModel — passalo al costruttore di ViewModelFactory"
+                }
+                CreatePrescriptionViewModel(farmacoId, farmaciRepo) as T
+            }
+
             PrescriptionsViewModel::class.java ->
                 PrescriptionsViewModel() as T
-
 
             else -> throw IllegalArgumentException("ViewModel non riconosciuto: ${modelClass.name}")
         }
