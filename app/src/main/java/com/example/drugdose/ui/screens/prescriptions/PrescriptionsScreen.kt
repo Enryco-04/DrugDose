@@ -72,7 +72,7 @@ fun PrescrizioniScreen(
     onHomeClick: () -> Unit = {}
 ) {
     val prescrizioni by viewModel.prescrizioniFiltrate.collectAsStateWithLifecycle()
-    val filtroCF by viewModel.filtroCF.collectAsStateWithLifecycle()
+    val filtroPaziente by viewModel.filtroPaziente.collectAsStateWithLifecycle()
     val filtroFarmaco by viewModel.filtroFarmaco.collectAsStateWithLifecycle()
     val filtroStatus by viewModel.filtroStatus.collectAsStateWithLifecycle()
 
@@ -82,7 +82,7 @@ fun PrescrizioniScreen(
     // Box filtri aperto/chiuso — puramente visivo, non serve al ViewModel
     var filtriAperti by remember { mutableStateOf(false) }
 
-    val filtriAttivi = filtroCF.isNotBlank() || filtroFarmaco.isNotBlank() || filtroStatus != FiltroStatus.TUTTI
+    val filtriAttivi = filtroPaziente.isNotBlank() || filtroFarmaco.isNotBlank() || filtroStatus != FiltroStatus.TUTTI
 
     Surface(
         shape = RoundedCornerShape(44.dp),
@@ -204,15 +204,15 @@ fun PrescrizioniScreen(
                     ) {
                         Column {
                             Text(
-                                text = "Codice Fiscale Paziente",
+                                text = "Dati Paziente",
                                 style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium),
                                 color = Color.Black
                             )
                             OutlinedTextField(
-                                value = filtroCF,
-                                onValueChange = { viewModel.onFiltroCFChange(it) },
+                                value = filtroPaziente,
+                                onValueChange = { viewModel.onFiltroPazienteChange(it) },
                                 placeholder = {
-                                    Text("Cerca per codice fiscale...", color = Color(0xFFAAAAAA), fontSize = 14.sp)
+                                    Text("Cerca per dati paziente ...", color = Color(0xFFAAAAAA), fontSize = 14.sp)
                                 },
                                 singleLine = true,
                                 modifier = Modifier.fillMaxWidth(),

@@ -14,8 +14,8 @@ import com.example.drugdose.ui.screens.home.HomeViewModel
 import com.example.drugdose.ui.screens.login.LoginViewModel
 import com.example.drugdose.ui.screens.prescriptions.PrescriptionsViewModel
 import com.example.drugdose.ui.screens.register.RegisterViewModel
-
-// import per LoginViewModel/RegisterViewModel — mantieni i tuoi import esistenti
+import com.example.drugdose.ui.screens.search.DrugSearchViewModel
+import com.example.drugdose.ui.screens.prescriptions.PrescriptionsViewModel
 
 class ViewModelFactory(
     private val authRepo: AuthRepository = AuthRepositoryImpl(),
@@ -49,7 +49,7 @@ class ViewModelFactory(
             }
 
             PrescriptionsViewModel::class.java ->
-                PrescriptionsViewModel() as T
+                PrescriptionsViewModel(prescrizioniRepo,authRepo) as T
 
             else -> throw IllegalArgumentException("ViewModel non riconosciuto: ${modelClass.name}")
         }

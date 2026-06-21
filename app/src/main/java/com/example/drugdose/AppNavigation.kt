@@ -102,7 +102,12 @@ fun AppNavigation() {
             )
             PrescrizioniScreen( //Inietto il viewModel creato da qui,
                 viewModel = viewModel,
-                onHomeClick = { navController.popBackStack() }
+                onHomeClick = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Home.route) { inclusive = false }
+                        launchSingleTop = true
+                    }
+                }
             )
         }
 
@@ -135,6 +140,8 @@ fun AppNavigation() {
                     }
                 )
             }
+        composable(Screen.Creazione.route){
+
         }
 
     }
