@@ -11,8 +11,8 @@ import com.example.drugdose.ui.model.HomeAction
 import com.example.drugdose.ui.screens.home.HomeScreen
 import com.example.drugdose.ui.screens.loading.LoadingScreen
 import com.example.drugdose.ui.screens.login.LoginScreen
-import com.example.drugdose.ui.screens.prescrizioni.PrescriptionsViewModel
-import com.example.drugdose.ui.screens.prescrizioni.PrescrizioniScreen
+import com.example.drugdose.ui.screens.prescriptions.PrescriptionsViewModel
+import com.example.drugdose.ui.screens.prescriptions.PrescrizioniScreen
 import com.example.drugdose.ui.screens.register.RegisterScreen
 import com.example.drugdose.ui.screens.search.DrugSearchScreen
 
@@ -103,8 +103,17 @@ fun AppNavigation() {
             )
             PrescrizioniScreen( //Inietto il viewModel creato da qui,
                 viewModel = viewModel,
-                onHomeClick = { navController.popBackStack() }
+                onHomeClick = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Home.route) { inclusive = false }
+                        launchSingleTop = true
+                    }
+                }
             )
+        }
+
+        composable(Screen.Creazione.route){
+
         }
 
     }
