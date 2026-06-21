@@ -1,0 +1,376 @@
+package com.example.drugdose.ui.screens.create
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.drugdose.di.ViewModelFactory
+import com.example.drugdose.ui.theme.DrugDoseTheme
+
+@Composable
+fun CreatePrescriptionScreen(
+    farmacoId: String,
+    modifier: Modifier = Modifier,
+    onBack: () -> Unit = {},
+    onPrescrizioneCreata: () -> Unit = {}
+) {
+    val viewModel: CreatePrescriptionViewModel = viewModel(
+        factory = ViewModelFactory(farmacoId = farmacoId) // ← usa la tua factory centralizzata
+    )
+
+    val formState by viewModel.formState.collectAsStateWithLifecycle()
+    val currentStep by viewModel.currentStep.collectAsStateWithLifecycle()
+    val salvataggioState by viewModel.salvataggioState.collectAsStateWithLifecycle()
+    val caricamentoFarmacoState by viewModel.caricamentoFarmacoState.collectAsStateWithLifecycle()
+
+    // Mostra un loader a tutto schermo finché il Farmaco non è arrivato da Firestore,
+    // ed un messaggio se il caricamento fallisce — evita NullPointerException sugli step.
+    when (val stato = caricamentoFarmacoState) {
+        is CaricamentoState.Loading -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            }
+            return
+        }
+        is CaricamentoState.Error -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stato.message,
+                    style = TextStyle(fontSize = 16.sp, color = Color.Red)
+                )
+            }
+            return
+        }
+        is CaricamentoState.Success -> {
+            // procede normalmente
+        }
+    }
+
+    Surface(
+        shape = RoundedCornerShape(44.dp),
+        color = Color(0xFFF5F5F5),
+        modifier = modifier
+            .fillMaxSize()
+            .shadow(elevation = 4.dp, shape = RoundedCornerShape(44.dp))
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+
+            // HEADER FISSO
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 40.dp, start = 16.dp, end = 16.dp, bottom = 12.dp)
+            ) {
+                IconButton(
+                    onClick = onBack,
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Indietro",
+                        tint = Color.White,
+                        modifier = Modifier.requiredSize(20.dp)
+                    )
+                }
+
+                Text(
+                    text = "DrugDose",
+                    style = TextStyle(
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = MaterialTheme.colorScheme.primary
+                    ),
+                    modifier = Modifier.align(Alignment.Center)
+                )
+
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Profilo",
+                        tint = Color.White,
+                        modifier = Modifier.requiredSize(24.dp)
+                    )
+                }
+            }
+
+            // TITOLO + SOTTOTITOLO FARMACO — fisso
+            Column(
+                modifier = Modifier.padding(horizontal = 24.dp)
+            ) {
+                Text(
+                    text = "Compila Prescrizione:",
+                    style = TextStyle(
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color.Black
+                    )
+                )
+                Text(
+                    text = formState.farmaco?.let { "${it.nome} – ${it.nomeCommerciale}" } ?: "Caricamento...",
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // STEP INDICATOR — fisso, non cliccabile
+            StepIndicator(
+                currentStep = currentStep,
+                modifier = Modifier.padding(horizontal = 24.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // CONTENUTO SCROLLABILE — cambia in base allo step
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                item {
+                    when (currentStep) {
+                        PrescrizioneStep.PAZIENTE -> PazienteStep(
+                            formState = formState,
+                            onNomeChange = viewModel::onNomeChange,
+                            onCognomeChange = viewModel::onCognomeChange,
+                            onCodiceFiscaleChange = viewModel::onCodiceFiscaleChange,
+                            onEtaChange = viewModel::onEtaChange,
+                            onPesoChange = viewModel::onPesoChange,
+                            onAltezzaChange = viewModel::onAltezzaChange
+                        )
+                        PrescrizioneStep.FARMACO -> FarmacoStep(
+                            formState = formState,
+                            onFrequenzaChange = viewModel::onFrequenzaChange,
+                            onNumeroConfezioniChange = viewModel::onNumeroConfezioniChange,
+                            onNoteChange = viewModel::onNoteChange
+                        )
+                        PrescrizioneStep.RIEPILOGO -> RiepilogoStep(formState = formState)
+                    }
+                }
+                item { Spacer(Modifier.height(8.dp)) }
+            }
+
+            // BOTTONI NAVIGAZIONE — fissi in basso
+            NavigationButtons(
+                currentStep = currentStep,
+                salvataggioState = salvataggioState,
+                onBack = { viewModel.goToPreviousStep() },
+                onNext = { viewModel.goToNextStep() },
+                onConferma = {
+                    viewModel.confermaPrescrizione(onSuccess = onPrescrizioneCreata)
+                },
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun StepIndicator(
+    currentStep: PrescrizioneStep,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        PrescrizioneStep.values().forEachIndexed { index, step ->
+            val isActive = step == currentStep
+            val isPast = step.ordinal < currentStep.ordinal
+
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(36.dp)
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(
+                        when {
+                            isActive -> MaterialTheme.colorScheme.primary
+                            isPast -> MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)
+                            else -> Color(0xFFEDE7F6)
+                        }
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = step.label,
+                    style = TextStyle(
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = if (isActive) Color.White else MaterialTheme.colorScheme.primary
+                    )
+                )
+            }
+
+            if (index < PrescrizioneStep.values().lastIndex) {
+                Text(
+                    text = "–",
+                    color = Color(0xFFBBBBBB)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun NavigationButtons(
+    currentStep: PrescrizioneStep,
+    salvataggioState: SalvataggioState,
+    onBack: () -> Unit,
+    onNext: () -> Unit,
+    onConferma: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        // Bottone Indietro — nascosto/disabilitato solo se si vuole sul primo step.
+        // Qui resta visibile ma cliccabile solo se non siamo già al primo step.
+        if (currentStep != PrescrizioneStep.PAZIENTE) {
+            Button(
+                onClick = onBack,
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                shape = RoundedCornerShape(24.dp),
+                modifier = Modifier.size(width = 64.dp, height = 50.dp),
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Indietro",
+                    tint = Color.White
+                )
+            }
+        } else {
+            Spacer(modifier = Modifier.size(width = 64.dp, height = 50.dp))
+        }
+
+        when (currentStep) {
+            PrescrizioneStep.PAZIENTE, PrescrizioneStep.FARMACO -> {
+                Button(
+                    onClick = onNext,
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    shape = RoundedCornerShape(24.dp),
+                    modifier = Modifier.height(50.dp)
+                ) {
+                    Text(
+                        text = "Avanti",
+                        style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                    )
+                    Spacer(modifier = Modifier.size(6.dp))
+                    Icon(
+                        imageVector = Icons.Default.ArrowForward,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            }
+            PrescrizioneStep.RIEPILOGO -> {
+                Button(
+                    onClick = onConferma,
+                    enabled = salvataggioState !is SalvataggioState.Loading,
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)), // verde
+                    shape = RoundedCornerShape(24.dp),
+                    modifier = Modifier.height(50.dp)
+                ) {
+                    if (salvataggioState is SalvataggioState.Loading) {
+                        CircularProgressIndicator(
+                            color = Color.White,
+                            strokeWidth = 2.dp,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    } else {
+                        Text(
+                            text = "Conferma",
+                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                        )
+                        Spacer(modifier = Modifier.size(6.dp))
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+// NOTA: questo Preview richiede repository Firestore reali (FarmaciRepositoryImpl)
+// quindi non renderizzerà dati nel pannello Preview di Android Studio senza
+// un emulatore/connessione. Per testare visivamente in isolamento, valuta un
+// fake/mock FarmaciRepository solo per i preview.
+@Preview(widthDp = 431, heightDp = 934)
+@Composable
+private fun CreatePrescriptionScreenPreview() {
+    DrugDoseTheme {
+        CreatePrescriptionScreen(farmacoId = "1")
+    }
+}
