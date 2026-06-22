@@ -53,7 +53,7 @@ class HomeViewModel(
                 },
                 onFailure = {
                     authRepo.logout()
-                    sessioneNonValida = true //AppNavigation rimanda immediamente a Login Page
+                    sessioneNonValida = true //AppNavigation rimanda immediatamente a Login Page
                 }
             )
         }

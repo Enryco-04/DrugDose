@@ -226,6 +226,12 @@ fun CreatePrescriptionScreen(
             )
         }
     }
+    if (viewModel.mostraPopUpErrori) {
+        PopUpErrori(
+            errori = formState.erroriCalcolo ?: emptyList(),
+            onDismiss = { viewModel.chiudiPopUpErrori() }
+        )
+    }
 }
 
 @Composable

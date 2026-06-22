@@ -20,6 +20,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Alignment
+
+import androidx.compose.ui.window.Dialog
 
 @Composable
 fun PazienteStep(
@@ -162,3 +171,57 @@ fun fieldColors() = OutlinedTextFieldDefaults.colors(
     focusedContainerColor = Color(0xFFFAFAFA),
     unfocusedContainerColor = Color(0xFFFAFAFA)
 )
+
+
+
+@Composable
+fun PopUpErrori(
+    errori: List<String>,
+    onDismiss: () -> Unit
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = RoundedCornerShape(24.dp),
+            color = Color.White,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = null,
+                    tint = Color(0xFFC62828),
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+
+                Text(
+                    text = "Impossibile procedere",
+                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                )
+
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    errori.forEach { errore ->
+                        Text(
+                            text = "• $errore",
+                            style = TextStyle(fontSize = 15.sp, color = Color(0xFF4A4A4A))
+                        )
+                    }
+                }
+
+                Button(
+                    onClick = onDismiss,
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    shape = RoundedCornerShape(20.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Ho capito", color = Color.White)
+                }
+            }
+        }
+    }
+}

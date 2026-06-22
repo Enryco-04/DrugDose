@@ -96,9 +96,16 @@ fun FarmacoStep(
                     value = formState.doseArrotondataMg?.let { "${it.toInt()} mg" } ?: "– mg"
                 )
                 LabelValueRow(
-                    label = "Dose unitaria:",
-                    value = formState.doseUnitaria ?: "– u"
+                    label = "Conversione:",
+                    value = formState.numeroUnitaTesto ?: "– u"
                 )
+                formState.erroriCalcolo?.forEach { errore ->
+                    Text(
+                        text = errore,
+                        style = TextStyle(fontSize = 13.sp, color = Color(0xFFC62828)),
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
             }
         }
 

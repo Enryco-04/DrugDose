@@ -68,7 +68,7 @@ fun RiepilogoStep(
                     appendValue(formState.doseEsattaMg?.let { "${"%.0f".format(it)} mg" } ?: "– mg")
                     append(" | ")
                     appendBold("Dose unitaria: ")
-                    appendValue(formState.doseUnitaria ?: "– u")
+                    appendValue(formState.numeroUnitaTesto ?: "– u")
                 }
             )
             RiepilogoLine(label = "Frequenza: ", value = formState.frequenza.ifBlank { "—" })

@@ -38,13 +38,15 @@ sealed class Screen(val route: String) {
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Screen.Loading.route) {
+    NavHost(navController = navController, startDestination = Screen.Home.route) {
 
         composable(Screen.Loading.route) {
             LoadingScreen(
                 onIniziamoClick = {
                     navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Loading.route) { inclusive = true } // Rimuove LoadingScreen dalla backstack, non si torna indietro
+                        popUpTo(Screen.Loading.route) {
+                            inclusive = true
+                        } // Rimuove LoadingScreen dalla backstack, non si torna indietro
                     }
                 }
             )
@@ -54,7 +56,9 @@ fun AppNavigation() {
             LoginScreen(
                 onLoginSuccesso = {
                     navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Login.route) { inclusive = true } //Rimuove tutto cio che c'era prima
+                        popUpTo(Screen.Login.route) {
+                            inclusive = true
+                        } //Rimuove tutto cio che c'era prima
                     }
                 },
                 onVaiRegistrazione = { navController.navigate(Screen.Register.route) }
@@ -77,7 +81,8 @@ fun AppNavigation() {
                 onMenuItemClick = { menuItem ->
                     when (menuItem.action) {
                         HomeAction.DRUG_DOSE -> navController.navigate(Screen.DrugSearchList.route)
-                        HomeAction.PLACEHOLDER -> { /* non fa nulla per ora */ }
+                        HomeAction.PLACEHOLDER -> { /* non fa nulla per ora */
+                        }
                     }
                 },
                 onSessioneNonValida = {
@@ -94,7 +99,7 @@ fun AppNavigation() {
         // ECCEZIONE: Il ViewModel viene legato al ciclo di vita della Home (Screen.Home.route)
         // invece che a quello di questa destinazione. Questo permette di navigare avanti e indietro
         // tra Home e Prescrizioni senza perdere i dati caricati e lo stato della UI.
-        composable(Screen.Prescrizioni.route){
+        composable(Screen.Prescrizioni.route) {
             val viewModel: PrescriptionsViewModel = viewModel(
                 //Assegno l'owner del BackStack di PrescrizioniViewModel a Home, per non uccidere il vecchio ViewModel (Home)
                 viewModelStoreOwner = navController.getBackStackEntry(Screen.Home.route),
@@ -140,9 +145,8 @@ fun AppNavigation() {
                     }
                 )
             }
-        composable(Screen.Creazione.route){
+
 
         }
-
     }
 }

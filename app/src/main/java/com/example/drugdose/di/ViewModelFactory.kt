@@ -9,10 +9,8 @@ import com.example.drugdose.data.repository.FarmaciRepositoryImpl
 import com.example.drugdose.data.repository.PrescrizioniRepository
 import com.example.drugdose.data.repository.PrescrizioniRepositoryImpl
 import com.example.drugdose.ui.screens.create.CreatePrescriptionViewModel
-import com.example.drugdose.ui.screens.search.DrugSearchViewModel
 import com.example.drugdose.ui.screens.home.HomeViewModel
 import com.example.drugdose.ui.screens.login.LoginViewModel
-import com.example.drugdose.ui.screens.prescriptions.PrescriptionsViewModel
 import com.example.drugdose.ui.screens.register.RegisterViewModel
 import com.example.drugdose.ui.screens.search.DrugSearchViewModel
 import com.example.drugdose.ui.screens.prescriptions.PrescriptionsViewModel
@@ -45,7 +43,7 @@ class ViewModelFactory(
                 requireNotNull(farmacoId) {
                     "farmacoId è obbligatorio per CreatePrescriptionViewModel — passalo al costruttore di ViewModelFactory"
                 }
-                CreatePrescriptionViewModel(farmacoId, farmaciRepo) as T
+                CreatePrescriptionViewModel(farmacoId, farmaciRepo, prescrizioniRepo,authRepo) as T
             }
 
             PrescriptionsViewModel::class.java ->

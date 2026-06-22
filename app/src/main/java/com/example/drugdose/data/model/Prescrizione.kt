@@ -8,7 +8,7 @@ data class Prescrizione(
     @get:Exclude //per non mettere id dentro il DB ma solo come identificatore di documento
     val id: String = "",
 
-    val idMedico: String = "",
+    val idMedico: String? = "",
     val status: String = "ATTIVA",
     val dataCreazione: Timestamp? = null,
     val dataScadenza: Timestamp? = null,
