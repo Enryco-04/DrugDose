@@ -11,7 +11,9 @@ import com.example.drugdose.data.repository.PrescrizioniRepositoryImpl
 import com.example.drugdose.ui.screens.create.CreatePrescriptionViewModel
 import com.example.drugdose.ui.screens.home.HomeViewModel
 import com.example.drugdose.ui.screens.login.LoginViewModel
+import com.example.drugdose.ui.screens.prescriptions.PrescriptionsViewModel
 import com.example.drugdose.ui.screens.register.RegisterViewModel
+import com.example.drugdose.ui.screens.search.DrugSearchViewModel
 
 
 class ViewModelFactory(

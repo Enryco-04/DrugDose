@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -50,6 +51,8 @@ fun PazienteStep(
                 value = formState.nome,
                 onValueChange = onNomeChange,
                 placeholder = { Text("Nome", style = fieldPlaceholderStyle()) },
+                isError = formState.nomeError,
+                supportingText = if (formState.nomeError) { { Text("Campo obbligatorio") } } else null,
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
                 colors = fieldColors(),
@@ -59,6 +62,8 @@ fun PazienteStep(
                 value = formState.cognome,
                 onValueChange = onCognomeChange,
                 placeholder = { Text("Cognome", style = fieldPlaceholderStyle()) },
+                isError = formState.cognomeError,
+                supportingText = if (formState.cognomeError) { { Text("Campo obbligatorio") } } else null,
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
                 colors = fieldColors(),
@@ -71,6 +76,8 @@ fun PazienteStep(
                 value = formState.codiceFiscale,
                 onValueChange = { onCodiceFiscaleChange(it.uppercase()) },
                 placeholder = { Text("RSSMRA80A01H501U", style = fieldPlaceholderStyle()) },
+                isError = formState.codiceFiscaleError,
+                supportingText = if (formState.codiceFiscaleError) { { Text("Campo obbligatorio") } } else null,
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
                 colors = fieldColors(),
@@ -83,10 +90,10 @@ fun PazienteStep(
                 value = formState.etaAnni,
                 onValueChange = { if (it.all { c -> c.isDigit() }) onEtaChange(it) },
                 placeholder = { Text("Età (anni)", style = fieldPlaceholderStyle()) },
+                isError = formState.etaError,
+                supportingText = if (formState.etaError) { { Text("Campo obbligatorio") } } else null,
                 singleLine = true,
-                keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-                    keyboardType = KeyboardType.Number
-                ),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 shape = RoundedCornerShape(12.dp),
                 colors = fieldColors(),
                 modifier = Modifier.fillMaxWidth()
@@ -103,10 +110,10 @@ fun PazienteStep(
                     onValueChange = { if (it.all { c -> c.isDigit() || c == '.' }) onPesoChange(it) },
                     placeholder = { Text("Peso", style = fieldPlaceholderStyle()) },
                     suffix = { Text("kg", style = fieldPlaceholderStyle()) },
+                    isError = formState.pesoError,
+                    supportingText = if (formState.pesoError) { { Text("Obbligatorio") } } else null,
                     singleLine = true,
-                    keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-                        keyboardType = KeyboardType.Decimal
-                    ),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     shape = RoundedCornerShape(12.dp),
                     colors = fieldColors(),
                     modifier = Modifier.weight(1f)
@@ -116,10 +123,10 @@ fun PazienteStep(
                     onValueChange = { if (it.all { c -> c.isDigit() }) onAltezzaChange(it) },
                     placeholder = { Text("Altezza", style = fieldPlaceholderStyle()) },
                     suffix = { Text("cm", style = fieldPlaceholderStyle()) },
+                    isError = formState.altezzaError,
+                    supportingText = if (formState.altezzaError) { { Text("Obbligatorio") } } else null,
                     singleLine = true,
-                    keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    ),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     shape = RoundedCornerShape(12.dp),
                     colors = fieldColors(),
                     modifier = Modifier.weight(1f)

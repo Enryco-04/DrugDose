@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -42,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.drugdose.R
 import com.example.drugdose.di.ViewModelFactory
 
 @Composable
@@ -74,14 +76,14 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Accedi",
+                text = stringResource(R.string.accedi),
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.headlineLarge
             )
 
             Text(
-                text = "Siamo contenti di rivederti!",
+                text = stringResource(R.string.welcome_back),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 style = TextStyle(fontSize = 18.sp),
@@ -148,7 +150,9 @@ fun LoginScreen(
                 onClick = { viewModel.login() },
                 enabled = !viewModel.isLoading,
                 shape = RoundedCornerShape(15.dp),
-                modifier = Modifier.fillMaxWidth().height(60.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
             ) {
                 if (viewModel.isLoading) {
                     CircularProgressIndicator(modifier = Modifier.size(24.dp), color = Color.White)
