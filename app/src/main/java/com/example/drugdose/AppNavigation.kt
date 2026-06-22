@@ -92,6 +92,12 @@ fun AppNavigation() {
                 },
                 onVaiAPrescrizioniClick = {
                     navController.navigate(Screen.Prescrizioni.route)
+                } ,
+
+                onLogoutClick = {
+                    navController.navigate(Screen.Loading.route) {
+                        popUpTo(Screen.Loading.route) { inclusive = false }
+                    }
                 }
             )
         }
@@ -145,8 +151,6 @@ fun AppNavigation() {
                     }
                 )
             }
-
-
         }
     }
 }
