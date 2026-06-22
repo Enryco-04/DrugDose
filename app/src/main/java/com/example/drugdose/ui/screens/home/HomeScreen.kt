@@ -36,6 +36,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,6 +53,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.drugdose.di.ViewModelFactory
 import com.example.drugdose.ui.components.HomeCard  // ← importato da components
+import com.example.drugdose.ui.components.ProfileDropdownMenu
 import com.example.drugdose.ui.model.HomeMenuItem
 
 @Composable
@@ -58,7 +62,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(factory = ViewModelFactory()),
     onMenuItemClick: (HomeMenuItem) -> Unit = {},
     onSessioneNonValida: () -> Unit = {},
-    onVaiAPrescrizioniClick: () -> Unit ={}
+    onVaiAPrescrizioniClick: () -> Unit ={},
+    onLogoutClick: () -> Unit = {}
 
 ) {
     LaunchedEffect(viewModel.sessioneNonValida) {
@@ -70,51 +75,18 @@ fun HomeScreen(
     val pagerState = rememberPagerState(
         pageCount = { pages.size.coerceAtLeast(1) }
     )
+    // Stato del menu a discesa del profilo
+    var profileMenuExpanded by remember { mutableStateOf(false) }
+
 
     Surface(
-        shape = RoundedCornerShape(44.dp),
         color = Color(0xFFF5F5F5),
         modifier = modifier
             .fillMaxSize()
-            .shadow(elevation = 4.dp, shape = RoundedCornerShape(44.dp))
     ) {
-        Box(
+        Box (
             modifier = Modifier.fillMaxSize()
         ) {
-            // Top Bar
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.Start),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .align(alignment = Alignment.TopEnd)
-                    .padding(top = 33.dp, end = 26.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Notifications,
-                    contentDescription = "Notifiche",
-                    tint = Color.Black,
-                    modifier = Modifier.requiredSize(size = 27.dp)
-                )
-                Box(
-                    modifier = Modifier.requiredSize(size = 45.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(CircleShape)
-                            .background(color = MaterialTheme.colorScheme.primary)
-                            .border(border = BorderStroke(2.dp, Color.White), shape = CircleShape)
-                    )
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Profile",
-                        tint = Color.White,
-                        modifier = Modifier.requiredSize(size = 30.dp)
-                    )
-                }
-            }
-
             Icon(
                 imageVector = Icons.Default.Menu,
                 contentDescription = "Menu",
@@ -213,6 +185,27 @@ fun HomeScreen(
                         )
                     }
                 }
+            }
+
+            // Top Bar
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.Start),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .align(alignment = Alignment.TopEnd)
+                    .padding(top = 33.dp, end = 26.dp)
+            ) {
+
+
+                ProfileDropdownMenu(
+                    expanded = profileMenuExpanded,
+                    onAvatarClick = { profileMenuExpanded = !profileMenuExpanded },
+                    onDismiss = { profileMenuExpanded = false },
+                    onLogoutClick = {
+                        profileMenuExpanded = false
+                        onLogoutClick()
+                    }
+                )
             }
 
             // Bottom Navigation Bar

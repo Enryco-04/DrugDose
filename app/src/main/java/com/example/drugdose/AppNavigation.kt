@@ -38,7 +38,7 @@ sealed class Screen(val route: String) {
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Screen.Loading.route) {
+    NavHost(navController = navController, startDestination = Screen.Home.route) {
 
         composable(Screen.Loading.route) {
             LoadingScreen(
@@ -87,6 +87,12 @@ fun AppNavigation() {
                 },
                 onVaiAPrescrizioniClick = {
                     navController.navigate(Screen.Prescrizioni.route)
+                } ,
+
+                onLogoutClick = {
+                    navController.navigate(Screen.Loading.route) {
+                        popUpTo(Screen.Loading.route) { inclusive = false }
+                    }
                 }
             )
         }
@@ -140,9 +146,6 @@ fun AppNavigation() {
                     }
                 )
             }
-        composable(Screen.Creazione.route){
-
         }
-
     }
 }

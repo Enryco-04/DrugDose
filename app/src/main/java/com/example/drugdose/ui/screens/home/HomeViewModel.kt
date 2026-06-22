@@ -83,4 +83,10 @@ class HomeViewModel(
     fun removeMenuItem(id: Int) {
         _menuItems.update { currentList -> currentList.filter { it.id != id } }
     }
+
+    fun logout() {
+        viewModelScope.launch {
+            authRepo.logout()
+        }
+    }
 }
