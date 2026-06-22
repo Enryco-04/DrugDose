@@ -135,4 +135,8 @@ class PrescriptionsViewModel(
             )
         }
     }
+
+    fun refreshPrescrizioni() {
+        loadPrescrizioni()
+    }
 }

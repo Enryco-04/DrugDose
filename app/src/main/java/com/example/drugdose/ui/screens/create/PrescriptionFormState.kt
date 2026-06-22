@@ -24,7 +24,9 @@ data class PrescriptionFormState(
     // --- Calcolo dose (placeholder — da collegare alla logica reale) ---
     val doseEsattaMg: Double? = null,
     val doseArrotondataMg: Double? = null,
-    val doseUnitaria: String? = null
+    val numeroUnitaTesto: String? = null ,
+    val erroriCalcolo: List<String>? = null
+
 )
 
 enum class PrescrizioneStep(val label: String) {

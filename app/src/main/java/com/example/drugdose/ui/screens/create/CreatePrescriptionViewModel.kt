@@ -1,8 +1,18 @@
 package com.example.drugdose.ui.screens.create
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.drugdose.data.calculator.Calculator
+import com.example.drugdose.data.model.Farmaco
+import com.example.drugdose.data.model.PazienteEmbedded
+import com.example.drugdose.data.model.Prescrizione
+import com.example.drugdose.data.repository.AuthRepository
 import com.example.drugdose.data.repository.FarmaciRepository
+import com.example.drugdose.data.repository.PrescrizioniRepository
+import com.google.firebase.Timestamp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +21,9 @@ import kotlinx.coroutines.launch
 
 class CreatePrescriptionViewModel(
     private val farmacoId: String,
-    private val farmaciRepo: FarmaciRepository
+    private val farmaciRepo: FarmaciRepository,
+    private val prescrizioniRepo: PrescrizioniRepository,
+    private val authRepo: AuthRepository
 ) : ViewModel() {
 
     private val _formState = MutableStateFlow(PrescriptionFormState())
@@ -26,6 +38,13 @@ class CreatePrescriptionViewModel(
     // Stato di caricamento del farmaco (separato dal salvataggio finale)
     private val _caricamentoFarmacoState = MutableStateFlow<CaricamentoState>(CaricamentoState.Loading)
     val caricamentoFarmacoState: StateFlow<CaricamentoState> = _caricamentoFarmacoState.asStateFlow()
+
+    var mostraPopUpErrori by mutableStateOf(false)
+        private set
+
+    fun chiudiPopUpErrori() {
+        mostraPopUpErrori = false
+    }
 
     init {
         caricaFarmaco()
@@ -77,31 +96,68 @@ class CreatePrescriptionViewModel(
      */
     private fun ricalcolaDose() {
         val state = _formState.value
-        val peso = state.pesoKg.toDoubleOrNull()
         val farmaco = state.farmaco
 
-        if (peso == null || farmaco == null) {
+        val peso = state.pesoKg.toDoubleOrNull()
+        val altezza = state.altezzaCm.toDoubleOrNull()
+        val eta = state.etaAnni.toIntOrNull()
+
+        // Se manca anche un solo dato necessario, azzera il risultato — non c'è errore da mostrare,
+        // semplicemente l'utente non ha ancora finito di compilare
+        if (farmaco == null || peso == null || altezza == null || eta == null) {
             _formState.value = state.copy(
                 doseEsattaMg = null,
                 doseArrotondataMg = null,
-                doseUnitaria = null
+                numeroUnitaTesto  = null,
+                erroriCalcolo = null
             )
             return
         }
 
-        val doseEsatta = peso * 3.7 // valore fittizio
-        val doseArrotondata = Math.round(doseEsatta / 50.0) * 50.0
+        val risultato = Calculator.calcola(farmaco, peso, altezza, eta)
 
         _formState.value = state.copy(
-            doseEsattaMg = doseEsatta,
-            doseArrotondataMg = doseArrotondata,
-            doseUnitaria = "1 –"
+            doseEsattaMg = risultato.doseRealeMg,
+            doseArrotondataMg = risultato.doseArrotondataMg,
+            numeroUnitaTesto  = formatNumeroUnita(risultato.numeroUnitaSomministrare, farmaco),
+            erroriCalcolo = risultato.erroriCalcolo
         )
+    }
+
+    private fun formatNumeroUnita(numeroUnita: Double, farmaco: Farmaco): String {
+        val count = numeroUnita.toInt()
+        val forma = pluralizza(farmaco.formaFarmaceuticaSomministrazione, count)
+        return "$count $forma"
+    }
+
+    private fun pluralizza(forma: String, count: Int): String {
+        if (count == 1) return forma
+        return when (forma.lowercase()) {
+            "fiala" -> "fiale"
+            "capsula" -> "capsule"
+            "compressa" -> "compresse"
+            "bustina" -> "bustine"
+            "flaconcino" -> "flaconcini"
+            else -> forma
+        }
     }
 
     // --- Navigazione tra step ---
     fun goToNextStep() {
+        if (_currentStep.value == PrescrizioneStep.PAZIENTE && !_formState.value.erroriCalcolo.isNullOrEmpty()) {
+            mostraPopUpErrori = true
+            return // non procede al Farmaco se ci sono errori clinici (peso/età sotto soglia)
+        }
+
+        val numeroScatole = _formState.value.numeroConfezioni
+
+        if (_currentStep.value == PrescrizioneStep.FARMACO && numeroScatole.isBlank() ) {
+            // qui puoi creare un messaggio errore se vuoi
+            return
+        }
+
         _currentStep.value = when (_currentStep.value) {
+
             PrescrizioneStep.PAZIENTE -> PrescrizioneStep.FARMACO
             PrescrizioneStep.FARMACO -> PrescrizioneStep.RIEPILOGO
             PrescrizioneStep.RIEPILOGO -> PrescrizioneStep.RIEPILOGO
@@ -121,8 +177,55 @@ class CreatePrescriptionViewModel(
         viewModelScope.launch {
             _salvataggioState.value = SalvataggioState.Loading
             try {
-                // TODO: sostituire con vera chiamata a PrescrizioniRepository.creaPrescrizione(...)
-                delay(1500) // simula latenza di rete
+                // salvo numero untia e forma farmaceutica
+
+                val state = _formState.value   // <-- manca questo
+
+
+                val numeroUnita = state.numeroUnitaTesto
+                    ?.substringBefore(" ")
+                    ?.toIntOrNull()
+                    ?: 0
+
+                val idMedico = authRepo.getMedicoCorrente().fold(
+                    onSuccess = { it?.id},
+                    onFailure = { "" }
+                )
+
+                val farmaco = _formState.value.farmaco ?: return@launch
+
+                //Chiama PrescrizioniRepo
+                //Raccoglie tutti i dati necessari al salvataggio su DB
+                val prescrizione = Prescrizione(
+                    idMedico = idMedico,
+                    dataCreazione = Timestamp.now(),
+                    dataScadenza = Timestamp(Timestamp.now().seconds + (30L*24L*60L*60L),0),
+                paziente = PazienteEmbedded(
+                    nome = state.nome,
+                    cognome = state.cognome,
+                    codiceFiscale = state.codiceFiscale
+                ),
+
+                idFarmaco = farmaco.id,
+                nomeFarmaco = farmaco.nome,
+                nomeCommercialeFarmaco = farmaco.nomeCommerciale,
+
+                dosaggioMg = state.doseArrotondataMg ?: 0.0,
+
+                formaFarmaceuticaSomministrazione =
+                    farmaco.formaFarmaceuticaSomministrazione,
+
+                numeroUnitaSomministrazione = numeroUnita,
+
+                quantita = state.numeroConfezioni.toIntOrNull() ?: 1,
+
+                frequenza = state.frequenza,
+                note = state.note
+                )
+
+
+
+                prescrizioniRepo.creaPrescrizione(prescrizione)
                 _salvataggioState.value = SalvataggioState.Success
                 onSuccess()
             } catch (e: Exception) {

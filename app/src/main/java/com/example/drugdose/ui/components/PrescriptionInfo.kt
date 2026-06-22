@@ -83,10 +83,10 @@ fun PrescriptionInfo(
                     item {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
+                                modifier = Modifier.weight(1f),
                                 text = prescrizione.nomeFarmaco,
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Bold
