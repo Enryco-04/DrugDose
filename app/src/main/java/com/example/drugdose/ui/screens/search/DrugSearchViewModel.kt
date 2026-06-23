@@ -79,4 +79,10 @@ class DrugSearchViewModel(
     fun retry() {
         loadFarmaci()
     }
+
+    fun logout() {
+        viewModelScope.launch {
+            authRepo.logout()
+        }
+    }
 }
