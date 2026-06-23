@@ -1,5 +1,7 @@
 package com.example.drugdose.ui.screens.search
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -39,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -199,8 +202,9 @@ fun DrugSearchScreen(
             }
         }
     }
+    //temporaneo per avere un intent
+    val context = LocalContext.current
 
-    // Popup con i dettagli del farmaco selezionato
     farmacoSelezionato?.let { farmaco ->
         DrugInfo(
             farmaco = farmaco,
@@ -208,6 +212,10 @@ fun DrugSearchScreen(
             onCreaPrescrizione = { selezionato ->
                 onCreaPrescrizione(selezionato)
                 farmacoSelezionato = null
+            },
+            onApriLink = { url ->
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                context.startActivity(intent)
             }
         )
     }

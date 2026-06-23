@@ -23,6 +23,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.drugdose.data.model.Farmaco
 import com.example.drugdose.data.model.Rcp
 import com.example.drugdose.ui.theme.DrugDoseTheme
@@ -44,6 +46,7 @@ fun DrugInfo(
     farmaco: Farmaco,
     onDismiss: () -> Unit,
     onCreaPrescrizione: (Farmaco) -> Unit,
+    onApriLink: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Dialog(
@@ -184,14 +187,16 @@ fun DrugInfo(
                     }
                     if (farmaco.fonteRcp.isNotBlank()) {
                         item {
-                            Text(
-                                text = farmaco.fonteRcp,
-                                style = TextStyle(
-                                    fontSize = 13.sp,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    textDecoration = TextDecoration.Underline
+                            TextButton(onClick = { onApriLink(farmaco.fonteRcp) }) {
+                                Text(
+                                    text = farmaco.fonteRcp,
+                                    style = TextStyle(
+                                        fontSize = 13.sp,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        textDecoration = TextDecoration.Underline
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
 

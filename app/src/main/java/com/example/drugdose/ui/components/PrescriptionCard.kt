@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.example.drugdose.data.model.PazienteEmbedded
 import com.example.drugdose.data.model.Prescrizione
 import androidx.compose.runtime.remember
+import androidx.compose.ui.text.style.TextOverflow
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -67,13 +68,16 @@ fun PrescriptionCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            Column {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
                 Text(
                     text = prescrizione.nomeFarmaco,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = Color.Black,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 Text(
@@ -85,7 +89,7 @@ fun PrescriptionCard(
 
 
             StatusBadge(
-                stato = prescrizione.status
+                stato = prescrizione.statoVisualizzato()
             )
         }
 

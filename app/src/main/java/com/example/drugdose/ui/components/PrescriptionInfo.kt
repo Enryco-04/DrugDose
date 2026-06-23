@@ -91,7 +91,7 @@ fun PrescriptionInfo(
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Bold
                             )
-                            StatusBadge(stato = prescrizione.status)
+                            StatusBadge(stato = prescrizione.statoVisualizzato())
                         }
                     }
 
@@ -218,7 +218,7 @@ fun PrescriptionInfo(
                 }
 
                 // ========== BOTTONE FISSO (solo se ATTIVA) ==========
-                if (prescrizione.status == "ATTIVA") {
+                if (prescrizione.statoVisualizzato() == "ATTIVA") {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()

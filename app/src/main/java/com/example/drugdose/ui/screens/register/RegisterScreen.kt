@@ -96,6 +96,7 @@ fun RegisterScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 OutlinedTextField(
+                    singleLine = true,
                     value = viewModel.name,
                     onValueChange = { viewModel.onNameChange(it) },
                     label = { Text("Nome") },
@@ -106,6 +107,7 @@ fun RegisterScreen(
                 )
 
                 OutlinedTextField(
+                    singleLine = true,
                     value = viewModel.surname,
                     onValueChange = { viewModel.onSurnameChange(it) },
                     label = { Text("Cognome") },
@@ -116,6 +118,7 @@ fun RegisterScreen(
                 )
 
                 OutlinedTextField(
+                    singleLine = true,
                     value = viewModel.email,
                     onValueChange = { viewModel.onEmailChange(it) },
                     label = { Text("Email") },
@@ -131,6 +134,7 @@ fun RegisterScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     OutlinedTextField(
+                        singleLine = true,
                         value = viewModel.albumNumber,
                         onValueChange = { viewModel.onAlbumNumberChange(it) },
                         label = { Text("Numero d'albo") },
@@ -141,6 +145,7 @@ fun RegisterScreen(
                     )
 
                     OutlinedTextField(
+                        singleLine = true,
                         value = viewModel.province,
                         onValueChange = { viewModel.onProvinceChange(it.uppercase()) },
                         label = { Text("Prov.") },
@@ -152,6 +157,7 @@ fun RegisterScreen(
                 }
 
                 OutlinedTextField(
+                    singleLine = true,
                     value = viewModel.password,
                     onValueChange = { viewModel.onPasswordChange(it) },
                     label = { Text("Password") },
@@ -169,6 +175,7 @@ fun RegisterScreen(
                 )
 
                 OutlinedTextField(
+                    singleLine = true,
                     value = viewModel.confirmPassword,
                     onValueChange = { viewModel.onConfirmPasswordChange(it) },
                     label = { Text("Conferma Password") },
