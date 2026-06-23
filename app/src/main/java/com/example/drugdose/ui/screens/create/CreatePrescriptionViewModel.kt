@@ -36,8 +36,10 @@ class CreatePrescriptionViewModel(
     val salvataggioState: StateFlow<SalvataggioState> = _salvataggioState.asStateFlow()
 
     // Stato di caricamento del farmaco (separato dal salvataggio finale)
-    private val _caricamentoFarmacoState = MutableStateFlow<CaricamentoState>(CaricamentoState.Loading)
-    val caricamentoFarmacoState: StateFlow<CaricamentoState> = _caricamentoFarmacoState.asStateFlow()
+    private val _caricamentoFarmacoState =
+        MutableStateFlow<CaricamentoState>(CaricamentoState.Loading)
+    val caricamentoFarmacoState: StateFlow<CaricamentoState> =
+        _caricamentoFarmacoState.asStateFlow()
 
     var mostraPopUpErrori by mutableStateOf(false)
         private set
@@ -60,7 +62,8 @@ class CreatePrescriptionViewModel(
                         _formState.value = _formState.value.copy(farmaco = farmaco)
                         _caricamentoFarmacoState.value = CaricamentoState.Success
                     } else {
-                        _caricamentoFarmacoState.value = CaricamentoState.Error("Farmaco non trovato")
+                        _caricamentoFarmacoState.value =
+                            CaricamentoState.Error("Farmaco non trovato")
                     }
                 },
                 onFailure = { error ->
@@ -72,17 +75,22 @@ class CreatePrescriptionViewModel(
         }
     }
 
-    // --- Aggiornamento campi Step 1: Paziente ---
-    fun onNomeChange(value: String) = updateForm { it.copy(nome = value) }
-    fun onCognomeChange(value: String) = updateForm { it.copy(cognome = value) }
-    fun onCodiceFiscaleChange(value: String) = updateForm { it.copy(codiceFiscale = value) }
-    fun onEtaChange(value: String) = updateForm { it.copy(etaAnni = value) }
-    fun onPesoChange(value: String) = updateForm { it.copy(pesoKg = value) }
-    fun onAltezzaChange(value: String) = updateForm { it.copy(altezzaCm = value) }
+    fun onNomeChange(value: String) = updateForm { it.copy(nome = value, nomeError = false) }
+    fun onCognomeChange(value: String) =
+        updateForm { it.copy(cognome = value, cognomeError = false) }
 
-    // --- Aggiornamento campi Step 2: Farmaco ---
+    fun onCodiceFiscaleChange(value: String) =
+        updateForm { it.copy(codiceFiscale = value, codiceFiscaleError = false) }
+
+    fun onEtaChange(value: String) = updateForm { it.copy(etaAnni = value, etaError = false) }
+    fun onPesoChange(value: String) = updateForm { it.copy(pesoKg = value, pesoError = false) }
+    fun onAltezzaChange(value: String) =
+        updateForm { it.copy(altezzaCm = value, altezzaError = false) }
+
+    fun onNumeroConfezioniChange(value: String) =
+        updateForm { it.copy(numeroConfezioni = value, numeroConfezioniError = false) }
+
     fun onFrequenzaChange(value: String) = updateForm { it.copy(frequenza = value) }
-    fun onNumeroConfezioniChange(value: String) = updateForm { it.copy(numeroConfezioni = value) }
     fun onNoteChange(value: String) = updateForm { it.copy(note = value) }
 
     private fun updateForm(transform: (PrescriptionFormState) -> PrescriptionFormState) {
@@ -114,7 +122,7 @@ class CreatePrescriptionViewModel(
             _formState.value = state.copy(
                 doseEsattaMg = null,
                 doseArrotondataMg = null,
-                numeroUnitaTesto  = null,
+                numeroUnitaTesto = null,
                 erroriCalcolo = null
             )
             return
@@ -125,7 +133,7 @@ class CreatePrescriptionViewModel(
         _formState.value = state.copy(
             doseEsattaMg = risultato.doseRealeMg,
             doseArrotondataMg = risultato.doseArrotondataMg,
-            numeroUnitaTesto  = formatNumeroUnita(risultato.numeroUnitaSomministrare, farmaco),
+            numeroUnitaTesto = formatNumeroUnita(risultato.numeroUnitaSomministrare, farmaco),
             erroriCalcolo = risultato.erroriCalcolo
         )
     }
@@ -148,25 +156,50 @@ class CreatePrescriptionViewModel(
         }
     }
 
-    // --- Navigazione tra step ---
     fun goToNextStep() {
-        if (_currentStep.value == PrescrizioneStep.PAZIENTE && !_formState.value.erroriCalcolo.isNullOrEmpty()) {
-            mostraPopUpErrori = true
-            return // non procede al Farmaco se ci sono errori clinici (peso/età sotto soglia)
-        }
+        when (_currentStep.value) {
 
-        val numeroScatole = _formState.value.numeroConfezioni
+            PrescrizioneStep.PAZIENTE -> {
+                val s = _formState.value
+                val hasErrors = s.nome.isBlank() || s.cognome.isBlank() ||
+                        s.codiceFiscale.isBlank() || s.etaAnni.isBlank() ||
+                        s.pesoKg.isBlank() || s.altezzaCm.isBlank()
 
-        if (_currentStep.value == PrescrizioneStep.FARMACO && numeroScatole.isBlank() ) {
-            // qui puoi creare un messaggio errore se vuoi
-            return
-        }
+                // aggiorna i flag di errore — rosso solo sui campi vuoti
+                _formState.value = s.copy(
+                    nomeError = s.nome.isBlank(),
+                    cognomeError = s.cognome.isBlank(),
+                    codiceFiscaleError = s.codiceFiscale.isBlank(),
+                    etaError = s.etaAnni.isBlank(),
+                    pesoError = s.pesoKg.isBlank(),
+                    altezzaError = s.altezzaCm.isBlank()
+                )
 
-        _currentStep.value = when (_currentStep.value) {
+                if (hasErrors) return
 
-            PrescrizioneStep.PAZIENTE -> PrescrizioneStep.FARMACO
-            PrescrizioneStep.FARMACO -> PrescrizioneStep.RIEPILOGO
-            PrescrizioneStep.RIEPILOGO -> PrescrizioneStep.RIEPILOGO
+                if (!s.erroriCalcolo.isNullOrEmpty()) {
+                    mostraPopUpErrori = true
+                    return
+                }
+
+                _currentStep.value = PrescrizioneStep.FARMACO
+            }
+
+            PrescrizioneStep.FARMACO -> {
+                val s = _formState.value
+                val hasErrors = s.numeroConfezioni.isBlank()
+
+                _formState.value = s.copy(
+                    numeroConfezioniError = s.numeroConfezioni.isBlank()
+                )
+
+                if (hasErrors) return
+
+                _currentStep.value = PrescrizioneStep.RIEPILOGO
+            }
+
+            PrescrizioneStep.RIEPILOGO -> { /* niente — usa il bottone Conferma */
+            }
         }
     }
 
@@ -185,7 +218,7 @@ class CreatePrescriptionViewModel(
             try {
                 // salvo numero untia e forma farmaceutica
 
-                val state = _formState.value   // <-- manca questo
+                val state = _formState.value
 
 
                 val numeroUnita = state.numeroUnitaTesto
@@ -194,7 +227,7 @@ class CreatePrescriptionViewModel(
                     ?: 0
 
                 val idMedico = authRepo.getMedicoCorrente().fold(
-                    onSuccess = { it?.id},
+                    onSuccess = { it?.id },
                     onFailure = { "" }
                 )
 
@@ -205,29 +238,28 @@ class CreatePrescriptionViewModel(
                 val prescrizione = Prescrizione(
                     idMedico = idMedico,
                     dataCreazione = Timestamp.now(),
-                    dataScadenza = Timestamp(Timestamp.now().seconds + (30L*24L*60L*60L),0),
-                paziente = PazienteEmbedded(
-                    nome = state.nome,
-                    cognome = state.cognome,
-                    codiceFiscale = state.codiceFiscale
-                ),
+                    dataScadenza =Timestamp(Timestamp.now().seconds + (30L * 24L * 60L * 60L), 0),
+                    paziente = PazienteEmbedded(
+                        nome = state.nome,
+                        cognome = state.cognome,
+                        codiceFiscale = state.codiceFiscale
+                    ),
 
-                idFarmaco = farmaco.id,
-                nomeFarmaco = farmaco.nome,
-                nomeCommercialeFarmaco = farmaco.nomeCommerciale,
+                    idFarmaco = farmaco.id,
+                    nomeFarmaco = farmaco.nome,
+                    nomeCommercialeFarmaco = farmaco.nomeCommerciale,
 
-                dosaggioMg = state.doseArrotondataMg ?: 0.0,
+                    dosaggioMg = state.doseArrotondataMg ?: 0.0,
 
-                formaFarmaceuticaSomministrazione =
-                    farmaco.formaFarmaceuticaSomministrazione,
+                    formaFarmaceuticaSomministrazione =
+                        farmaco.formaFarmaceuticaSomministrazione,
 
-                numeroUnitaSomministrazione = numeroUnita,
+                    numeroUnitaSomministrazione = numeroUnita,
 
-                quantita = state.numeroConfezioni.toIntOrNull() ?: 1,
+                    quantita = state.numeroConfezioni.toIntOrNull() ?: 1,
 
-                frequenza = state.frequenza,
-                note = state.note
-                )
+                    frequenza = state.frequenza,
+                    note = state.note.takeIf { it.isNotEmpty() } ?: "Nessuna nota")
 
 
 

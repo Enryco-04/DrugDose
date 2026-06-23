@@ -31,6 +31,9 @@ class DrugSearchViewModel(
     var errore by mutableStateOf<String?>(null)
         private set
 
+    var URLRcp:String by mutableStateOf("")
+
+
     val farmacoFiltrati: StateFlow<List<Farmaco>> = combine(
         _farmaci,
         _searchQuery

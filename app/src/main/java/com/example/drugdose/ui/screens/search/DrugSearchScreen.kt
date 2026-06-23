@@ -68,7 +68,6 @@ fun DrugSearchScreen(
     var farmacoSelezionato by remember { mutableStateOf<Farmaco?>(null) }
 
     var profileMenuExpanded by remember { mutableStateOf(false) }
-    //Box necessaria per mettere in z-index corretto il dropDownMenu
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -234,6 +233,17 @@ fun DrugSearchScreen(
             }
         }
 
+        // Popup con i dettagli del farmaco selezionato
+        farmacoSelezionato?.let { farmaco ->
+            DrugInfo(
+                farmaco = farmaco,
+                onDismiss = { farmacoSelezionato = null },
+                onCreaPrescrizione = { selezionato ->
+                    onCreaPrescrizione(selezionato)
+                    farmacoSelezionato = null
+                }
+            )
+        }
         // MENU PROFILO FUORI DALLA SURFACE
         ProfileDropdownMenu(
             expanded = profileMenuExpanded,
@@ -254,16 +264,6 @@ fun DrugSearchScreen(
                     end = 16.dp
                 )
         )
-        // Popup con i dettagli del farmaco selezionato
-        farmacoSelezionato?.let { farmaco ->
-            DrugInfo(
-                farmaco = farmaco,
-                onDismiss = { farmacoSelezionato = null },
-                onCreaPrescrizione = { selezionato ->
-                    onCreaPrescrizione(selezionato)
-                    farmacoSelezionato = null
-                }
-            )
-        }
+
     }
 }

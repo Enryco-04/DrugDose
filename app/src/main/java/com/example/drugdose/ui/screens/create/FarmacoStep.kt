@@ -20,6 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.text.KeyboardOptions
+
 
 @Composable
 fun FarmacoStep(
@@ -109,7 +111,7 @@ fun FarmacoStep(
             }
         }
 
-        FormCard(title = "Frequenza") {
+        FormCard(title = "Frequenza (opzionale)") {
             OutlinedTextField(
                 value = formState.frequenza,
                 onValueChange = onFrequenzaChange,
@@ -126,17 +128,17 @@ fun FarmacoStep(
                 value = formState.numeroConfezioni,
                 onValueChange = { if (it.all { c -> c.isDigit() }) onNumeroConfezioniChange(it) },
                 placeholder = { Text("es. 2, 3, …", style = fieldPlaceholderStyle()) },
+                isError = formState.numeroConfezioniError,
+                supportingText = if (formState.numeroConfezioniError) { { Text("Campo obbligatorio") } } else null,
                 singleLine = true,
-                keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-                    keyboardType = KeyboardType.Number
-                ),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 shape = RoundedCornerShape(12.dp),
                 colors = fieldColors(),
                 modifier = Modifier.fillMaxWidth()
             )
         }
 
-        FormCard(title = "Note") {
+        FormCard(title = "Note (opzionale)") {
             OutlinedTextField(
                 value = formState.note,
                 onValueChange = onNoteChange,
