@@ -98,6 +98,12 @@ class CreatePrescriptionViewModel(
         ricalcolaDose()
     }
 
+    fun logout() {
+        viewModelScope.launch {
+            authRepo.logout()
+        }
+    }
+
     /**
      * PLACEHOLDER — calcolo dose non reale.
      * TODO: collegare la vera logica basata su peso/età/farmaco.doseUnitariaMg/strategiaArrotondamento.

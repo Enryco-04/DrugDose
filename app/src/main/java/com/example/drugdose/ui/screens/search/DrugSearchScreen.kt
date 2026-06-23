@@ -2,7 +2,10 @@ package com.example.drugdose.ui.screens.search
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,7 +45,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -52,19 +54,23 @@ import com.example.drugdose.data.model.Farmaco
 import com.example.drugdose.di.ViewModelFactory
 import com.example.drugdose.ui.components.DrugCard
 import com.example.drugdose.ui.components.DrugInfo
+import com.example.drugdose.ui.components.ProfileDropdownMenu
 
 @Composable
 fun DrugSearchScreen(
     modifier: Modifier = Modifier,
     viewModel: DrugSearchViewModel = viewModel(factory = ViewModelFactory()),
     onBack: () -> Unit = {},
-    onCreaPrescrizione: (Farmaco) -> Unit = {}
+    onCreaPrescrizione: (Farmaco) -> Unit = {},
+    onLogoutClick: () -> Unit,
 ) {
     val farmaci by viewModel.farmacoFiltrati.collectAsStateWithLifecycle()
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
 
     // Farmaco selezionato per il popup (null = chiuso)
     var farmacoSelezionato by remember { mutableStateOf<Farmaco?>(null) }
+
+    var profileMenuExpanded by remember { mutableStateOf(false) }
 
     Surface(
         shape = RoundedCornerShape(44.dp),
@@ -89,7 +95,8 @@ fun DrugSearchScreen(
                         .align(Alignment.CenterStart)
                         .size(50.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primary),
+                        .shadow(elevation = 8.dp, shape = CircleShape)
+                        .background(MaterialTheme.colorScheme.onPrimary),
                     contentAlignment = Alignment.Center
                 ) {
                     IconButton(onClick = onBack) {
@@ -113,22 +120,8 @@ fun DrugSearchScreen(
                     modifier = Modifier.align(Alignment.Center)
                 )
 
-                // Avatar profilo
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .size(50.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primary),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Profile",
-                        tint = Color.White,
-                        modifier = Modifier.requiredSize(size = 30.dp)
-                    )
-                }
+                //TODO Avatar profilo allarga l'header
+
             }
 
             // Titolo sezione
@@ -228,8 +221,29 @@ fun DrugSearchScreen(
     }
 }
 
-@Preview(widthDp = 431, heightDp = 934)
 @Composable
-private fun DrugDoseScreenPreview() {
-    DrugSearchScreen()
+fun ProfileMenuOverlay(
+    onDismiss: () -> Unit,
+    onLogoutClick: () -> Unit,
+) {
+    var profileMenuExpanded by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+        // menu in alto a destra
+        ProfileDropdownMenu(
+            expanded = profileMenuExpanded,
+            onAvatarClick = { profileMenuExpanded = !profileMenuExpanded },
+            onDismiss = { profileMenuExpanded = false },
+            onLogoutClick = {
+                profileMenuExpanded = false
+                onLogoutClick()
+            },
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 40.dp, end = 16.dp)
+        )
+    }
 }

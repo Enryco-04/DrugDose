@@ -129,6 +129,11 @@ fun AppNavigation() {
                     // Passiamo solo l'id (String) — niente IllegalArgumentException
                     // su SavedStateHandle, perché Farmaco non è Parcelable.
                     navController.navigate(Screen.Creazione.createRoute(farmaco.id))
+                },
+                onLogoutClick = {
+                    navController.navigate(Screen.Loading.route) {
+                        popUpTo(Screen.Loading.route) { inclusive = false }
+                    }
                 }
             )
         }
@@ -143,8 +148,12 @@ fun AppNavigation() {
                 CreatePrescriptionScreen(
                     farmacoId = farmacoId,
                     onBack = { navController.popBackStack() },
+                    onLogoutClick = {
+                        navController.navigate(Screen.Loading.route) {
+                            popUpTo(Screen.Loading.route) { inclusive = false }
+                        }
+                    },
                     onPrescrizioneCreata = {
-                        // Naviga a Prescrizioni e pulisce lo stack fino a DrugSearchList
                         navController.navigate(Screen.Prescrizioni.route) {
                             popUpTo(Screen.DrugSearchList.route) { inclusive = false }
                         }
