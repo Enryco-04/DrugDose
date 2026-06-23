@@ -5,9 +5,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,8 +27,6 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -54,15 +50,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.drugdose.R
 import com.example.drugdose.data.model.Prescrizione
 import com.example.drugdose.ui.components.PrescriptionCard
 import com.example.drugdose.ui.components.PrescriptionInfo
+import com.example.drugdose.ui.components.ProfileDropdownMenu
 
 // Eccezione: PrescrizioniViewModel non è iniettato dalla factory ma deve essere gestito in AppNavigation.kt per il backstack
 // Così si può avere un backstack con dentro Home e Prescrizioni
@@ -70,7 +65,8 @@ import com.example.drugdose.ui.components.PrescriptionInfo
 fun PrescrizioniScreen(
     modifier: Modifier = Modifier,
     viewModel: PrescriptionsViewModel,
-    onHomeClick: () -> Unit = {}
+    onHomeClick: () -> Unit = {},
+    onLogoutClick: () -> Unit
 ) {
     LaunchedEffect(Unit) {
         viewModel.refreshPrescrizioni()
@@ -88,6 +84,8 @@ fun PrescrizioniScreen(
     var filtriAperti by remember { mutableStateOf(false) }
 
     val filtriAttivi = filtroPaziente.isNotBlank() || filtroFarmaco.isNotBlank() || filtroStatus != FiltroStatus.TUTTI
+
+    var profileMenuExpanded by remember { mutableStateOf(false) }
 
     Surface(
         shape = RoundedCornerShape(44.dp),
@@ -108,38 +106,6 @@ fun PrescrizioniScreen(
                     .requiredSize(27.dp)
             )
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.Start),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 33.dp, end = 26.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Notifications,
-                    contentDescription = "Notifiche",
-                    tint = Color.Black,
-                    modifier = Modifier.requiredSize(27.dp)
-                )
-                Box(
-                    modifier = Modifier.requiredSize(45.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary)
-                            .border(BorderStroke(2.dp, Color.White), CircleShape)
-                    )
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Profile",
-                        tint = Color.White,
-                        modifier = Modifier.requiredSize(30.dp)
-                    )
-                }
-            }
 
             // Content
             Column(
@@ -275,6 +241,26 @@ fun PrescrizioniScreen(
                 }
             }
 
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.Start),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 33.dp, end = 26.dp)
+            ) {
+
+                ProfileDropdownMenu(
+                    expanded = profileMenuExpanded,
+                    onAvatarClick = { profileMenuExpanded = !profileMenuExpanded },
+                    onDismiss = { profileMenuExpanded = false },
+                    onLogoutClick = {
+                        profileMenuExpanded = false
+                        onLogoutClick()
+                    }
+                )
+
+            }
+
             // Bottom Navigation Bar — identica a HomeScreen, "Prescriptions" evidenziato
             Row(
                 horizontalArrangement = Arrangement.SpaceAround,
@@ -385,12 +371,4 @@ private fun StatusDropdown(
             }
         }
     }
-}
-
-@Preview(widthDp = 430, heightDp = 932)
-@Composable
-private fun PrescrizioniScreenPreview() {
-    PrescrizioniScreen(
-        viewModel = viewModel()
-    )
 }

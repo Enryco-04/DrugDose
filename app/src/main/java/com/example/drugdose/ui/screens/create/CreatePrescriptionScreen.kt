@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -40,14 +39,12 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.drugdose.di.ViewModelFactory
 import com.example.drugdose.ui.components.ProfileDropdownMenu
-import com.example.drugdose.ui.theme.DrugDoseTheme
 
 @Composable
 fun CreatePrescriptionScreen(
@@ -97,134 +94,151 @@ fun CreatePrescriptionScreen(
 
     var profileMenuExpanded by remember { mutableStateOf(false) }
 
-    Surface(
-        shape = RoundedCornerShape(44.dp),
-        color = Color(0xFFF5F5F5),
-        modifier = modifier
-            .fillMaxSize()
-            .shadow(elevation = 4.dp, shape = RoundedCornerShape(44.dp))
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Surface(
+            shape = RoundedCornerShape(44.dp),
+            color = Color(0xFFF5F5F5),
+            modifier = modifier
+                .fillMaxSize()
+                .shadow(elevation = 4.dp, shape = RoundedCornerShape(44.dp))
+        ) {
+            Column(modifier = Modifier.fillMaxSize()) {
 
-            // HEADER FISSO
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 40.dp, start = 16.dp, end = 16.dp, bottom = 12.dp)
-            ) {
-                IconButton(
-                    onClick = onBack,
+                // HEADER FISSO
+                Box(
                     modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primary)
+                        .fillMaxWidth()
+                        .padding(top = 40.dp, start = 16.dp, end = 16.dp, bottom = 12.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Indietro",
-                        tint = Color.White,
-                        modifier = Modifier.requiredSize(20.dp)
+                    IconButton(
+                        onClick = onBack,
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Indietro",
+                            tint = Color.White,
+                            modifier = Modifier.requiredSize(20.dp)
+                        )
+                    }
+
+                    Text(
+                        text = "DrugDose",
+                        style = TextStyle(
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = MaterialTheme.colorScheme.primary
+                        ),
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+
+                }
+
+                // TITOLO + SOTTOTITOLO FARMACO — fisso
+                Column(
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                ) {
+                    Text(
+                        text = "Compila Prescrizione:",
+                        style = TextStyle(
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = Color.Black
+                        )
+                    )
+                    Text(
+                        text = formState.farmaco?.let { "${it.nome} – ${it.nomeCommerciale}" }
+                            ?: "Caricamento...",
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
                     )
                 }
 
-                Text(
-                    text = "DrugDose",
-                    style = TextStyle(
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.primary
-                    ),
-                    modifier = Modifier.align(Alignment.Center)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // STEP INDICATOR — fisso, non cliccabile
+                StepIndicator(
+                    currentStep = currentStep,
+                    modifier = Modifier.padding(horizontal = 24.dp)
                 )
 
-                ProfileDropdownMenu(
-                    modifier = Modifier.align(Alignment.CenterEnd),
-                    expanded = profileMenuExpanded,
-                    onAvatarClick = { profileMenuExpanded = !profileMenuExpanded },
-                    onDismiss = { profileMenuExpanded = false },
-                    onLogoutClick = {
-                        profileMenuExpanded = false
-                        onLogoutClick()
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // CONTENUTO SCROLLABILE — cambia in base allo step
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    item {
+                        when (currentStep) {
+                            PrescrizioneStep.PAZIENTE -> PazienteStep(
+                                formState = formState,
+                                onNomeChange = viewModel::onNomeChange,
+                                onCognomeChange = viewModel::onCognomeChange,
+                                onCodiceFiscaleChange = viewModel::onCodiceFiscaleChange,
+                                onEtaChange = viewModel::onEtaChange,
+                                onPesoChange = viewModel::onPesoChange,
+                                onAltezzaChange = viewModel::onAltezzaChange
+                            )
+
+                            PrescrizioneStep.FARMACO -> FarmacoStep(
+                                formState = formState,
+                                onFrequenzaChange = viewModel::onFrequenzaChange,
+                                onNumeroConfezioniChange = viewModel::onNumeroConfezioniChange,
+                                onNoteChange = viewModel::onNoteChange
+                            )
+
+                            PrescrizioneStep.RIEPILOGO -> RiepilogoStep(formState = formState)
+                        }
                     }
-                )
-            }
-
-            // TITOLO + SOTTOTITOLO FARMACO — fisso
-            Column(
-                modifier = Modifier.padding(horizontal = 24.dp)
-            ) {
-                Text(
-                    text = "Compila Prescrizione:",
-                    style = TextStyle(
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = Color.Black
-                    )
-                )
-                Text(
-                    text = formState.farmaco?.let { "${it.nome} – ${it.nomeCommerciale}" } ?: "Caricamento...",
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // STEP INDICATOR — fisso, non cliccabile
-            StepIndicator(
-                currentStep = currentStep,
-                modifier = Modifier.padding(horizontal = 24.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // CONTENUTO SCROLLABILE — cambia in base allo step
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                item {
-                    when (currentStep) {
-                        PrescrizioneStep.PAZIENTE -> PazienteStep(
-                            formState = formState,
-                            onNomeChange = viewModel::onNomeChange,
-                            onCognomeChange = viewModel::onCognomeChange,
-                            onCodiceFiscaleChange = viewModel::onCodiceFiscaleChange,
-                            onEtaChange = viewModel::onEtaChange,
-                            onPesoChange = viewModel::onPesoChange,
-                            onAltezzaChange = viewModel::onAltezzaChange
-                        )
-                        PrescrizioneStep.FARMACO -> FarmacoStep(
-                            formState = formState,
-                            onFrequenzaChange = viewModel::onFrequenzaChange,
-                            onNumeroConfezioniChange = viewModel::onNumeroConfezioniChange,
-                            onNoteChange = viewModel::onNoteChange
-                        )
-                        PrescrizioneStep.RIEPILOGO -> RiepilogoStep(formState = formState)
-                    }
+                    item { Spacer(Modifier.height(8.dp)) }
                 }
-                item { Spacer(Modifier.height(8.dp)) }
-            }
 
-            // BOTTONI NAVIGAZIONE — fissi in basso
-            NavigationButtons(
-                currentStep = currentStep,
-                salvataggioState = salvataggioState,
-                onBack = { viewModel.goToPreviousStep() },
-                onNext = { viewModel.goToNextStep() },
-                onConferma = {
-                    viewModel.confermaPrescrizione(onSuccess = onPrescrizioneCreata)
-                },
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
-            )
+                // BOTTONI NAVIGAZIONE — fissi in basso
+                NavigationButtons(
+                    currentStep = currentStep,
+                    salvataggioState = salvataggioState,
+                    onBack = { viewModel.goToPreviousStep() },
+                    onNext = { viewModel.goToNextStep() },
+                    onConferma = {
+                        viewModel.confermaPrescrizione(onSuccess = onPrescrizioneCreata)
+                    },
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
+                )
+            }
         }
+
+        ProfileDropdownMenu(
+            expanded = profileMenuExpanded,
+            onAvatarClick = {
+                profileMenuExpanded = !profileMenuExpanded
+            },
+            onDismiss = {
+                profileMenuExpanded = false
+            },
+            onLogoutClick = {
+                profileMenuExpanded = false
+                onLogoutClick()
+            },
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(
+                    top = 40.dp,
+                    end = 16.dp
+                )
+        )
     }
     if (viewModel.mostraPopUpErrori) {
         PopUpErrori(

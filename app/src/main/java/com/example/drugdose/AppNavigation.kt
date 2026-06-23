@@ -118,6 +118,11 @@ fun AppNavigation() {
                         popUpTo(Screen.Home.route) { inclusive = false }
                         launchSingleTop = true
                     }
+                },
+                onLogoutClick = {
+                    navController.navigate(Screen.Loading.route) {
+                        popUpTo(Screen.Loading.route) { inclusive = false }
+                    }
                 }
             )
         }
