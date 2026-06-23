@@ -68,174 +68,202 @@ fun DrugSearchScreen(
     var farmacoSelezionato by remember { mutableStateOf<Farmaco?>(null) }
 
     var profileMenuExpanded by remember { mutableStateOf(false) }
-
-    Surface(
-        shape = RoundedCornerShape(44.dp),
-        color = Color(0xFFF5F5F5),
-        modifier = modifier
-            .fillMaxSize()
-            .shadow(elevation = 4.dp, shape = RoundedCornerShape(44.dp))
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-                .padding(bottom = 10.dp)
-        ) {
-            // Header
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 40.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
-            ) {
-                // Pulsante Home
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .size(50.dp)
-                        .clip(CircleShape)
-                        .shadow(elevation = 8.dp, shape = CircleShape)
-                        .background(MaterialTheme.colorScheme.onPrimary),
-                    contentAlignment = Alignment.Center
-                ) {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_home),
-                            contentDescription = "Home",
-                            tint = Color.Unspecified,
-                            modifier = Modifier.requiredSize(size = 40.dp)
-                        )
-                    }
-                }
-
-                // Titolo centrato
-                Text(
-                    text = "DrugDose",
-                    style = TextStyle(
-                        fontSize = 35.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.primary
-                    ),
-                    modifier = Modifier.align(Alignment.Center)
-                )
-
-                //TODO Avatar profilo allarga l'header
-
-            }
-
-            // Titolo sezione
-            Text(
-                text = "Seleziona un Farmaco:",
-                style = TextStyle(
-                    fontSize = 25.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = Color.Black
-                ),
-                modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
-            )
-
-            // Lista farmaci
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                item { Spacer(Modifier.height(4.dp)) }
-
-                items(
-                    items = farmaci,
-                    key = { it.id }
-                ) { farmaco ->
-                    DrugCard(
-                        nomeFarmaco = farmaco.nome,
-                        nomeCommerciale = farmaco.nomeCommerciale,
-                        indicazione = farmaco.indicazione,
-                        tipoCalcolo = farmaco.tipoFormula,
-                        onClick = {
-                            farmacoSelezionato = farmaco // ← apre il popup
-                        }
-                    )
-                }
-
-                item { Spacer(Modifier.height(16.dp)) }
-            }
-
-            // Search bar fissa in basso
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
-                    .shadow(elevation = 6.dp, shape = RoundedCornerShape(40.dp))
-                    .clip(RoundedCornerShape(40.dp))
-                    .background(Color.White)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Cerca",
-                    tint = Color(0xFF625B71),
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .size(22.dp)
-                )
-                OutlinedTextField(
-                    value = searchQuery,
-                    onValueChange = { viewModel.onSearchQueryChange(it) },
-                    placeholder = {
-                        Text(
-                            text = "Cerca un farmaco",
-                            style = TextStyle(
-                                fontSize = 15.sp,
-                                color = Color(0xFFAAAAAA)
-                            )
-                        )
-                    },
-                    singleLine = true,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Transparent,
-                        unfocusedBorderColor = Color.Transparent
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        }
-    }
-
-    // Popup con i dettagli del farmaco selezionato
-    farmacoSelezionato?.let { farmaco ->
-        DrugInfo(
-            farmaco = farmaco,
-            onDismiss = { farmacoSelezionato = null },
-            onCreaPrescrizione = { selezionato ->
-                onCreaPrescrizione(selezionato)
-                farmacoSelezionato = null
-            }
-        )
-    }
-}
-
-@Composable
-fun ProfileMenuOverlay(
-    onDismiss: () -> Unit,
-    onLogoutClick: () -> Unit,
-) {
-    var profileMenuExpanded by remember { mutableStateOf(false) }
-
+    //Box necessaria per mettere in z-index corretto il dropDownMenu
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        // menu in alto a destra
+        Surface(
+            shape = RoundedCornerShape(44.dp),
+            color = Color(0xFFF5F5F5),
+            modifier = modifier
+                .fillMaxSize()
+                .shadow(
+                    elevation = 4.dp,
+                    shape = RoundedCornerShape(44.dp)
+                )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 10.dp)
+            ) {
+
+                // Header
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            top = 40.dp,
+                            start = 16.dp,
+                            end = 16.dp,
+                            bottom = 16.dp
+                        )
+                ) {
+
+                    // Pulsante Home
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .size(50.dp)
+                            .clip(CircleShape)
+                            .shadow(
+                                elevation = 8.dp,
+                                shape = CircleShape
+                            )
+                            .background(MaterialTheme.colorScheme.onPrimary),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        IconButton(onClick = onBack) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_home),
+                                contentDescription = "Home",
+                                tint = Color.Unspecified,
+                                modifier = Modifier.requiredSize(40.dp)
+                            )
+                        }
+                    }
+
+                    // Titolo
+                    Text(
+                        text = "DrugDose",
+                        style = TextStyle(
+                            fontSize = 35.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = MaterialTheme.colorScheme.primary
+                        ),
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+
+                // Titolo sezione
+                Text(
+                    text = "Seleziona un Farmaco:",
+                    style = TextStyle(
+                        fontSize = 25.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color.Black
+                    ),
+                    modifier = Modifier.padding(
+                        horizontal = 24.dp,
+                        vertical = 8.dp
+                    )
+                )
+
+                // Lista farmaci
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+
+                    item {
+                        Spacer(Modifier.height(4.dp))
+                    }
+
+                    items(
+                        items = farmaci,
+                        key = { it.id }
+                    ) { farmaco ->
+
+                        DrugCard(
+                            nomeFarmaco = farmaco.nome,
+                            nomeCommerciale = farmaco.nomeCommerciale,
+                            indicazione = farmaco.indicazione,
+                            tipoCalcolo = farmaco.tipoFormula,
+                            onClick = {
+                                farmacoSelezionato = farmaco
+                            }
+                        )
+                    }
+
+                    item {
+                        Spacer(Modifier.height(16.dp))
+                    }
+                }
+
+                // Search bar
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            horizontal = 16.dp,
+                            vertical = 12.dp
+                        )
+                        .shadow(
+                            elevation = 6.dp,
+                            shape = RoundedCornerShape(40.dp)
+                        )
+                        .clip(RoundedCornerShape(40.dp))
+                        .background(Color.White)
+                ) {
+
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Cerca",
+                        tint = Color(0xFF625B71),
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .size(22.dp)
+                    )
+
+                    OutlinedTextField(
+                        value = searchQuery,
+                        onValueChange = {
+                            viewModel.onSearchQueryChange(it)
+                        },
+                        placeholder = {
+                            Text(
+                                text = "Cerca un farmaco",
+                                style = TextStyle(
+                                    fontSize = 15.sp,
+                                    color = Color(0xFFAAAAAA)
+                                )
+                            )
+                        },
+                        singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color.Transparent,
+                            unfocusedBorderColor = Color.Transparent
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+        }
+
+        // MENU PROFILO FUORI DALLA SURFACE
         ProfileDropdownMenu(
             expanded = profileMenuExpanded,
-            onAvatarClick = { profileMenuExpanded = !profileMenuExpanded },
-            onDismiss = { profileMenuExpanded = false },
+            onAvatarClick = {
+                profileMenuExpanded = !profileMenuExpanded
+            },
+            onDismiss = {
+                profileMenuExpanded = false
+            },
             onLogoutClick = {
                 profileMenuExpanded = false
                 onLogoutClick()
             },
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(top = 40.dp, end = 16.dp)
+                .padding(
+                    top = 40.dp,
+                    end = 16.dp
+                )
         )
+        // Popup con i dettagli del farmaco selezionato
+        farmacoSelezionato?.let { farmaco ->
+            DrugInfo(
+                farmaco = farmaco,
+                onDismiss = { farmacoSelezionato = null },
+                onCreaPrescrizione = { selezionato ->
+                    onCreaPrescrizione(selezionato)
+                    farmacoSelezionato = null
+                }
+            )
+        }
     }
 }
