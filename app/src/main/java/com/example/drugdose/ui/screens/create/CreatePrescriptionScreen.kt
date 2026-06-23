@@ -13,15 +13,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -32,6 +30,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.drugdose.di.ViewModelFactory
+import com.example.drugdose.ui.components.ProfileDropdownMenu
 import com.example.drugdose.ui.theme.DrugDoseTheme
 
 @Composable
@@ -52,7 +54,8 @@ fun CreatePrescriptionScreen(
     farmacoId: String,
     modifier: Modifier = Modifier,
     onBack: () -> Unit = {},
-    onPrescrizioneCreata: () -> Unit = {}
+    onPrescrizioneCreata: () -> Unit = {},
+    onLogoutClick: () -> Unit
 ) {
     val viewModel: CreatePrescriptionViewModel = viewModel(
         factory = ViewModelFactory(farmacoId = farmacoId) // ← usa la tua factory centralizzata
@@ -92,6 +95,8 @@ fun CreatePrescriptionScreen(
         }
     }
 
+    var profileMenuExpanded by remember { mutableStateOf(false) }
+
     Surface(
         shape = RoundedCornerShape(44.dp),
         color = Color(0xFFF5F5F5),
@@ -116,7 +121,7 @@ fun CreatePrescriptionScreen(
                         .background(MaterialTheme.colorScheme.primary)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Indietro",
                         tint = Color.White,
                         modifier = Modifier.requiredSize(20.dp)
@@ -133,21 +138,16 @@ fun CreatePrescriptionScreen(
                     modifier = Modifier.align(Alignment.Center)
                 )
 
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primary),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Profilo",
-                        tint = Color.White,
-                        modifier = Modifier.requiredSize(24.dp)
-                    )
-                }
+                ProfileDropdownMenu(
+                    modifier = Modifier.align(Alignment.CenterEnd),
+                    expanded = profileMenuExpanded,
+                    onAvatarClick = { profileMenuExpanded = !profileMenuExpanded },
+                    onDismiss = { profileMenuExpanded = false },
+                    onLogoutClick = {
+                        profileMenuExpanded = false
+                        onLogoutClick()
+                    }
+                )
             }
 
             // TITOLO + SOTTOTITOLO FARMACO — fisso
@@ -329,7 +329,7 @@ private fun NavigationButtons(
                     )
                     Spacer(modifier = Modifier.size(6.dp))
                     Icon(
-                        imageVector = Icons.Default.ArrowForward,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = null,
                         tint = Color.White,
                         modifier = Modifier.size(18.dp)
@@ -366,17 +366,5 @@ private fun NavigationButtons(
                 }
             }
         }
-    }
-}
-
-// NOTA: questo Preview richiede repository Firestore reali (FarmaciRepositoryImpl)
-// quindi non renderizzerà dati nel pannello Preview di Android Studio senza
-// un emulatore/connessione. Per testare visivamente in isolamento, valuta un
-// fake/mock FarmaciRepository solo per i preview.
-@Preview(widthDp = 431, heightDp = 934)
-@Composable
-private fun CreatePrescriptionScreenPreview() {
-    DrugDoseTheme {
-        CreatePrescriptionScreen(farmacoId = "1")
     }
 }
