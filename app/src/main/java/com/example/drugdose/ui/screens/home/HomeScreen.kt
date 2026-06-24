@@ -73,19 +73,18 @@ fun HomeScreen(
     // Stato del menu a discesa del profilo
     var profileMenuExpanded by remember { mutableStateOf(false) }
 
-
     Surface(
-        color = Color(0xFFF5F5F5),
+        color = MaterialTheme.colorScheme.background,
         modifier = modifier
             .fillMaxSize()
     ) {
-        Box (
+        Box(
             modifier = Modifier.fillMaxSize()
         ) {
             Icon(
                 imageVector = Icons.Default.Menu,
                 contentDescription = "Menu",
-                tint = Color.Black,
+                tint = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier
                     .padding(start = 23.dp, top = 42.dp)
                     .requiredSize(size = 27.dp)
@@ -106,18 +105,18 @@ fun HomeScreen(
                 ) {
                     Text(
                         text = "Benvenuto Dr. ${viewModel.medico?.cognome ?: ""}",
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold)
                     )
 
                     Text(
                         text = "Cosa vuole fare oggi?",
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = TextStyle(fontSize = 16.sp)
                     )
                 }
 
-                // Cards Section — dinamica tramite LazyRow
+                // Cards Section â€” dinamica tramite LazyRow
                 HorizontalPager(
                     state = pagerState,
                     modifier = Modifier
@@ -129,20 +128,16 @@ fun HomeScreen(
 
                     Column(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
-                                modifier = Modifier
-                                .fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
                             .wrapContentHeight(Alignment.Top)
                     ) {
-
                         pageItems.chunked(3).forEach { rowItems ->
-
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
-
                                 rowItems.forEach { menuItem ->
-
                                     HomeCard(
                                         title = menuItem.title,
                                         icon = menuItem.icon,
@@ -161,7 +156,10 @@ fun HomeScreen(
 
                 // Page Indicator
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        8.dp,
+                        Alignment.CenterHorizontally
+                    ),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -175,7 +173,7 @@ fun HomeScreen(
                                     if (isSelected)
                                         MaterialTheme.colorScheme.primary
                                     else
-                                        Color(0xFFD9D9D9)
+                                        MaterialTheme.colorScheme.outlineVariant
                                 )
                         )
                     }
@@ -190,8 +188,6 @@ fun HomeScreen(
                     .align(alignment = Alignment.TopEnd)
                     .padding(top = 33.dp, end = 26.dp)
             ) {
-
-
                 ProfileDropdownMenu(
                     expanded = profileMenuExpanded,
                     onAvatarClick = { profileMenuExpanded = !profileMenuExpanded },
@@ -214,7 +210,7 @@ fun HomeScreen(
                     .height(77.dp)
                     .shadow(elevation = 10.dp, shape = RoundedCornerShape(40.dp))
                     .clip(shape = RoundedCornerShape(40.dp))
-                    .background(color = Color.White)
+                    .background(color = MaterialTheme.colorScheme.surface)
                     .padding(horizontal = 20.dp)
             ) {
                 Column(
@@ -233,21 +229,21 @@ fun HomeScreen(
                         style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     )
                 }
+
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.clickable { onVaiAPrescrizioniClick() }   // ← aggiungi
-
+                    modifier = Modifier.clickable { onVaiAPrescrizioniClick() }
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_stethoscope),
                         contentDescription = "Prescriptions",
-                        tint = Color(0xFF5F6368),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(24.dp)
                     )
                     Text(
                         text = "Prescriptions",
-                        color = Color(0xFF5F6368),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     )
                 }
@@ -255,7 +251,6 @@ fun HomeScreen(
         }
     }
 }
-
 @Preview(widthDp = 431, heightDp = 934)
 @Composable
 private fun HomeScreenPreview() {

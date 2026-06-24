@@ -40,7 +40,7 @@ fun PrescriptionInfo(
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Surface(
-            color = Color.White,
+            color = MaterialTheme.colorScheme.surface,
             shape = RoundedCornerShape(24.dp),
             modifier = modifier
                 .fillMaxWidth(0.92f)
@@ -99,7 +99,7 @@ fun PrescriptionInfo(
                         Text(
                             text = prescrizione.nomeCommercialeFarmaco,
                             fontSize = 16.sp,
-                            color = Color(0xff4a5565)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
 
@@ -228,7 +228,7 @@ fun PrescriptionInfo(
                             onClick = { onAnnulla(prescrizione.id) },
                             modifier = Modifier.fillMaxWidth(),
                             colors = ButtonDefaults.outlinedButtonColors(
-                                contentColor = Color(0xffc62828)
+                                contentColor = MaterialTheme.colorScheme.error,
                             )
                         ) {
                             Text("Annulla prescrizione")
