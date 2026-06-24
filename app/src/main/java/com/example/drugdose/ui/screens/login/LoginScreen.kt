@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -38,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -60,11 +62,10 @@ fun LoginScreen(
         if (viewModel.successo) onLoginSuccesso()
     }
     Surface(
-        shape = RoundedCornerShape(40.dp),
+        shape = RoundedCornerShape(0.dp),
         color = MaterialTheme.colorScheme.surface,
         modifier = modifier
             .fillMaxSize()
-            .shadow(elevation = 4.dp, shape = RoundedCornerShape(40.dp))
             .clip(shape = RoundedCornerShape(40.dp))
     ) {
         Column(
@@ -163,22 +164,36 @@ fun LoginScreen(
                 }
             }
 
-
             Spacer(modifier = Modifier.height(32.dp))
 
-            TextButton(onClick = onVaiRegistrazione) {
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(
+                        style = SpanStyle(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontSize = 16.sp)) { append("Non hai un account? ") }
-                        withStyle(style = SpanStyle(
-                            color = MaterialTheme.colorScheme.primary,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold)) { append("Registrati") }
+                            fontSize = 16.sp
+                        )
+                    ) {
+                        append("Non hai un account? ")
                     }
-                )
-            }
+                    withLink(
+                        LinkAnnotation.Clickable(
+                            tag = "registrati",
+                            linkInteractionListener = { onVaiRegistrazione() }
+                        )
+                    ) {
+                        withStyle(
+                            style = SpanStyle(
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        ) {
+                            append("Registrati")
+                        }
+                    }
+                }
+            )
         }
     }
 }

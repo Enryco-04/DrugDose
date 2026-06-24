@@ -59,15 +59,15 @@ class HomeViewModel(
     private fun loadMenuItems() {
             _menuItems.value = listOf(
                 HomeMenuItem(1, "Drug Dose", MenuIcon.Resource(R.drawable.ic_pill), HomeAction.DRUG_DOSE),
-                HomeMenuItem(2, "DermaCalc", MenuIcon.Vector(Icons.Default.ReceiptLong)),  // PLACEHOLDER di default
-                HomeMenuItem(3, "PatientKiosk", MenuIcon.Vector(Icons.Default.ReceiptLong)),
-                HomeMenuItem(4, "MelanomaTNM", MenuIcon.Vector(Icons.Default.ReceiptLong)),
-                HomeMenuItem(5, "DermaBSA", MenuIcon.Vector(Icons.Default.ReceiptLong)),
-                HomeMenuItem(6, "SCC TNM", MenuIcon.Vector(Icons.Default.ReceiptLong)),
-                HomeMenuItem(7, "Vaccini", MenuIcon.Vector(Icons.Default.ReceiptLong)),
-                HomeMenuItem(8, "Linee di Langer", MenuIcon.Vector(Icons.Default.ReceiptLong)),
-                HomeMenuItem(9, "Altro", MenuIcon.Vector(Icons.Default.ReceiptLong)),
-                HomeMenuItem(10, "Altro", MenuIcon.Vector(Icons.Default.ReceiptLong))
+                HomeMenuItem(2, "DermaCalc", MenuIcon.Resource(R.drawable.ic_dermacalc)),
+                HomeMenuItem(3, "PatientKiosk", MenuIcon.Resource(R.drawable.ic_patientkiosk)),
+                HomeMenuItem(4, "MelanomaTNM", MenuIcon.Resource(R.drawable.ic_melanomatnm)),
+                HomeMenuItem(5, "DermaBSA", MenuIcon.Resource(R.drawable.ic_dermabsa)),
+                HomeMenuItem(6, "SCC TNM", MenuIcon.Resource(R.drawable.ic_scctnm)),
+                HomeMenuItem(7, "Vaccini", MenuIcon.Resource(R.drawable.ic_vaccini)),
+                HomeMenuItem(8, "Linee di Langer", MenuIcon.Resource(R.drawable.ic_lineedilanger)),
+                HomeMenuItem(9, "Temperatura", MenuIcon.Resource(R.drawable.ic_term)),
+                HomeMenuItem(10, "Add", MenuIcon.Resource(R.drawable.ic_plus))
         )
     }
 
@@ -79,11 +79,5 @@ class HomeViewModel(
     // Rimuovi un item per id
     fun removeMenuItem(id: Int) {
         _menuItems.update { currentList -> currentList.filter { it.id != id } }
-    }
-
-    fun logout() {
-        viewModelScope.launch {
-            authRepo.logout()
-        }
     }
 }
