@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="60dp"
+    android:height="60dp"
+    android:viewportWidth="60"
+    android:viewportHeight="60">
+
+    <path
+        android:fillColor="#6750A4"
+        android:pathData="M 30 0 C 46.5685424949 0 60 13.4314575051 60 30 C 60 46.5685424949 46.5685424949 60 30 60 C 13.4314575051 60 0 46.5685424949 0 30 C 0 13.4314575051 13.4314575051 0 30 0 Z" />
+    <path
+        android:fillColor="#6750A4"
+        android:strokeColor="#ffffff"
+        android:strokeWidth="4"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round"
+        android:pathData="M18.75 39.75H33.75" />
+    <path
+        android:fillColor="#6750A4"
+        android:strokeColor="#ffffff"
+        android:strokeWidth="4"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round"
+        android:pathData="M13.125 47.25H46.875" />
+    <path
+        android:fillColor="#6750A4"
+        android:strokeColor="#ffffff"
+        android:strokeWidth="4"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round"
+        android:pathData="M33.75 47.25C37.231 47.25 40.5694 45.8672 43.0308 43.4058C45.4922 40.9444 46.875 37.606 46.875 34.125C46.875 30.644 45.4922 27.3056 43.0308 24.8442C40.5694 22.3828 37.231 21 33.75 21H31.875" />
+    <path
+        android:fillColor="#6750A4"
+        android:strokeColor="#ffffff"
+        android:strokeWidth="4"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round"
+        android:pathData="M24.375 32.25H28.125" />
+    <path
+        android:fillColor="#6750A4"
+        android:strokeColor="#ffffff"
+        android:strokeWidth="4"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round"
+        android:pathData="M24.375 28.5C23.3804 28.5 22.4266 28.1049 21.7233 27.4016C21.0201 26.6984 20.625 25.7446 20.625 24.75V17.25H31.875V24.75C31.875 25.7446 31.4799 26.6984 30.7766 27.4016C30.0734 28.1049 29.1196 28.5 28.125 28.5H24.375Z" />
+    <path
+        android:fillColor="#6750A4"
+        android:strokeColor="#ffffff"
+        android:strokeWidth="4"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round"
+        android:pathData="M30 17.25V11.625C30 11.1277 29.8025 10.6508 29.4508 10.2992C29.0992 9.94754 28.6223 9.75 28.125 9.75H24.375C23.8777 9.75 23.4008 9.94754 23.0492 10.2992C22.6975 10.6508 22.5 11.1277 22.5 11.625V17.25" />
+</vector>
