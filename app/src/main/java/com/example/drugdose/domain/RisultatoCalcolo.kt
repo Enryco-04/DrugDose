@@ -1,5 +1,4 @@
-package com.example.drugdose.data.model
-
+package com.example.drugdose.domain
 
 //Class solo per formattare i dati in output, no DB
 data class RisultatoCalcolo(

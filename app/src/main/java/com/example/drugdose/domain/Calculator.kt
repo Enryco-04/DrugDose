@@ -1,7 +1,7 @@
-package com.example.drugdose.data.calculator
+package com.example.drugdose.domain
 
 import com.example.drugdose.data.model.Farmaco
-import com.example.drugdose.data.model.RisultatoCalcolo
+import com.example.drugdose.domain.RisultatoCalcolo
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.roundToInt

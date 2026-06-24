@@ -74,7 +74,7 @@ fun DrugSearchScreen(
 
         Surface(
             shape = RoundedCornerShape(44.dp),
-            color = Color(0xFFF5F5F5),
+            color = MaterialTheme.colorScheme.surface,
             modifier = modifier
                 .fillMaxSize()
                 .shadow(
@@ -141,7 +141,7 @@ fun DrugSearchScreen(
                     style = TextStyle(
                         fontSize = 25.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.primary
                     ),
                     modifier = Modifier.padding(
                         horizontal = 24.dp,

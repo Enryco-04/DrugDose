@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.drugdose.data.calculator.Calculator
+import com.example.drugdose.domain.Calculator
 import com.example.drugdose.data.model.Farmaco
 import com.example.drugdose.data.model.PazienteEmbedded
 import com.example.drugdose.data.model.Prescrizione
@@ -13,7 +13,6 @@ import com.example.drugdose.data.repository.AuthRepository
 import com.example.drugdose.data.repository.FarmaciRepository
 import com.example.drugdose.data.repository.PrescrizioniRepository
 import com.google.firebase.Timestamp
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

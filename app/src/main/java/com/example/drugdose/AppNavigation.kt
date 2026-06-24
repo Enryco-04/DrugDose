@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.drugdose.di.ViewModelFactory
-import com.example.drugdose.ui.model.HomeAction
+import com.example.drugdose.ui.screens.home.HomeAction
 import com.example.drugdose.ui.screens.create.CreatePrescriptionScreen
 import com.example.drugdose.ui.screens.home.HomeScreen
 import com.example.drugdose.ui.screens.loading.LoadingScreen
