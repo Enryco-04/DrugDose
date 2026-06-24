@@ -88,15 +88,13 @@ fun PrescrizioniScreen(
     var profileMenuExpanded by remember { mutableStateOf(false) }
 
     Surface(
-        shape = RoundedCornerShape(44.dp),
+        shape = RoundedCornerShape(0.dp),
         color = Color(0xFFF5F5F5),
-        modifier = modifier
-            .fillMaxSize()
-            .shadow(elevation = 4.dp, shape = RoundedCornerShape(44.dp))
+        modifier = modifier.fillMaxSize()
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
 
-            // Top bar — hamburger a sx, notifiche + avatar a dx (come mockup)
+            // Top bar
             Icon(
                 imageVector = Icons.Default.Menu,
                 contentDescription = "Menu",

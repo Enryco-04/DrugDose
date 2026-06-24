@@ -73,14 +73,9 @@ fun DrugSearchScreen(
     ) {
 
         Surface(
-            shape = RoundedCornerShape(44.dp),
+            shape = RoundedCornerShape(0.dp),
             color = Color(0xFFF5F5F5),
-            modifier = modifier
-                .fillMaxSize()
-                .shadow(
-                    elevation = 4.dp,
-                    shape = RoundedCornerShape(44.dp)
-                )
+            modifier = modifier.fillMaxSize()
         ) {
             Column(
                 modifier = Modifier
@@ -92,12 +87,7 @@ fun DrugSearchScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(
-                            top = 40.dp,
-                            start = 16.dp,
-                            end = 16.dp,
-                            bottom = 16.dp
-                        )
+                        .padding(top = 40.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
                 ) {
 
                     // Pulsante Home

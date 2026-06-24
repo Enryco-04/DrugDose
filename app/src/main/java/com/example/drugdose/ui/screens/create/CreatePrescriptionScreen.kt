@@ -37,12 +37,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.drugdose.R
 import com.example.drugdose.di.ViewModelFactory
 import com.example.drugdose.ui.components.ProfileDropdownMenu
 
@@ -98,11 +100,9 @@ fun CreatePrescriptionScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         Surface(
-            shape = RoundedCornerShape(44.dp),
+            shape = RoundedCornerShape(0.dp),
             color = Color(0xFFF5F5F5),
-            modifier = modifier
-                .fillMaxSize()
-                .shadow(elevation = 4.dp, shape = RoundedCornerShape(44.dp))
+            modifier = modifier.fillMaxSize()
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
 
@@ -110,28 +110,34 @@ fun CreatePrescriptionScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 40.dp, start = 16.dp, end = 16.dp, bottom = 12.dp)
+                        .padding(top = 40.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
                 ) {
-                    IconButton(
-                        onClick = onBack,
+                    Box(
                         modifier = Modifier
                             .align(Alignment.CenterStart)
-                            .size(40.dp)
+                            .size(50.dp)
                             .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary)
+                            .shadow(
+                                elevation = 8.dp,
+                                shape = CircleShape
+                            )
+                            .background(MaterialTheme.colorScheme.onPrimary),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Indietro",
-                            tint = Color.White,
-                            modifier = Modifier.requiredSize(20.dp)
-                        )
+                        IconButton(onClick = onBack) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_back),
+                                contentDescription = "Back",
+                                tint = Color.Unspecified,
+                                modifier = Modifier.requiredSize(40.dp)
+                            )
+                        }
                     }
 
                     Text(
                         text = "DrugDose",
                         style = TextStyle(
-                            fontSize = 28.sp,
+                            fontSize = 35.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colorScheme.primary
                         ),
@@ -147,11 +153,14 @@ fun CreatePrescriptionScreen(
                     Text(
                         text = "Compila Prescrizione:",
                         style = TextStyle(
-                            fontSize = 24.sp,
+                            fontSize = 25.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color = Color.Black
                         )
                     )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
                     Text(
                         text = formState.farmaco?.let { "${it.nome} – ${it.nomeCommerciale}" }
                             ?: "Caricamento...",
@@ -163,7 +172,7 @@ fun CreatePrescriptionScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // STEP INDICATOR — fisso, non cliccabile
                 StepIndicator(
@@ -316,13 +325,20 @@ private fun NavigationButtons(
                 onClick = onBack,
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(24.dp),
-                modifier = Modifier.size(width = 64.dp, height = 50.dp),
-                contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp)
+                modifier = Modifier.height(50.dp)
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Indietro",
-                    tint = Color.White
+                    tint = Color.White ,
+                    modifier = Modifier.size(18.dp)
+                )
+
+                Spacer(modifier = Modifier.size(6.dp))
+
+                Text(
+                    text = "Indietro",
+                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
                 )
             }
         } else {
