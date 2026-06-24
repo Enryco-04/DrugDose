@@ -60,11 +60,10 @@ fun LoginScreen(
         if (viewModel.successo) onLoginSuccesso()
     }
     Surface(
-        shape = RoundedCornerShape(40.dp),
+        shape = RoundedCornerShape(0.dp),
         color = MaterialTheme.colorScheme.surface,
         modifier = modifier
             .fillMaxSize()
-            .shadow(elevation = 4.dp, shape = RoundedCornerShape(40.dp))
             .clip(shape = RoundedCornerShape(40.dp))
     ) {
         Column(
