@@ -25,16 +25,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 @Composable
 fun DrugCard(
+    modifier: Modifier = Modifier,
     nomeFarmaco: String,
     nomeCommerciale: String,
     indicazione: String,
     tipoCalcolo: String,
-    onClick: () -> Unit = {},
-    modifier: Modifier = Modifier
+    onClick: () -> Unit = {}
+
 ) {
     Card(
         onClick = onClick,
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(16.dp),
         modifier = modifier.fillMaxWidth()
@@ -53,7 +56,7 @@ fun DrugCard(
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onSurface
                     ),
                     modifier = Modifier.weight(1f),
                     maxLines = 2,
@@ -72,7 +75,7 @@ fun DrugCard(
                         text = tipoCalcolo,
                         style = TextStyle(
                             fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.secondary,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
                             fontWeight = FontWeight.Medium
                         ),
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
@@ -89,7 +92,7 @@ fun DrugCard(
                 text = nomeCommerciale,
                 style = TextStyle(
                     fontSize = 13.sp,
-                    color = Color(0xFF625B71)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             )
 
@@ -101,7 +104,7 @@ fun DrugCard(
                 style = TextStyle(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             )
 

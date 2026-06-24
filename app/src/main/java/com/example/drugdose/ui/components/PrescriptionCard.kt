@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,16 +28,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.text.style.TextOverflow
 import java.text.SimpleDateFormat
 import java.util.Locale
-
 @Composable
 fun PrescriptionCard(
     prescrizione: Prescrizione,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}        // ← aggiungi questo parametro
-
-
+    onClick: () -> Unit = {}
 ) {
-    //ToDO capire come passare il change nel ViewModel forse
+    //TODO da mettere in ViewModel
     val dateFormatter = remember {
         SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     }
@@ -47,7 +45,6 @@ fun PrescriptionCard(
         } ?: "-"
     }
 
-    //FIne TODO
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -56,13 +53,10 @@ fun PrescriptionCard(
                 shape = RoundedCornerShape(16.dp)
             )
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(16.dp)
-            .clickable { onClick() }   // ← aggiungi questa riga, dopo .background()
-
+            .clickable { onClick() }
     ) {
-
-        // Nome farmaco + stato
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -75,7 +69,7 @@ fun PrescriptionCard(
                     text = prescrizione.nomeFarmaco,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -83,76 +77,68 @@ fun PrescriptionCard(
                 Text(
                     text = "${prescrizione.dosaggioMg.toInt()}mg - ${prescrizione.frequenza ?: ""}",
                     fontSize = 14.sp,
-                    color = Color(0xff4a5565)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
 
             StatusBadge(
                 stato = prescrizione.statoVisualizzato()
             )
         }
 
-
-        // Paziente
         Column(
             modifier = Modifier.padding(top = 16.dp)
         ) {
-
             Text(
                 text = "Paziente: ${prescrizione.paziente.nome} ${prescrizione.paziente.cognome}",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             Text(
                 text = "CF: ${prescrizione.paziente.codiceFiscale}",
                 fontSize = 14.sp,
-                color = Color(0xff4a5565)
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
-            ) {Text(
-                text = "Prescrizione: ${formatDate(prescrizione.dataCreazione)}",
-                fontSize = 12.sp,
-                color = Color(0xff6a7282)
-            )
+            ) {
+                Text(
+                    text = "Prescrizione: ${formatDate(prescrizione.dataCreazione)}",
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
 
                 Text(
                     text = "Scadenza: ${formatDate(prescrizione.dataScadenza)}",
                     fontSize = 12.sp,
-                    color = Color(0xff6a7282)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
     }
 }
 
-
 @Composable
 private fun StatusBadge(
     stato: String
 ) {
-
     val background = when(stato) {
         "ATTIVA" -> Color(0xffdcfce7)
         "SCADUTA" -> Color(0xfffff3e0)
         else -> Color(0xffffebee)
     }
 
-
     val textColor = when(stato) {
         "ATTIVA" -> Color(0xff016630)
         "SCADUTA" -> Color(0xffe65100)
         else -> Color(0xffc62828)
     }
-
 
     Box(
         modifier = Modifier
@@ -168,7 +154,6 @@ private fun StatusBadge(
                 vertical = 4.dp
             )
     ) {
-
         Text(
             text = stato.lowercase()
                 .replaceFirstChar { it.uppercase() },
@@ -177,6 +162,7 @@ private fun StatusBadge(
             color = textColor
         )
     }
+
 }
 @Preview(showBackground = true)
 @Composable

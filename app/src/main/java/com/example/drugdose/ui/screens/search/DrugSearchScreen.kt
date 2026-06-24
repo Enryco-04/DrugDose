@@ -64,17 +64,15 @@ fun DrugSearchScreen(
     val farmaci by viewModel.farmacoFiltrati.collectAsStateWithLifecycle()
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
 
-    // Farmaco selezionato per il popup (null = chiuso)
     var farmacoSelezionato by remember { mutableStateOf<Farmaco?>(null) }
-
     var profileMenuExpanded by remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-
         Surface(
             shape = RoundedCornerShape(44.dp),
-            color = MaterialTheme.colorScheme.surface,
+            color = MaterialTheme.colorScheme.background,
             modifier = modifier
                 .fillMaxSize()
                 .shadow(
@@ -87,8 +85,6 @@ fun DrugSearchScreen(
                     .fillMaxSize()
                     .padding(bottom = 10.dp)
             ) {
-
-                // Header
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -99,8 +95,6 @@ fun DrugSearchScreen(
                             bottom = 16.dp
                         )
                 ) {
-
-                    // Pulsante Home
                     Box(
                         modifier = Modifier
                             .align(Alignment.CenterStart)
@@ -110,7 +104,7 @@ fun DrugSearchScreen(
                                 elevation = 8.dp,
                                 shape = CircleShape
                             )
-                            .background(MaterialTheme.colorScheme.onPrimary),
+                            .background(MaterialTheme.colorScheme.surface),
                         contentAlignment = Alignment.Center
                     ) {
                         IconButton(onClick = onBack) {
@@ -123,7 +117,6 @@ fun DrugSearchScreen(
                         }
                     }
 
-                    // Titolo
                     Text(
                         text = "DrugDose",
                         style = TextStyle(
@@ -135,13 +128,12 @@ fun DrugSearchScreen(
                     )
                 }
 
-                // Titolo sezione
                 Text(
                     text = "Seleziona un Farmaco:",
                     style = TextStyle(
                         fontSize = 25.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.onBackground
                     ),
                     modifier = Modifier.padding(
                         horizontal = 24.dp,
@@ -149,14 +141,12 @@ fun DrugSearchScreen(
                     )
                 )
 
-                // Lista farmaci
                 LazyColumn(
                     modifier = Modifier
                         .weight(1f)
                         .padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-
                     item {
                         Spacer(Modifier.height(4.dp))
                     }
@@ -165,7 +155,6 @@ fun DrugSearchScreen(
                         items = farmaci,
                         key = { it.id }
                     ) { farmaco ->
-
                         DrugCard(
                             nomeFarmaco = farmaco.nome,
                             nomeCommerciale = farmaco.nomeCommerciale,
@@ -182,7 +171,6 @@ fun DrugSearchScreen(
                     }
                 }
 
-                // Search bar
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -196,13 +184,12 @@ fun DrugSearchScreen(
                             shape = RoundedCornerShape(40.dp)
                         )
                         .clip(RoundedCornerShape(40.dp))
-                        .background(Color.White)
+                        .background(MaterialTheme.colorScheme.surface)
                 ) {
-
                     Icon(
                         imageVector = Icons.Default.Search,
                         contentDescription = "Cerca",
-                        tint = Color(0xFF625B71),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .padding(start = 8.dp)
                             .size(22.dp)
@@ -218,14 +205,19 @@ fun DrugSearchScreen(
                                 text = "Cerca un farmaco",
                                 style = TextStyle(
                                     fontSize = 15.sp,
-                                    color = Color(0xFFAAAAAA)
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             )
                         },
                         singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Color.Transparent,
-                            unfocusedBorderColor = Color.Transparent
+                            unfocusedBorderColor = Color.Transparent,
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            cursorColor = MaterialTheme.colorScheme.primary,
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                         ),
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -233,7 +225,6 @@ fun DrugSearchScreen(
             }
         }
 
-        // Popup con i dettagli del farmaco selezionato
         farmacoSelezionato?.let { farmaco ->
             DrugInfo(
                 farmaco = farmaco,
@@ -244,7 +235,7 @@ fun DrugSearchScreen(
                 }
             )
         }
-        // MENU PROFILO FUORI DALLA SURFACE
+
         ProfileDropdownMenu(
             expanded = profileMenuExpanded,
             onAvatarClick = {
@@ -264,6 +255,5 @@ fun DrugSearchScreen(
                     end = 16.dp
                 )
         )
-
     }
 }

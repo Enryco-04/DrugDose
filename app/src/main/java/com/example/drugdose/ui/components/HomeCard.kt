@@ -46,7 +46,7 @@ fun HomeCard(
             .aspectRatio(1f)
             .shadow(elevation = 2.dp, shape = RoundedCornerShape(10.dp))
             .clip(shape = RoundedCornerShape(10.dp))
-            .background(color = Color.White)
+            .background(color = MaterialTheme.colorScheme.surface)
             .clickable { onClick() }
             .padding(8.dp)
     ) {
@@ -77,7 +77,7 @@ fun HomeCard(
         }
         Text(
             text = title,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onSurface,
             style = TextStyle(fontSize = 14.sp),
             textAlign = TextAlign.Center
         )

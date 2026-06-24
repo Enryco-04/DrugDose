@@ -54,7 +54,7 @@ fun DrugInfo(
         properties = DialogProperties(usePlatformDefaultWidth = false) // ← card a tutta larghezza, non il default ristretto
     ) {
         Surface(
-            color = Color.White,
+            color = MaterialTheme.colorScheme.surface,
             shape = RoundedCornerShape(24.dp),
             modifier = modifier
                 .fillMaxWidth(0.92f)
@@ -79,7 +79,7 @@ fun DrugInfo(
                             style = TextStyle(
                                 fontSize = 22.sp,
                                 fontWeight = FontWeight.ExtraBold,
-                                color = Color.Black
+                                color = MaterialTheme.colorScheme.onSurface
                             ),
                             modifier = Modifier.weight(1f)
                         )
@@ -90,7 +90,7 @@ fun DrugInfo(
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = "Chiudi",
-                                tint = Color(0xFF625B71)
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -224,7 +224,7 @@ fun DrugInfo(
                             style = TextStyle(
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = Color.White
+                                color =  MaterialTheme.colorScheme.onPrimary
                             )
                         )
                     }
@@ -242,7 +242,7 @@ private fun DetailSection(title: String, content: String) {
             style = TextStyle(
                 fontSize = 15.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onBackground
             )
         )
         Spacer(modifier = Modifier.height(2.dp))
