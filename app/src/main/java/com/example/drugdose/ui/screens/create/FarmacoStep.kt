@@ -111,18 +111,6 @@ fun FarmacoStep(
             }
         }
 
-        FormCard(title = "Frequenza (opzionale)") {
-            OutlinedTextField(
-                value = formState.frequenza,
-                onValueChange = onFrequenzaChange,
-                placeholder = { Text("es. due volte al giorno", style = fieldPlaceholderStyle()) },
-                singleLine = true,
-                shape = RoundedCornerShape(12.dp),
-                colors = fieldColors(),
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-
         FormCard(title = "N° confezioni") {
             OutlinedTextField(
                 value = formState.numeroConfezioni,
@@ -132,6 +120,18 @@ fun FarmacoStep(
                 supportingText = if (formState.numeroConfezioniError) { { Text("Campo obbligatorio") } } else null,
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                shape = RoundedCornerShape(12.dp),
+                colors = fieldColors(),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        FormCard(title = "Frequenza (opzionale)") {
+            OutlinedTextField(
+                value = formState.frequenza,
+                onValueChange = onFrequenzaChange,
+                placeholder = { Text("es. due volte al giorno", style = fieldPlaceholderStyle()) },
+                singleLine = true,
                 shape = RoundedCornerShape(12.dp),
                 colors = fieldColors(),
                 modifier = Modifier.fillMaxWidth()
