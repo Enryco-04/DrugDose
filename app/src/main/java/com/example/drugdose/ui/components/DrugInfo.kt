@@ -1,5 +1,6 @@
 package com.example.drugdose.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -132,7 +135,7 @@ fun DrugInfo(
                         .weight(1f)
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
                     item {
                         DetailSection(
@@ -141,12 +144,32 @@ fun DrugInfo(
                         )
                     }
 
+                    item { Spacer(modifier = Modifier.height(20.dp)) }
+                    item {
+                        HorizontalDivider(
+                            Modifier,
+                            DividerDefaults.Thickness,
+                            DividerDefaults.color
+                        )
+                    }
+                    item { Spacer(modifier = Modifier.height(16.dp)) }
+
                     item {
                         DetailSection(
                             title = "Età minima:",
                             content = farmaco.etaMinimaAnni?.let { "$it anni" } ?: "Non specificata"
                         )
                     }
+
+                    item { Spacer(modifier = Modifier.height(20.dp)) }
+                    item {
+                        HorizontalDivider(
+                            Modifier,
+                            DividerDefaults.Thickness,
+                            DividerDefaults.color
+                        )
+                    }
+                    item { Spacer(modifier = Modifier.height(16.dp)) }
 
                     item {
                         DetailSection(
@@ -160,41 +183,89 @@ fun DrugInfo(
                         )
                     }
 
+                    item { Spacer(modifier = Modifier.height(20.dp)) }
+                    item {
+                        HorizontalDivider(
+                            Modifier,
+                            DividerDefaults.Thickness,
+                            DividerDefaults.color
+                        )
+                    }
+                    item { Spacer(modifier = Modifier.height(16.dp)) }
+
 
                     item {
                         DetailSection(
                             title = "Controindicazioni:",
                             content = farmaco.rcp?.controindicazioni?.takeIf { it.isNotEmpty() }
-                                ?.joinToString("\n") ?: "Non specificate."
+                                ?.joinToString("\n\n") { "• $it" } ?: "Non specificate."
                         )
                     }
+
+                    item { Spacer(modifier = Modifier.height(20.dp)) }
+                    item {
+                        HorizontalDivider(
+                            Modifier,
+                            DividerDefaults.Thickness,
+                            DividerDefaults.color
+                        )
+                    }
+                    item { Spacer(modifier = Modifier.height(16.dp)) }
 
 
                     item {
                         DetailSection(
                             title = "Interazioni",
                             content = farmaco.rcp?.interazioni?.takeIf { it.isNotEmpty() }
-                                ?.joinToString("\n") ?: "Non specificate."
+                                ?.joinToString("\n\n") { "• $it" } ?: "Non specificate."
                         )
                     }
+
+                    item { Spacer(modifier = Modifier.height(20.dp)) }
+                    item {
+                        HorizontalDivider(
+                            Modifier,
+                            DividerDefaults.Thickness,
+                            DividerDefaults.color
+                        )
+                    }
+                    item { Spacer(modifier = Modifier.height(16.dp)) }
 
                     item {
                         DetailSection(
                             title = "Avvertenze speciali:",
                             content = farmaco.rcp?.avvertenzeSpeciali?.takeIf { it.isNotEmpty() }
-                                ?.joinToString("\n") ?: "Non specificate."
+                                ?.joinToString("\n\n") { "• $it" } ?: "Non specificate."
                         )
                     }
+
                     if (farmaco.fonteRcp.isNotBlank()) {
+
+                        item { Spacer(modifier = Modifier.height(20.dp)) }
                         item {
-                            TextButton(onClick = { onApriLink(farmaco.fonteRcp) }) {
+                            HorizontalDivider(
+                                Modifier,
+                                DividerDefaults.Thickness,
+                                DividerDefaults.color
+                            )
+                        }
+                        item { Spacer(modifier = Modifier.height(16.dp)) }
+
+                        item {
+                            Column(modifier = Modifier.padding(vertical = 4.dp)) {
+                                Text(
+                                    text = "Fonte:",
+                                    style = MaterialTheme.typography.titleSmall
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = farmaco.fonteRcp,
                                     style = TextStyle(
                                         fontSize = 13.sp,
                                         color = MaterialTheme.colorScheme.primary,
                                         textDecoration = TextDecoration.Underline
-                                    )
+                                    ),
+                                    modifier = Modifier.clickable { onApriLink(farmaco.fonteRcp) }
                                 )
                             }
                         }
