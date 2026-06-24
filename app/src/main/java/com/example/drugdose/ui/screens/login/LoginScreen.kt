@@ -61,7 +61,7 @@ fun LoginScreen(
     }
     Surface(
         shape = RoundedCornerShape(40.dp),
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surface,
         modifier = modifier
             .fillMaxSize()
             .shadow(elevation = 4.dp, shape = RoundedCornerShape(40.dp))
@@ -143,7 +143,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
             viewModel.errore?.let {
-                Text(text = it, color = Color.Red, modifier = Modifier.padding(top = 8.dp))
+                Text(text = it, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
                 Spacer(modifier = Modifier.height(24.dp))
             }
 

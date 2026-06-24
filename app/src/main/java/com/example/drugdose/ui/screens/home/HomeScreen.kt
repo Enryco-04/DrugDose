@@ -1,8 +1,6 @@
 package com.example.drugdose.ui.screens.home
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,8 +23,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.res.painterResource
 import com.example.drugdose.R
 import androidx.compose.material3.Icon
@@ -54,7 +50,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.drugdose.di.ViewModelFactory
 import com.example.drugdose.ui.components.HomeCard  // ← importato da components
 import com.example.drugdose.ui.components.ProfileDropdownMenu
-import com.example.drugdose.ui.model.HomeMenuItem
 
 @Composable
 fun HomeScreen(

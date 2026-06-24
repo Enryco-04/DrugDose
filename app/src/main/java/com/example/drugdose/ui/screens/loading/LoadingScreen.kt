@@ -27,7 +27,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.drugdose.R
-
 @Composable
 fun LoadingScreen(
     modifier: Modifier = Modifier,
@@ -35,7 +34,7 @@ fun LoadingScreen(
 ) {
     Surface(
         shape = RoundedCornerShape(40.dp),
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surface,
         modifier = modifier
             .fillMaxSize()
             .shadow(elevation = 4.dp, shape = RoundedCornerShape(40.dp))
@@ -59,6 +58,7 @@ fun LoadingScreen(
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
                     modifier = Modifier.size(70.dp)
                 )
+
                 Text(
                     text = "Ospedale di Varese",
                     color = MaterialTheme.colorScheme.primary,
@@ -70,11 +70,11 @@ fun LoadingScreen(
             Spacer(modifier = Modifier.height(50.dp))
 
             Button(
-                onClick = { onIniziamoClick()},
+                onClick = {onIniziamoClick()},
                 shape = RoundedCornerShape(15.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = Color.White
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 modifier = Modifier
                     .fillMaxWidth()

@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Medication
-import com.example.drugdose.ui.model.MenuIcon
+import com.example.drugdose.ui.screens.home.MenuIcon
 
 @Composable
 fun HomeCard(

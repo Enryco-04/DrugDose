@@ -1,4 +1,4 @@
-package com.example.drugdose.ui.model
+package com.example.drugdose.ui.screens.home
 
 enum class HomeAction {
     DRUG_DOSE,
