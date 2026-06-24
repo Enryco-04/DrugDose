@@ -57,7 +57,7 @@ fun CreatePrescriptionScreen(
     onLogoutClick: () -> Unit
 ) {
     val viewModel: CreatePrescriptionViewModel = viewModel(
-        factory = ViewModelFactory(farmacoId = farmacoId) // ← usa la tua factory centralizzata
+        factory = ViewModelFactory(farmacoId = farmacoId)
     )
 
     val formState by viewModel.formState.collectAsStateWithLifecycle()
@@ -65,8 +65,6 @@ fun CreatePrescriptionScreen(
     val salvataggioState by viewModel.salvataggioState.collectAsStateWithLifecycle()
     val caricamentoFarmacoState by viewModel.caricamentoFarmacoState.collectAsStateWithLifecycle()
 
-    // Mostra un loader a tutto schermo finché il Farmaco non è arrivato da Firestore,
-    // ed un messaggio se il caricamento fallisce — evita NullPointerException sugli step.
     when (val stato = caricamentoFarmacoState) {
         is CaricamentoState.Loading -> {
             Box(
@@ -84,7 +82,10 @@ fun CreatePrescriptionScreen(
             ) {
                 Text(
                     text = stato.message,
-                    style = TextStyle(fontSize = 16.sp, color = Color.Red)
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.error
+                    )
                 )
             }
             return
@@ -101,7 +102,7 @@ fun CreatePrescriptionScreen(
     ) {
         Surface(
             shape = RoundedCornerShape(0.dp),
-            color = Color(0xFFF5F5F5),
+            color = MaterialTheme.colorScheme.background,
             modifier = modifier.fillMaxSize()
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
@@ -121,7 +122,7 @@ fun CreatePrescriptionScreen(
                                 elevation = 8.dp,
                                 shape = CircleShape
                             )
-                            .background(MaterialTheme.colorScheme.onPrimary),
+                            .background(MaterialTheme.colorScheme.surface),
                         contentAlignment = Alignment.Center
                     ) {
                         IconButton(onClick = onBack) {
@@ -143,10 +144,9 @@ fun CreatePrescriptionScreen(
                         ),
                         modifier = Modifier.align(Alignment.Center)
                     )
-
                 }
 
-                // TITOLO + SOTTOTITOLO FARMACO — fisso
+                // TITOLO + SOTTOTITOLO FARMACO â€” fisso
                 Column(
                     modifier = Modifier.padding(horizontal = 24.dp)
                 ) {
@@ -155,14 +155,14 @@ fun CreatePrescriptionScreen(
                         style = TextStyle(
                             fontSize = 25.sp,
                             fontWeight = FontWeight.ExtraBold,
-                            color = Color.Black
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = formState.farmaco?.let { "${it.nome} – ${it.nomeCommerciale}" }
+                        text = formState.farmaco?.let { "${it.nome} â€“ ${it.nomeCommerciale}" }
                             ?: "Caricamento...",
                         style = TextStyle(
                             fontSize = 14.sp,
@@ -174,7 +174,6 @@ fun CreatePrescriptionScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // STEP INDICATOR — fisso, non cliccabile
                 StepIndicator(
                     currentStep = currentStep,
                     modifier = Modifier.padding(horizontal = 24.dp)
@@ -182,7 +181,6 @@ fun CreatePrescriptionScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // CONTENUTO SCROLLABILE — cambia in base allo step
                 LazyColumn(
                     modifier = Modifier
                         .weight(1f)
@@ -215,7 +213,6 @@ fun CreatePrescriptionScreen(
                     item { Spacer(Modifier.height(8.dp)) }
                 }
 
-                // BOTTONI NAVIGAZIONE — fissi in basso
                 NavigationButtons(
                     currentStep = currentStep,
                     salvataggioState = salvataggioState,
@@ -249,6 +246,7 @@ fun CreatePrescriptionScreen(
                 )
         )
     }
+
     if (viewModel.mostraPopUpErrori) {
         PopUpErrori(
             errori = formState.erroriCalcolo ?: emptyList(),
@@ -280,7 +278,7 @@ private fun StepIndicator(
                         when {
                             isActive -> MaterialTheme.colorScheme.primary
                             isPast -> MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)
-                            else -> Color(0xFFEDE7F6)
+                            else -> MaterialTheme.colorScheme.secondaryContainer
                         }
                     ),
                 contentAlignment = Alignment.Center
@@ -290,15 +288,18 @@ private fun StepIndicator(
                     style = TextStyle(
                         fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = if (isActive) Color.White else MaterialTheme.colorScheme.primary
+                        color = if (isActive)
+                            MaterialTheme.colorScheme.onPrimary
+                        else
+                            MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 )
             }
 
             if (index < PrescrizioneStep.values().lastIndex) {
                 Text(
-                    text = "–",
-                    color = Color(0xFFBBBBBB)
+                    text = "-",
+                    color = MaterialTheme.colorScheme.outlineVariant
                 )
             }
         }

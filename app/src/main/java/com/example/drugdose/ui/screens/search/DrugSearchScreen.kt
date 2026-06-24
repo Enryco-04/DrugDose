@@ -1,5 +1,7 @@
 package com.example.drugdose.ui.screens.search
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -39,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -186,18 +189,16 @@ fun DrugSearchScreen(
                             shape = RoundedCornerShape(40.dp)
                         )
                         .clip(RoundedCornerShape(40.dp))
-                        .background(Color.White)
-                ) {
+                        .background(MaterialTheme.colorScheme.surface)                ) {
 
                     Icon(
                         imageVector = Icons.Default.Search,
                         contentDescription = "Cerca",
-                        tint = Color(0xFF625B71),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
                             .padding(start = 8.dp)
                             .size(22.dp)
                     )
-
                     OutlinedTextField(
                         value = searchQuery,
                         onValueChange = {
@@ -208,22 +209,27 @@ fun DrugSearchScreen(
                                 text = "Cerca un farmaco",
                                 style = TextStyle(
                                     fontSize = 15.sp,
-                                    color = Color(0xFFAAAAAA)
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             )
                         },
                         singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Color.Transparent,
-                            unfocusedBorderColor = Color.Transparent
+                            unfocusedBorderColor = Color.Transparent,
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            cursorColor = MaterialTheme.colorScheme.primary,
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                         ),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
         }
+        val context = LocalContext.current
 
-        // Popup con i dettagli del farmaco selezionato
         farmacoSelezionato?.let { farmaco ->
             DrugInfo(
                 farmaco = farmaco,
@@ -231,6 +237,10 @@ fun DrugSearchScreen(
                 onCreaPrescrizione = { selezionato ->
                     onCreaPrescrizione(selezionato)
                     farmacoSelezionato = null
+                },
+                onApriLink = { url ->
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    context.startActivity(intent)
                 }
             )
         }

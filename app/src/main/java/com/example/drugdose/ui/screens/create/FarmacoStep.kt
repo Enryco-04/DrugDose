@@ -21,6 +21,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 
 
 @Composable
@@ -58,12 +59,13 @@ fun FarmacoStep(
                         style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Color.Black)
                     )
                     Card(
-                        colors = CardDefaults.cardColors(containerColor = Color(0xFFEDE7F6)),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer
+                    ),
                         shape = RoundedCornerShape(20.dp)
                     ) {
                         Text(
                             text = farmaco?.tipoFormula ?: "Tipo_calcolo",
-                            style = TextStyle(fontSize = 12.sp, color = Color(0xFF6750A4), fontWeight = FontWeight.Medium),
+                            style = TextStyle(fontSize = 12.sp, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Medium),
                             modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                         )
                     }
@@ -104,7 +106,7 @@ fun FarmacoStep(
                 formState.erroriCalcolo?.forEach { errore ->
                     Text(
                         text = errore,
-                        style = TextStyle(fontSize = 13.sp, color = Color(0xFFC62828)),
+                        style = TextStyle(fontSize = 13.sp, color = MaterialTheme.colorScheme.error),
                         modifier = Modifier.padding(top = 4.dp)
                     )
                 }
@@ -162,7 +164,7 @@ private fun LabelValueRow(label: String, value: String) {
     ) {
         Text(
             text = label,
-            style = TextStyle(fontSize = 14.sp, color = Color(0xFF625B71))
+            style = TextStyle(fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
         )
         Text(
             text = value,
