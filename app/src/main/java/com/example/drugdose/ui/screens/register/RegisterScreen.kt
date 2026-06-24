@@ -63,9 +63,7 @@ fun RegisterScreen(
     Surface(
         shape = RoundedCornerShape(0.dp),
         color = Color.White,
-        modifier = modifier
-            .fillMaxSize()
-            .clip(shape = RoundedCornerShape(40.dp))
+        modifier = modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier

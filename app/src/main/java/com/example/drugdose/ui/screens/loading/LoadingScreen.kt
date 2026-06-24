@@ -35,9 +35,7 @@ fun LoadingScreen(
     Surface(
         shape = RoundedCornerShape(0.dp),
         color = MaterialTheme.colorScheme.surface,
-        modifier = modifier
-            .fillMaxSize()
-            .clip(shape = RoundedCornerShape(40.dp))
+        modifier = modifier.fillMaxSize()
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
