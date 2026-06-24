@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.drugdose.ui.theme.DrugDoseTheme
 
-
 @Composable
 fun ProfileDropdownMenu(
     expanded: Boolean,
@@ -51,7 +50,7 @@ fun ProfileDropdownMenu(
             modifier = Modifier
                 .shadow(elevation = 8.dp, shape = CircleShape)
                 .clip(CircleShape)
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.surface)
         ) {
             // Avatar — sempre visibile, click apre/chiude il menu
             Box(
@@ -60,14 +59,14 @@ fun ProfileDropdownMenu(
                     .size(45.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primary)
-                    .border(BorderStroke(2.dp, Color.White), CircleShape)
+                    .border(BorderStroke(2.dp, MaterialTheme.colorScheme.surface), CircleShape)
                     .clickable { onAvatarClick() },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = "Profilo",
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(30.dp)
                 )
             }
@@ -78,14 +77,14 @@ fun ProfileDropdownMenu(
                         .padding(horizontal = 4.dp, vertical = 4.dp)
                         .size(40.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFFEDE7F6))
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
                         .clickable { onLogoutClick() },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.Logout,
                         contentDescription = "Logout",
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer,
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -104,14 +103,14 @@ fun ProfileDropdownMenu(
                     .size(44.dp)
                     .shadow(elevation = 4.dp, shape = CircleShape)
                     .clip(CircleShape)
-                    .background(Color.Black),
+                    .background(MaterialTheme.colorScheme.onSurface),
                 contentAlignment = Alignment.Center
             ) {
                 IconButton(onClick = onDismiss) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = "Chiudi",
-                        tint = Color.White
+                        tint = MaterialTheme.colorScheme.surface
                     )
                 }
             }

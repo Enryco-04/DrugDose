@@ -62,7 +62,7 @@ fun RegisterScreen(
     }
     Surface(
         shape = RoundedCornerShape(0.dp),
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surface,
         modifier = modifier.fillMaxSize()
     ) {
         Column(
