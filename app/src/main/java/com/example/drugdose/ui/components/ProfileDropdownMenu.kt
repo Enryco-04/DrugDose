@@ -50,7 +50,7 @@ fun ProfileDropdownMenu(
             modifier = Modifier
                 .shadow(elevation = 8.dp, shape = CircleShape)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surface)
+                .background(Color.White) //Scellta estetica di @author Tia-04
         ) {
             // Avatar — sempre visibile, click apre/chiude il menu
             Box(
@@ -59,7 +59,7 @@ fun ProfileDropdownMenu(
                     .size(45.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primary)
-                    .border(BorderStroke(2.dp, MaterialTheme.colorScheme.surface), CircleShape)
+                    //.border(BorderStroke(2.dp, MaterialTheme.colorScheme.surface), CircleShape)
                     .clickable { onAvatarClick() },
                 contentAlignment = Alignment.Center
             ) {
