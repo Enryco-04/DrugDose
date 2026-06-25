@@ -40,7 +40,7 @@ fun FarmacoStep(
     ) {
         // Card: Farmaco selezionato
         Card(
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier.fillMaxWidth()
@@ -56,7 +56,7 @@ fun FarmacoStep(
                 ) {
                     Text(
                         text = "Farmaco Selezionato",
-                        style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                        style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                     )
                     Card(
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer
@@ -78,7 +78,7 @@ fun FarmacoStep(
 
         // Card: Dosaggio (placeholder calcolato dal ViewModel)
         Card(
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier.fillMaxWidth()
@@ -89,7 +89,7 @@ fun FarmacoStep(
             ) {
                 Text(
                     text = "Dosaggio",
-                    style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                    style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                 )
                 LabelValueRow(
                     label = "Dose esatta:",
@@ -168,7 +168,8 @@ private fun LabelValueRow(label: String, value: String) {
         )
         Text(
             text = value,
-            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
+            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface
+            )
         )
     }
 }

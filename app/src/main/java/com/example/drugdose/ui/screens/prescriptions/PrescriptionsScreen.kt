@@ -89,7 +89,7 @@ fun PrescrizioniScreen(
 
     Surface(
         shape = RoundedCornerShape(0.dp),
-        color = Color(0xFFF5F5F5),
+        color = MaterialTheme.colorScheme.background,
         modifier = modifier.fillMaxSize()
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -98,7 +98,7 @@ fun PrescrizioniScreen(
             Icon(
                 imageVector = Icons.Default.Menu,
                 contentDescription = "Menu",
-                tint = Color.Black,
+                tint = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier
                     .padding(start = 23.dp, top = 42.dp)
                     .requiredSize(27.dp)
@@ -120,7 +120,7 @@ fun PrescrizioniScreen(
                 ) {
                     Text(
                         text = "Elenco prescrizioni",
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold)
                     )
 
@@ -129,7 +129,7 @@ fun PrescrizioniScreen(
                             Icon(
                                 imageVector = Icons.Default.FilterList,
                                 contentDescription = "Filtri",
-                                tint = if (filtriAperti) MaterialTheme.colorScheme.primary else Color.Black,
+                                tint = if (filtriAperti) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
                                 modifier = Modifier.size(26.dp)
                             )
                         }
@@ -151,7 +151,7 @@ fun PrescrizioniScreen(
                 Text(
                     text = "Trovate ${prescrizioni.size} prescrizioni",
                     style = TextStyle(fontSize = 13.sp),
-                    color = Color(0xFF5F6368),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 4.dp, bottom = 12.dp)
                 )
 
@@ -167,7 +167,7 @@ fun PrescrizioniScreen(
                             .padding(bottom = 16.dp)
                             .shadow(elevation = 2.dp, shape = RoundedCornerShape(16.dp))
                             .clip(RoundedCornerShape(16.dp))
-                            .background(Color.White)
+                            .background(MaterialTheme.colorScheme.surface)
                             .padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
@@ -175,13 +175,13 @@ fun PrescrizioniScreen(
                             Text(
                                 text = "Dati Paziente",
                                 style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium),
-                                color = Color.Black
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                             OutlinedTextField(
                                 value = filtroPaziente,
                                 onValueChange = { viewModel.onFiltroPazienteChange(it) },
                                 placeholder = {
-                                    Text("Cerca per dati paziente ...", color = Color(0xFFAAAAAA), fontSize = 14.sp)
+                                    Text("Cerca per dati paziente ...", color = MaterialTheme.colorScheme.outline, fontSize = 14.sp)
                                 },
                                 singleLine = true,
                                 modifier = Modifier.fillMaxWidth(),
@@ -193,13 +193,13 @@ fun PrescrizioniScreen(
                             Text(
                                 text = "Nome Farmaco",
                                 style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium),
-                                color = Color.Black
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                             OutlinedTextField(
                                 value = filtroFarmaco,
                                 onValueChange = { viewModel.onFiltroFarmacoChange(it) },
                                 placeholder = {
-                                    Text("Cerca per farmaco...", color = Color(0xFFAAAAAA), fontSize = 14.sp)
+                                    Text("Cerca per farmaco...", color = MaterialTheme.colorScheme.outline, fontSize = 14.sp)
                                 },
                                 singleLine = true,
                                 modifier = Modifier.fillMaxWidth(),
@@ -211,7 +211,7 @@ fun PrescrizioniScreen(
                             Text(
                                 text = "Status",
                                 style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium),
-                                color = Color.Black
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                             StatusDropdown(
                                 selected = filtroStatus,
@@ -270,7 +270,7 @@ fun PrescrizioniScreen(
                     .height(77.dp)
                     .shadow(elevation = 10.dp, shape = RoundedCornerShape(40.dp))
                     .clip(RoundedCornerShape(40.dp))
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.surface)
                     .padding(horizontal = 20.dp)
             ) {
                 Column(
@@ -281,12 +281,12 @@ fun PrescrizioniScreen(
                     Icon(
                         imageVector = Icons.Default.Home,
                         contentDescription = "Home",
-                        tint = Color(0xFF5F6368),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(24.dp)
                     )
                     Text(
                         text = "Home",
-                        color = Color(0xFF5F6368),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     )
                 }
@@ -339,9 +339,9 @@ private fun StatusDropdown(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(10.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                disabledTextColor = Color.Black,
+                disabledTextColor = MaterialTheme.colorScheme.onBackground,
                 disabledBorderColor = MaterialTheme.colorScheme.outline,
-                disabledTrailingIconColor = Color.Black
+                disabledTrailingIconColor = MaterialTheme.colorScheme.onBackground
             ),
             enabled = false
         )

@@ -122,7 +122,7 @@ fun CreatePrescriptionScreen(
                                 elevation = 8.dp,
                                 shape = CircleShape
                             )
-                            .background(MaterialTheme.colorScheme.surface),
+                            .background(Color.White),
                         contentAlignment = Alignment.Center
                     ) {
                         IconButton(onClick = onBack) {
@@ -146,7 +146,7 @@ fun CreatePrescriptionScreen(
                     )
                 }
 
-                // TITOLO + SOTTOTITOLO FARMACO â€” fisso
+                // TITOLO + SOTTOTITOLO FARMACO -” fisso
                 Column(
                     modifier = Modifier.padding(horizontal = 24.dp)
                 ) {
@@ -162,7 +162,7 @@ fun CreatePrescriptionScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = formState.farmaco?.let { "${it.nome} â€“ ${it.nomeCommerciale}" }
+                        text = formState.farmaco?.let { "${it.nome} -“ ${it.nomeCommerciale}" }
                             ?: "Caricamento...",
                         style = TextStyle(
                             fontSize = 14.sp,
@@ -331,7 +331,7 @@ private fun NavigationButtons(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Indietro",
-                    tint = Color.White ,
+                    tint = MaterialTheme.colorScheme.onPrimary ,
                     modifier = Modifier.size(18.dp)
                 )
 
@@ -339,7 +339,7 @@ private fun NavigationButtons(
 
                 Text(
                     text = "Indietro",
-                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onPrimary )
                 )
             }
         } else {
@@ -356,13 +356,13 @@ private fun NavigationButtons(
                 ) {
                     Text(
                         text = "Avanti",
-                        style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                        style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onPrimary )
                     )
                     Spacer(modifier = Modifier.size(6.dp))
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = null,
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.onPrimary ,
                         modifier = Modifier.size(18.dp)
                     )
                 }
@@ -377,20 +377,20 @@ private fun NavigationButtons(
                 ) {
                     if (salvataggioState is SalvataggioState.Loading) {
                         CircularProgressIndicator(
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onPrimary,
                             strokeWidth = 2.dp,
                             modifier = Modifier.size(20.dp)
                         )
                     } else {
                         Text(
                             text = "Conferma",
-                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onPrimary)
                         )
                         Spacer(modifier = Modifier.size(6.dp))
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = null,
-                            tint = Color.White,
+                            tint = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.size(18.dp)
                         )
                     }

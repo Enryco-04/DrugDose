@@ -116,7 +116,7 @@ fun HomeScreen(
                     )
                 }
 
-                // Cards Section â€” dinamica tramite LazyRow
+                // Cards Section ” dinamica tramite LazyRow
                 HorizontalPager(
                     state = pagerState,
                     modifier = Modifier

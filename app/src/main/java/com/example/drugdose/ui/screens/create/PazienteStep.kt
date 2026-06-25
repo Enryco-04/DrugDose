@@ -143,7 +143,7 @@ fun FormCard(
     content: @Composable () -> Unit
 ) {
     Card(
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier.fillMaxWidth()
@@ -157,8 +157,7 @@ fun FormCard(
                 style = TextStyle(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
+                    color = MaterialTheme.colorScheme.onSurface                )
             )
             content()
         }
@@ -168,15 +167,14 @@ fun FormCard(
 @Composable
 fun fieldPlaceholderStyle() = TextStyle(
     fontSize = 14.sp,
-    color = Color(0xFFAFAFAF)
-)
+    color = MaterialTheme.colorScheme.outline)
 
 @Composable
 fun fieldColors() = OutlinedTextFieldDefaults.colors(
     focusedBorderColor = MaterialTheme.colorScheme.primary,
-    unfocusedBorderColor = Color(0xFFE0E0E0),
-    focusedContainerColor = Color(0xFFFAFAFA),
-    unfocusedContainerColor = Color(0xFFFAFAFA)
+    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.1f),
+    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.1f)
 )
 
 
@@ -189,7 +187,7 @@ fun PopUpErrori(
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             shape = RoundedCornerShape(24.dp),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.surface,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
@@ -202,20 +200,20 @@ fun PopUpErrori(
                 Icon(
                     imageVector = Icons.Default.Warning,
                     contentDescription = null,
-                    tint = Color(0xFFC62828),
+                    tint = MaterialTheme.colorScheme.error,
                     modifier = Modifier.padding(top = 8.dp)
                 )
 
                 Text(
                     text = "Impossibile procedere",
-                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                 )
 
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     errori.forEach { errore ->
                         Text(
                             text = "• $errore",
-                            style = TextStyle(fontSize = 15.sp, color = Color(0xFF4A4A4A))
+                            style = TextStyle(fontSize = 15.sp, color = MaterialTheme.colorScheme.primary)
                         )
                     }
                 }
@@ -226,7 +224,7 @@ fun PopUpErrori(
                     shape = RoundedCornerShape(20.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Ho capito", color = Color.White)
+                    Text("Ho capito", color = MaterialTheme.colorScheme.onPrimary)
                 }
             }
         }
