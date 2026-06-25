@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,8 +24,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -34,7 +31,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,27 +42,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.drugdose.R
 import com.example.drugdose.data.model.Prescrizione
 import com.example.drugdose.ui.components.PrescriptionCard
 import com.example.drugdose.ui.components.PrescriptionInfo
-import com.example.drugdose.ui.components.ProfileDropdownMenu
 
-// Eccezione: PrescrizioniViewModel non è iniettato dalla factory ma deve essere gestito in AppNavigation.kt per il backstack
-// Così si può avere un backstack con dentro Home e Prescrizioni
 @Composable
 fun PrescrizioniScreen(
     modifier: Modifier = Modifier,
-    viewModel: PrescriptionsViewModel,
-    onHomeClick: () -> Unit = {},
-    onLogoutClick: () -> Unit
+    viewModel: PrescriptionsViewModel
 ) {
     LaunchedEffect(Unit) {
         viewModel.refreshPrescrizioni()
@@ -77,236 +65,136 @@ fun PrescrizioniScreen(
     val filtroFarmaco by viewModel.filtroFarmaco.collectAsStateWithLifecycle()
     val filtroStatus by viewModel.filtroStatus.collectAsStateWithLifecycle()
 
-    // Prescrizione selezionata per il popup (null = chiuso)
     var prescrizioneSelezionata by remember { mutableStateOf<Prescrizione?>(null) }
-
-    // Box filtri aperto/chiuso — puramente visivo, non serve al ViewModel
     var filtriAperti by remember { mutableStateOf(false) }
 
     val filtriAttivi = filtroPaziente.isNotBlank() || filtroFarmaco.isNotBlank() || filtroStatus != FiltroStatus.TUTTI
 
-    var profileMenuExpanded by remember { mutableStateOf(false) }
-
-    Surface(
-        shape = RoundedCornerShape(0.dp),
-        color = MaterialTheme.colorScheme.background,
-        modifier = modifier.fillMaxSize()
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(top = 107.dp, bottom = 97.dp)
+            .padding(horizontal = 24.dp)
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-
-            // Top bar
-            Icon(
-                imageVector = Icons.Default.Menu,
-                contentDescription = "Menu",
-                tint = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier
-                    .padding(start = 23.dp, top = 42.dp)
-                    .requiredSize(27.dp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Elenco prescrizioni",
+                color = MaterialTheme.colorScheme.onBackground,
+                style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold)
             )
 
+            Box {
+                IconButton(onClick = { filtriAperti = !filtriAperti }) {
+                    Icon(
+                        imageVector = Icons.Default.FilterList,
+                        contentDescription = "Filtri",
+                        tint = if (filtriAperti) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.size(26.dp)
+                    )
+                }
+                if (filtriAttivi) {
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(top = 6.dp, end = 6.dp)
+                            .size(8.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary)
+                    )
+                }
+            }
+        }
 
-            // Content
+        Text(
+            text = "Trovate ${prescrizioni.size} prescrizioni",
+            style = TextStyle(fontSize = 13.sp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(top = 4.dp, bottom = 12.dp)
+        )
+
+        AnimatedVisibility(
+            visible = filtriAperti,
+            enter = fadeIn() + expandVertically(),
+            exit = fadeOut() + shrinkVertically()
+        ) {
             Column(
                 modifier = Modifier
-                    .padding(top = 107.dp, bottom = 97.dp)
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp)
-            ) {
-                // Titolo + icona filtro con badge
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Elenco prescrizioni",
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold)
-                    )
-
-                    Box {
-                        IconButton(onClick = { filtriAperti = !filtriAperti }) {
-                            Icon(
-                                imageVector = Icons.Default.FilterList,
-                                contentDescription = "Filtri",
-                                tint = if (filtriAperti) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
-                                modifier = Modifier.size(26.dp)
-                            )
-                        }
-                        // pallino badge se almeno un filtro è attivo
-                        if (filtriAttivi) {
-                            Box(
-                                modifier = Modifier
-                                    .align(Alignment.TopEnd)
-                                    .padding(top = 6.dp, end = 6.dp)
-                                    .size(8.dp)
-                                    .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.primary)
-                            )
-                        }
-                    }
-                }
-
-                // Riga risultati — sempre visibile, sopra ai filtri collassabili
-                Text(
-                    text = "Trovate ${prescrizioni.size} prescrizioni",
-                    style = TextStyle(fontSize = 13.sp),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 4.dp, bottom = 12.dp)
-                )
-
-                // Box filtri — collassabile
-                AnimatedVisibility(
-                    visible = filtriAperti,
-                    enter = fadeIn() + expandVertically(),
-                    exit = fadeOut() + shrinkVertically()
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp)
-                            .shadow(elevation = 2.dp, shape = RoundedCornerShape(16.dp))
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(MaterialTheme.colorScheme.surface)
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Column {
-                            Text(
-                                text = "Dati Paziente",
-                                style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium),
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                            OutlinedTextField(
-                                value = filtroPaziente,
-                                onValueChange = { viewModel.onFiltroPazienteChange(it) },
-                                placeholder = {
-                                    Text("Cerca per dati paziente ...", color = MaterialTheme.colorScheme.outline, fontSize = 14.sp)
-                                },
-                                singleLine = true,
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(10.dp)
-                            )
-                        }
-
-                        Column {
-                            Text(
-                                text = "Nome Farmaco",
-                                style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium),
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                            OutlinedTextField(
-                                value = filtroFarmaco,
-                                onValueChange = { viewModel.onFiltroFarmacoChange(it) },
-                                placeholder = {
-                                    Text("Cerca per farmaco...", color = MaterialTheme.colorScheme.outline, fontSize = 14.sp)
-                                },
-                                singleLine = true,
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(10.dp)
-                            )
-                        }
-
-                        Column {
-                            Text(
-                                text = "Status",
-                                style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium),
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                            StatusDropdown(
-                                selected = filtroStatus,
-                                onSelected = { viewModel.onFiltroStatusChange(it) }
-                            )
-                        }
-                    }
-                }
-
-                // Lista prescrizioni — occupa tutto lo spazio rimanente
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(items = prescrizioni, key = { it.id }) { prescrizione ->
-                        PrescriptionCard(
-                            prescrizione = prescrizione,
-                            onClick = { prescrizioneSelezionata = prescrizione }
-                        )
-                    }
-
-                    item { Spacer(Modifier.height(8.dp)) }
-                }
-            }
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.Start),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 33.dp, end = 26.dp)
-            ) {
-
-                ProfileDropdownMenu(
-                    expanded = profileMenuExpanded,
-                    onAvatarClick = { profileMenuExpanded = !profileMenuExpanded },
-                    onDismiss = { profileMenuExpanded = false },
-                    onLogoutClick = {
-                        profileMenuExpanded = false
-                        onLogoutClick()
-                    }
-                )
-
-            }
-
-            // Bottom Navigation Bar — identica a HomeScreen, "Prescriptions" evidenziato
-            Row(
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 20.dp)
-                    .fillMaxWidth(0.9f)
-                    .height(77.dp)
-                    .shadow(elevation = 10.dp, shape = RoundedCornerShape(40.dp))
-                    .clip(RoundedCornerShape(40.dp))
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+                    .shadow(elevation = 2.dp, shape = RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(16.dp))
                     .background(MaterialTheme.colorScheme.surface)
-                    .padding(horizontal = 20.dp)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.clickable { onHomeClick() }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Home,
-                        contentDescription = "Home",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(24.dp)
-                    )
+                Column {
                     Text(
-                        text = "Home",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        text = "Dati Paziente",
+                        style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    OutlinedTextField(
+                        value = filtroPaziente,
+                        onValueChange = { viewModel.onFiltroPazienteChange(it) },
+                        placeholder = {
+                            Text("Cerca per dati paziente ...", color = MaterialTheme.colorScheme.outline, fontSize = 14.sp)
+                        },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp)
                     )
                 }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_stethoscope),
-                        contentDescription = "Prescriptions",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp)
-                    )
+
+                Column {
                     Text(
-                        text = "Prescriptions",
-                        color = MaterialTheme.colorScheme.primary,
-                        style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        text = "Nome Farmaco",
+                        style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    OutlinedTextField(
+                        value = filtroFarmaco,
+                        onValueChange = { viewModel.onFiltroFarmacoChange(it) },
+                        placeholder = {
+                            Text("Cerca per farmaco...", color = MaterialTheme.colorScheme.outline, fontSize = 14.sp)
+                        },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                }
+
+                Column {
+                    Text(
+                        text = "Status",
+                        style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    StatusDropdown(
+                        selected = filtroStatus,
+                        onSelected = { viewModel.onFiltroStatusChange(it) }
                     )
                 }
             }
+        }
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(items = prescrizioni, key = { it.id }) { prescrizione ->
+                PrescriptionCard(
+                    prescrizione = prescrizione,
+                    onClick = { prescrizioneSelezionata = prescrizione }
+                )
+            }
+            item { Spacer(Modifier.height(8.dp)) }
         }
     }
 
@@ -346,7 +234,6 @@ private fun StatusDropdown(
             enabled = false
         )
 
-        // overlay clickable — il campo è disabled, serve per intercettare il tap
         Box(
             modifier = Modifier
                 .fillMaxWidth()
