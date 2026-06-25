@@ -103,10 +103,7 @@ class CreatePrescriptionViewModel(
         }
     }
 
-    /**
-     * PLACEHOLDER — calcolo dose non reale.
-     * TODO: collegare la vera logica basata su peso/età/farmaco.doseUnitariaMg/strategiaArrotondamento.
-     */
+
     private fun ricalcolaDose() {
         val state = _formState.value
         val farmaco = state.farmaco
