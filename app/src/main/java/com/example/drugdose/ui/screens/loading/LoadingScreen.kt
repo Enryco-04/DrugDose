@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,7 +58,7 @@ fun LoadingScreen(
                 )
 
                 Text(
-                    text = "Ospedale di Varese",
+                    text = stringResource(R.string.nome_ospedale),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.headlineMedium,
                     textAlign = TextAlign.Center
@@ -78,7 +79,7 @@ fun LoadingScreen(
                     .height(60.dp)
             ) {
                 Text(
-                    text = "Iniziamo",
+                    text = stringResource(R.string.start_string),
                     style = MaterialTheme.typography.titleLarge
                 )
             }
