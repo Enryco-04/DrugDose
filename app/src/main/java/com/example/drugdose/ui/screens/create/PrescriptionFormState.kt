@@ -2,10 +2,7 @@ package com.example.drugdose.ui.screens.create
 
 import com.example.drugdose.data.model.Farmaco
 
-/**
- * Stato del form multi-step per la creazione di una prescrizione.
- * Vive nel ViewModel e viene letto/scritto da tutti e 3 gli step.
- */
+
 data class PrescriptionFormState(
     // Step 1 — Paziente
     val nome: String = "",
@@ -17,9 +14,9 @@ data class PrescriptionFormState(
 
     // Step 2 — Farmaco
     val farmaco: Farmaco? = null,
-    val frequenza: String = "",           // opzionale
-    val numeroConfezioni: String = "",    // obbligatorio
-    val note: String = "",                // opzionale
+    val numeroConfezioni: String = "",
+    val frequenza: String = "",
+    val note: String = "",
 
     // Calcolo
     val doseEsattaMg: Double? = null,
@@ -27,7 +24,7 @@ data class PrescriptionFormState(
     val numeroUnitaTesto: String? = null,
     val erroriCalcolo: List<String>? = null,
 
-    // Errori di validazione UI — true = campo vuoto e tentativo di avanzare
+    // Errori di validazione UI - true = campo vuoto e tentativo di avanzare
     val nomeError: Boolean = false,
     val cognomeError: Boolean = false,
     val codiceFiscaleError: Boolean = false,
@@ -42,7 +39,7 @@ enum class PrescrizioneStep(val label: String) {
     RIEPILOGO("Riepilogo")
 }
 
-/** Stato del salvataggio finale (bottone Conferma) */
+// Stato del salvataggio finale (click sul bottone Conferma)
 sealed class SalvataggioState {
     object Idle : SalvataggioState()
     object Loading : SalvataggioState()
