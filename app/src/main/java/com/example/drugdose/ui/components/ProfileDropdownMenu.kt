@@ -18,11 +18,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.drugdose.ui.theme.DrugDoseTheme
+import com.example.drugdose.ui.theme.LocalThemeController
 
 @Composable
 fun ProfileDropdownMenu(
@@ -40,6 +43,8 @@ fun ProfileDropdownMenu(
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val themeViewModel = LocalThemeController.current
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -71,6 +76,26 @@ fun ProfileDropdownMenu(
                 )
             }
 
+
+            AnimatedVisibility(visible = expanded) {
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp, vertical = 4.dp)
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .clickable {themeViewModel.toggleTheme() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.DarkMode,
+                        contentDescription = "Tema",
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
+
             AnimatedVisibility(visible = expanded) {
                 Box(
                     modifier = Modifier
@@ -89,7 +114,9 @@ fun ProfileDropdownMenu(
                     )
                 }
             }
+
         }
+
 
         // X separata sotto la pillola — chiude il menu, visibile solo se expanded
         AnimatedVisibility(
@@ -121,12 +148,12 @@ fun ProfileDropdownMenu(
 @Preview(showBackground = true)
 @Composable
 fun ProfileDropdownMenuPreview() {
-    DrugDoseTheme {
+    DrugDoseTheme (darkTheme = true) {
         ProfileDropdownMenu(
             expanded = false,
             onAvatarClick = {},
             onDismiss = {},
-            onLogoutClick = {}
+            onLogoutClick = {},
         )
     }
 }
@@ -134,12 +161,16 @@ fun ProfileDropdownMenuPreview() {
 @Preview(showBackground = true)
 @Composable
 fun ProfileDropdownMenuExpandedPreview() {
-    DrugDoseTheme {
+    DrugDoseTheme(darkTheme = true) {
+
+
+
         ProfileDropdownMenu(
             expanded = true,
             onAvatarClick = {},
             onDismiss = {},
-            onLogoutClick = {}
+            onLogoutClick = {},
+
         )
     }
 }

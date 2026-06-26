@@ -18,18 +18,23 @@ import com.example.drugdose.ui.screens.prescriptions.PrescriptionsViewModel
 import com.example.drugdose.ui.screens.prescriptions.PrescrizioniScreen
 import com.example.drugdose.ui.screens.register.RegisterScreen
 import com.example.drugdose.ui.screens.search.DrugSearchScreen
+import com.example.drugdose.ui.components.MainTab
+import com.example.drugdose.ui.screens.main.MainScreen
 
 // AppNavigation.kt
 sealed class Screen(val route: String) {
-    object Loading       : Screen("loading")
-    object Login         : Screen("login")
+    object Loading : Screen("loading")
+    object Login : Screen("login")
     object Register : Screen("registrazione")
-    object Home          : Screen("home")
-    object DrugSearchList  : Screen("drugdose")
-    object Creazione     : Screen("creazione/{farmacoId}") {
+    object DrugSearchList : Screen("drugdose")
+
+    object Creazione : Screen("creazione/{farmacoId}") {
         fun createRoute(farmacoId: String) = "creazione/$farmacoId"
     }
-    object Prescrizioni  : Screen("prescrizioni")
+
+    object Main : Screen("main?tab={tab}") {
+        fun createRoute(tab: String = "home") = "main?tab=$tab"
+    }
 }
 
 //TODO come gestire 3 viewModel in uno screen
@@ -38,103 +43,75 @@ sealed class Screen(val route: String) {
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Screen.Home.route) {
 
+    NavHost(navController = navController, startDestination = Screen.Main.route) {
         composable(Screen.Loading.route) {
             LoadingScreen(
                 onIniziamoClick = {
                     navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Loading.route) {
-                            inclusive = true
-                        } // Rimuove LoadingScreen dalla backstack, non si torna indietro
+                        popUpTo(Screen.Loading.route) { inclusive = true }
                     }
                 }
             )
         }
-
         composable(Screen.Login.route) {
             LoginScreen(
                 onLoginSuccesso = {
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Login.route) {
-                            inclusive = true
-                        } //Rimuove tutto cio che c'era prima
-                    }
-                },
+                    navController.navigate(Screen.Main.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    } },
                 onVaiRegistrazione = { navController.navigate(Screen.Register.route) }
             )
         }
-
         composable(Screen.Register.route) {
             RegisterScreen(
                 onRegistrazioneSuccesso = {
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Login.route) { inclusive = true }
+                    navController.navigate(Screen.Main.createRoute()) {
+                        popUpTo(Screen.Login.route) {
+                            inclusive = true
+                        }
                     }
                 },
-                onVaiLogin = { navController.popBackStack() } //semplice indietro
+                onVaiLogin = { navController.popBackStack() }
             )
         }
-
-        composable(Screen.Home.route) {
-            HomeScreen(
+        // composable Main — legge il tab dall'argomento
+        composable(
+            route = Screen.Main.route,
+            arguments = listOf(
+                navArgument("tab") {
+                    type = NavType.StringType
+                    defaultValue = "home"
+                }
+            )
+        ) { backStackEntry ->
+            val tabArg = backStackEntry.arguments?.getString("tab")
+            val initialTab = if (tabArg == "prescrizioni") MainTab.PRESCRIZIONI else MainTab.HOME
+            MainScreen(
+                initialTab = initialTab,
                 onMenuItemClick = { menuItem ->
                     when (menuItem.action) {
                         HomeAction.DRUG_DOSE -> navController.navigate(Screen.DrugSearchList.route)
-                        HomeAction.PLACEHOLDER -> { /* non fa nulla per ora */
-                        }
+                        HomeAction.PLACEHOLDER -> { /* non fa nulla per ora */ }
+                    }
+                },
+                onLogoutClick = {
+                    navController.navigate(Screen.Loading.route) {
+                        popUpTo(Screen.Loading.route) { inclusive = false }
                     }
                 },
                 onSessioneNonValida = {
                     navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Home.route) { inclusive = true }
-                    }
-                },
-                onVaiAPrescrizioniClick = {
-                    navController.navigate(Screen.Prescrizioni.route)
-                } ,
-
-                onLogoutClick = {
-                    navController.navigate(Screen.Loading.route) {
-                        popUpTo(Screen.Loading.route) { inclusive = false }
+                        popUpTo(Screen.Loading.route) { inclusive = true }
                     }
                 }
             )
         }
-
-        // ECCEZIONE: Il ViewModel viene legato al ciclo di vita della Home (Screen.Home.route)
-        // invece che a quello di questa destinazione. Questo permette di navigare avanti e indietro
-        // tra Home e Prescrizioni senza perdere i dati caricati e lo stato della UI.
-        composable(Screen.Prescrizioni.route) {
-            val viewModel: PrescriptionsViewModel = viewModel(
-                //Assegno l'owner del BackStack di PrescrizioniViewModel a Home, per non uccidere il vecchio ViewModel (Home)
-                viewModelStoreOwner = navController.getBackStackEntry(Screen.Home.route),
-                factory = ViewModelFactory()
-            )
-            PrescrizioniScreen( //Inietto il viewModel creato da qui,
-                viewModel = viewModel,
-                onHomeClick = {
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Home.route) { inclusive = false }
-                        launchSingleTop = true
-                    }
-                },
-                onLogoutClick = {
-                    navController.navigate(Screen.Loading.route) {
-                        popUpTo(Screen.Loading.route) { inclusive = false }
-                    }
-                }
-            )
-        }
-
         composable(Screen.DrugSearchList.route) {
             DrugSearchScreen(
                 onBack = { navController.popBackStack() },
                 onCreaPrescrizione = { farmaco ->
-                    // Passiamo solo l'id (String) — niente IllegalArgumentException
-                    // su SavedStateHandle, perché Farmaco non è Parcelable.
-                    navController.navigate(Screen.Creazione.createRoute(farmaco.id))
-                },
+                    navController.navigate(Screen.Creazione.createRoute(farmaco.id)) },
                 onLogoutClick = {
                     navController.navigate(Screen.Loading.route) {
                         popUpTo(Screen.Loading.route) { inclusive = false }
@@ -142,25 +119,22 @@ fun AppNavigation() {
                 }
             )
         }
-
         composable(
             route = Screen.Creazione.route,
             arguments = listOf(navArgument("farmacoId") { type = NavType.StringType })
         ) { backStackEntry ->
             val farmacoId = backStackEntry.arguments?.getString("farmacoId")
-
             if (farmacoId != null) {
                 CreatePrescriptionScreen(
                     farmacoId = farmacoId,
                     onBack = { navController.popBackStack() },
                     onLogoutClick = {
                         navController.navigate(Screen.Loading.route) {
-                            popUpTo(Screen.Loading.route) { inclusive = false }
-                        }
-                    },
+                            popUpTo(Screen.Loading.route) { inclusive = false } }
+                                    },
                     onPrescrizioneCreata = {
-                        navController.navigate(Screen.Prescrizioni.route) {
-                            popUpTo(Screen.DrugSearchList.route) { inclusive = false }
+                        navController.navigate(Screen.Main.createRoute("prescrizioni")) {
+                            popUpTo(Screen.DrugSearchList.route) { inclusive = true }
                         }
                     }
                 )

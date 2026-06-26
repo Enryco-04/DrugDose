@@ -53,20 +53,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.drugdose.R
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.drugdose.data.model.Prescrizione
+import com.example.drugdose.di.ViewModelFactory
 import com.example.drugdose.ui.components.PrescriptionCard
 import com.example.drugdose.ui.components.PrescriptionInfo
-import com.example.drugdose.ui.components.ProfileDropdownMenu
+import com.example.drugdose.ui.screens.register.RegisterViewModel
 
 // Eccezione: PrescrizioniViewModel non è iniettato dalla factory ma deve essere gestito in AppNavigation.kt per il backstack
 // Così si può avere un backstack con dentro Home e Prescrizioni
 @Composable
 fun PrescrizioniScreen(
     modifier: Modifier = Modifier,
-    viewModel: PrescriptionsViewModel,
-    onHomeClick: () -> Unit = {},
-    onLogoutClick: () -> Unit
+    viewModel: PrescriptionsViewModel = viewModel(factory = ViewModelFactory())
 ) {
     LaunchedEffect(Unit) {
         viewModel.refreshPrescrizioni()

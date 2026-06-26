@@ -14,7 +14,7 @@ import com.example.drugdose.ui.screens.login.LoginViewModel
 import com.example.drugdose.ui.screens.prescriptions.PrescriptionsViewModel
 import com.example.drugdose.ui.screens.register.RegisterViewModel
 import com.example.drugdose.ui.screens.search.DrugSearchViewModel
-
+import com.example.drugdose.ui.theme.ThemeViewModel
 
 class ViewModelFactory(
     private val authRepo: AuthRepository = AuthRepositoryImpl(),
@@ -49,6 +49,9 @@ class ViewModelFactory(
 
             PrescriptionsViewModel::class.java ->
                 PrescriptionsViewModel(prescrizioniRepo,authRepo) as T
+
+            ThemeViewModel::class.java ->
+                ThemeViewModel() as T
 
             else -> throw IllegalArgumentException("ViewModel non riconosciuto: ${modelClass.name}")
         }

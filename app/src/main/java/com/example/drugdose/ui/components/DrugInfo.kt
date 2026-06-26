@@ -348,7 +348,8 @@ private fun DrugInfoPreview() {
         )
     )
 
-    DrugDoseTheme {
+    DrugDoseTheme (darkTheme = true) {
+
         DrugInfo(
             farmaco = sampleFarmaco,
             onDismiss = { },
