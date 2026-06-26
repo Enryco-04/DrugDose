@@ -228,56 +228,6 @@ fun PrescriptionsScreen(
                     item { Spacer(Modifier.height(8.dp)) }
                 }
             }
-
-
-            // Bottom Navigation Bar — identica a HomeScreen, "Prescriptions" evidenziato
-            Row(
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 20.dp)
-                    .fillMaxWidth(0.9f)
-                    .height(77.dp)
-                    .shadow(elevation = 10.dp, shape = RoundedCornerShape(40.dp))
-                    .clip(RoundedCornerShape(40.dp))
-                    .background(MaterialTheme.colorScheme.surface)
-                    .padding(horizontal = 20.dp)
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.clickable { onHomeClick() }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Home,
-                        contentDescription = "Home",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Text(
-                        text = "Home",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                    )
-                }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_stethoscope),
-                        contentDescription = "Prescriptions",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Text(
-                        text = "Prescriptions",
-                        color = MaterialTheme.colorScheme.primary,
-                        style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                    )
-                }
-            }
         }
     }
 
