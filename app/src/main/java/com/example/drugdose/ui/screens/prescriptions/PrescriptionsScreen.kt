@@ -47,14 +47,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.drugdose.data.model.Prescrizione
+import com.example.drugdose.di.ViewModelFactory
 import com.example.drugdose.ui.components.PrescriptionCard
 import com.example.drugdose.ui.components.PrescriptionInfo
+import com.example.drugdose.ui.screens.register.RegisterViewModel
 
 @Composable
 fun PrescrizioniScreen(
     modifier: Modifier = Modifier,
-    viewModel: PrescriptionsViewModel
+    viewModel: PrescriptionsViewModel = viewModel(factory = ViewModelFactory())
 ) {
     LaunchedEffect(Unit) {
         viewModel.refreshPrescrizioni()

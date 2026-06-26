@@ -55,18 +55,23 @@ import com.example.drugdose.ui.screens.prescriptions.PrescriptionsViewModel
 import com.example.drugdose.ui.screens.prescriptions.PrescrizioniScreen
 import com.example.drugdose.ui.screens.register.RegisterScreen
 import com.example.drugdose.ui.screens.search.DrugSearchScreen
+import com.example.drugdose.ui.components.MainTab
+import com.example.drugdose.ui.screens.main.MainScreen
 
 // AppNavigation.kt
 sealed class Screen(val route: String) {
-    object Loading       : Screen("loading")
-    object Login         : Screen("login")
+    object Loading : Screen("loading")
+    object Login : Screen("login")
     object Register : Screen("registrazione")
-    object Home          : Screen("home")
-    object DrugSearchList  : Screen("drugdose")
-    object Creazione     : Screen("creazione/{farmacoId}") {
+    object DrugSearchList : Screen("drugdose")
+
+    object Creazione : Screen("creazione/{farmacoId}") {
         fun createRoute(farmacoId: String) = "creazione/$farmacoId"
     }
-    object Prescrizioni  : Screen("prescrizioni")
+
+    object Main : Screen("main?tab={tab}") {
+        fun createRoute(tab: String = "home") = "main?tab=$tab"
+    }
 }
 
 
@@ -74,244 +79,102 @@ sealed class Screen(val route: String) {
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = backStackEntry?.destination?.route
 
-    // Header e bottom bar fissi: solo su Home/Prescrizioni
-    val showChrome = currentRoute == Screen.Home.route || currentRoute == Screen.Prescrizioni.route
-    var profileMenuExpanded by remember { mutableStateOf(false) }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-
-        NavHost(navController = navController, startDestination = Screen.Home.route) {
-
-            composable(Screen.Loading.route) {
-                LoadingScreen(
-                    onIniziamoClick = {
-                        navController.navigate(Screen.Login.route) {
-                            popUpTo(Screen.Loading.route) { inclusive = true }
-                        }
+    NavHost(navController = navController, startDestination = Screen.Main.route) {
+        composable(Screen.Loading.route) {
+            LoadingScreen(
+                onIniziamoClick = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Loading.route) { inclusive = true }
                     }
-                )
-            }
-
-            composable(Screen.Login.route) {
-                LoginScreen(
-                    onLoginSuccesso = {
-                        navController.navigate(Screen.Home.route) {
-                            popUpTo(Screen.Login.route) { inclusive = true }
-                        }
-                    },
-                    onVaiRegistrazione = { navController.navigate(Screen.Register.route) }
-                )
-            }
-
-            composable(Screen.Register.route) {
-                RegisterScreen(
-                    onRegistrazioneSuccesso = {
-                        navController.navigate(Screen.Home.route) {
-                            popUpTo(Screen.Login.route) { inclusive = true }
-                        }
-                    },
-                    onVaiLogin = { navController.popBackStack() }
-                )
-            }
-
-            // Scorrimento tra Home e Prescrizioni
-            composable(
-                route = Screen.Home.route,
-                exitTransition = {
-                    if (targetState.destination.route == Screen.Prescrizioni.route) {
-                        slideOutHorizontally(
-                            targetOffsetX = { fullWidth -> -fullWidth },
-                            animationSpec = tween(300)
-                        )
-                    } else null
-                },
-                popEnterTransition = {
-                    if (initialState.destination.route == Screen.Prescrizioni.route) {
-                        slideInHorizontally(
-                            initialOffsetX = { fullWidth -> -fullWidth },
-                            animationSpec = tween(300)
-                        )
-                    } else null
                 }
-            ) {
-                HomeScreen(
-                    onMenuItemClick = { menuItem ->
-                        when (menuItem.action) {
-                            HomeAction.DRUG_DOSE -> navController.navigate(Screen.DrugSearchList.route)
-                            HomeAction.PLACEHOLDER -> { /* non fa nulla per ora */ }
-                        }
-                    },
-                    onSessioneNonValida = {
-                        navController.navigate(Screen.Login.route) {
-                            popUpTo(Screen.Home.route) { inclusive = true }
-                        }
-                    }
-                )
-            }
-
-            composable(
-                route = Screen.Prescrizioni.route,
-                enterTransition = {
-                    if (initialState.destination.route == Screen.Home.route) {
-                        slideInHorizontally(
-                            initialOffsetX = { fullWidth -> fullWidth },
-                            animationSpec = tween(300)
-                        )
-                    } else null
-                },
-                popExitTransition = {
-                    if (targetState.destination.route == Screen.Home.route) {
-                        slideOutHorizontally(
-                            targetOffsetX = { fullWidth -> fullWidth },
-                            animationSpec = tween(300)
-                        )
-                    } else null
-                }
-            ) {
-                val viewModel: PrescriptionsViewModel = viewModel(
-                    viewModelStoreOwner = navController.getBackStackEntry(Screen.Home.route),
-                    factory = ViewModelFactory()
-                )
-                PrescrizioniScreen(viewModel = viewModel)
-            }
-
-            composable(Screen.DrugSearchList.route) {
-                DrugSearchScreen(
-                    onBack = { navController.popBackStack() },
-                    onCreaPrescrizione = { farmaco ->
-                        navController.navigate(Screen.Creazione.createRoute(farmaco.id))
-                    },
-                    onLogoutClick = {
-                        navController.navigate(Screen.Loading.route) {
-                            popUpTo(Screen.Loading.route) { inclusive = false }
-                        }
-                    }
-                )
-            }
-
-            composable(
-                route = Screen.Creazione.route,
-                arguments = listOf(navArgument("farmacoId") { type = NavType.StringType })
-            ) { backStackEntry ->
-                val farmacoId = backStackEntry.arguments?.getString("farmacoId")
-
-                if (farmacoId != null) {
-                    CreatePrescriptionScreen(
-                        farmacoId = farmacoId,
-                        onBack = { navController.popBackStack() },
-                        onLogoutClick = {
-                            navController.navigate(Screen.Loading.route) {
-                                popUpTo(Screen.Loading.route) { inclusive = false }
-                            }
-                        },
-                        onPrescrizioneCreata = {
-                            navController.navigate(Screen.Prescrizioni.route) {
-                                popUpTo(Screen.DrugSearchList.route) { inclusive = false }
-                            }
-                        }
-                    )
-                }
-            }
-        }
-
-        // CHROME FISSO: menu, profilo, bottom bar — solo su Home/Prescrizioni
-        if (showChrome) {
-
-            Icon(
-                imageVector = Icons.Default.Menu,
-                contentDescription = "Menu",
-                tint = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier
-                    .padding(start = 23.dp, top = 42.dp)
-                    .requiredSize(27.dp)
             )
-
-            Row(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 33.dp, end = 26.dp)
-            ) {
-                ProfileDropdownMenu(
-                    expanded = profileMenuExpanded,
-                    onAvatarClick = { profileMenuExpanded = !profileMenuExpanded },
-                    onDismiss = { profileMenuExpanded = false },
+        }
+        composable(Screen.Login.route) {
+            LoginScreen(
+                onLoginSuccesso = {
+                    navController.navigate(Screen.Main.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    } },
+                onVaiRegistrazione = { navController.navigate(Screen.Register.route) }
+            )
+        }
+        composable(Screen.Register.route) {
+            RegisterScreen(
+                onRegistrazioneSuccesso = {
+                    navController.navigate(Screen.Main.createRoute()) {
+                        popUpTo(Screen.Login.route) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onVaiLogin = { navController.popBackStack() }
+            )
+        }
+        // composable Main — legge il tab dall'argomento
+        composable(
+            route = Screen.Main.route,
+            arguments = listOf(
+                navArgument("tab") {
+                    type = NavType.StringType
+                    defaultValue = "home"
+                }
+            )
+        ) { backStackEntry ->
+            val tabArg = backStackEntry.arguments?.getString("tab")
+            val initialTab = if (tabArg == "prescrizioni") MainTab.PRESCRIZIONI else MainTab.HOME
+            MainScreen(
+                initialTab = initialTab,
+                onMenuItemClick = { menuItem ->
+                    when (menuItem.action) {
+                        HomeAction.DRUG_DOSE -> navController.navigate(Screen.DrugSearchList.route)
+                        HomeAction.PLACEHOLDER -> { /* non fa nulla per ora */ }
+                    }
+                },
+                onLogoutClick = {
+                    navController.navigate(Screen.Loading.route) {
+                        popUpTo(Screen.Loading.route) { inclusive = false }
+                    }
+                },
+                onSessioneNonValida = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Loading.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+        composable(Screen.DrugSearchList.route) {
+            DrugSearchScreen(
+                onBack = { navController.popBackStack() },
+                onCreaPrescrizione = { farmaco ->
+                    navController.navigate(Screen.Creazione.createRoute(farmaco.id)) },
+                onLogoutClick = {
+                    navController.navigate(Screen.Loading.route) {
+                        popUpTo(Screen.Loading.route) { inclusive = false }
+                    }
+                }
+            )
+        }
+        composable(
+            route = Screen.Creazione.route,
+            arguments = listOf(navArgument("farmacoId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val farmacoId = backStackEntry.arguments?.getString("farmacoId")
+            if (farmacoId != null) {
+                CreatePrescriptionScreen(
+                    farmacoId = farmacoId,
+                    onBack = { navController.popBackStack() },
                     onLogoutClick = {
-                        profileMenuExpanded = false
                         navController.navigate(Screen.Loading.route) {
-                            popUpTo(Screen.Loading.route) { inclusive = false }
+                            popUpTo(Screen.Loading.route) { inclusive = false } }
+                                    },
+                    onPrescrizioneCreata = {
+                        navController.navigate(Screen.Main.createRoute("prescrizioni")) {
+                            popUpTo(Screen.DrugSearchList.route) { inclusive = true }
                         }
                     }
                 )
-            }
-
-            Row(
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 20.dp)
-                    .fillMaxWidth(0.9f)
-                    .height(77.dp)
-                    .shadow(elevation = 10.dp, shape = RoundedCornerShape(40.dp))
-                    .clip(RoundedCornerShape(40.dp))
-                    .background(MaterialTheme.colorScheme.surface)
-                    .padding(horizontal = 20.dp)
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.clickable {
-                        navController.navigate(Screen.Home.route) {
-                            popUpTo(Screen.Home.route) { inclusive = false }
-                            launchSingleTop = true
-                        }
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Home,
-                        contentDescription = "Home",
-                        tint = if (currentRoute == Screen.Home.route)
-                            MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Text(
-                        text = "Home",
-                        color = if (currentRoute == Screen.Home.route)
-                            MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.onSurfaceVariant,
-                        style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                    )
-                }
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Alignment.Center.let { Arrangement.Center },
-                    modifier = Modifier.clickable {
-                        navController.navigate(Screen.Prescrizioni.route) {
-                            launchSingleTop = true
-                        }
-                    }
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_stethoscope),
-                        contentDescription = "Prescriptions",
-                        tint = if (currentRoute == Screen.Prescrizioni.route)
-                            MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Text(
-                        text = "Prescriptions",
-                        color = if (currentRoute == Screen.Prescrizioni.route)
-                            MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.onSurfaceVariant,
-                        style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                    )
-                }
             }
         }
     }

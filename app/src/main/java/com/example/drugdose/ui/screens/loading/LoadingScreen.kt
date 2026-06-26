@@ -58,7 +58,7 @@ fun LoadingScreen(
                 )
 
                 Text(
-                    text = stringResource(R.string.nome_ospedale),
+                    text = "Ospedale di Varese",
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.headlineMedium,
                     textAlign = TextAlign.Center
@@ -79,7 +79,7 @@ fun LoadingScreen(
                     .height(60.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.start_string),
+                    text = "Iniziamo",
                     style = MaterialTheme.typography.titleLarge
                 )
             }
