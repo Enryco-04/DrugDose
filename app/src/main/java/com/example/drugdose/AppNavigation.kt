@@ -52,7 +52,6 @@ import com.example.drugdose.ui.screens.home.HomeScreen
 import com.example.drugdose.ui.screens.loading.LoadingScreen
 import com.example.drugdose.ui.screens.login.LoginScreen
 import com.example.drugdose.ui.screens.prescriptions.PrescriptionsViewModel
-import com.example.drugdose.ui.screens.prescriptions.PrescrizioniScreen
 import com.example.drugdose.ui.screens.register.RegisterScreen
 import com.example.drugdose.ui.screens.search.DrugSearchScreen
 import com.example.drugdose.ui.components.MainTab

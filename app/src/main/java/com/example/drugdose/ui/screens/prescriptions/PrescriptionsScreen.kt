@@ -55,7 +55,7 @@ import com.example.drugdose.ui.components.PrescriptionInfo
 import com.example.drugdose.ui.screens.register.RegisterViewModel
 
 @Composable
-fun PrescrizioniScreen(
+fun PrescriptionsScreen(
     modifier: Modifier = Modifier,
     viewModel: PrescriptionsViewModel = viewModel(factory = ViewModelFactory())
 ) {

@@ -36,10 +36,10 @@ import com.example.drugdose.ui.components.MainTab
 import com.example.drugdose.ui.components.ProfileDropdownMenu
 import com.example.drugdose.ui.screens.home.HomeScreen
 import com.example.drugdose.ui.screens.home.HomeViewModel
-import com.example.drugdose.ui.screens.prescriptions.PrescrizioniScreen
 import com.example.drugdose.ui.screens.prescriptions.PrescriptionsViewModel
 import com.example.drugdose.ui.screens.home.HomeAction
 import com.example.drugdose.ui.screens.home.HomeMenuItem
+import com.example.drugdose.ui.screens.prescriptions.PrescriptionsScreen
 
 @Composable
 fun MainScreen(
@@ -87,7 +87,7 @@ fun MainScreen(
                     onMenuItemClick = onMenuItemClick,
                     onSessioneNonValida = onSessioneNonValida
                 )
-                MainTab.PRESCRIZIONI -> PrescrizioniScreen(
+                MainTab.PRESCRIZIONI -> PrescriptionsScreen(
                     modifier = Modifier.fillMaxSize(),
                     viewModel = prescriptionsViewModel
                 )
