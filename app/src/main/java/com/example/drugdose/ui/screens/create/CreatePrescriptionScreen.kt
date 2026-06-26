@@ -1,12 +1,5 @@
 package com.example.drugdose.ui.screens.create
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,10 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -154,7 +146,7 @@ fun CreatePrescriptionScreen(
                     )
                 }
 
-                // TITOLO + SOTTOTITOLO FARMACO — fisso
+                // TITOLO + SOTTOTITOLO FARMACO -” fisso
                 Column(
                     modifier = Modifier.padding(horizontal = 24.dp)
                 ) {
@@ -170,7 +162,7 @@ fun CreatePrescriptionScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = formState.farmaco?.let { "${it.nome} — ${it.nomeCommerciale}" }
+                        text = formState.farmaco?.let { "${it.nome} -“ ${it.nomeCommerciale}" }
                             ?: "Caricamento...",
                         style = TextStyle(
                             fontSize = 14.sp,
@@ -181,7 +173,7 @@ fun CreatePrescriptionScreen(
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
-                // INDICATORE STEP — fisso
+
                 StepIndicator(
                     currentStep = currentStep,
                     modifier = Modifier.padding(horizontal = 24.dp)
@@ -189,72 +181,38 @@ fun CreatePrescriptionScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // CONTENUTO DELLO STEP — unica parte animata.
-                Box(
+                LazyColumn(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    AnimatedContent(
-                        targetState = currentStep,
-                        transitionSpec = {
-                            val isForward = targetState.ordinal > initialState.ordinal
-                            if (isForward) {
-                                (slideInHorizontally(
-                                    initialOffsetX = { fullWidth -> fullWidth },
-                                    animationSpec = tween(300)
-                                ) + fadeIn(animationSpec = tween(300))) togetherWith
-                                        (slideOutHorizontally(
-                                            targetOffsetX = { fullWidth -> -fullWidth },
-                                            animationSpec = tween(300)
-                                        ) + fadeOut(animationSpec = tween(300)))
-                            } else {
-                                (slideInHorizontally(
-                                    initialOffsetX = { fullWidth -> -fullWidth },
-                                    animationSpec = tween(300)
-                                ) + fadeIn(animationSpec = tween(300))) togetherWith
-                                        (slideOutHorizontally(
-                                            targetOffsetX = { fullWidth -> fullWidth },
-                                            animationSpec = tween(300)
-                                        ) + fadeOut(animationSpec = tween(300)))
-                            }
-                        },
-                        modifier = Modifier.fillMaxSize()
-                    ) { step ->
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState())
-                                .padding(horizontal = 16.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            when (step) {
-                                PrescrizioneStep.PAZIENTE -> PazienteStep(
-                                    formState = formState,
-                                    onNomeChange = viewModel::onNomeChange,
-                                    onCognomeChange = viewModel::onCognomeChange,
-                                    onCodiceFiscaleChange = viewModel::onCodiceFiscaleChange,
-                                    onEtaChange = viewModel::onEtaChange,
-                                    onPesoChange = viewModel::onPesoChange,
-                                    onAltezzaChange = viewModel::onAltezzaChange
-                                )
+                    item {
+                        when (currentStep) {
+                            PrescrizioneStep.PAZIENTE -> PazienteStep(
+                                formState = formState,
+                                onNomeChange = viewModel::onNomeChange,
+                                onCognomeChange = viewModel::onCognomeChange,
+                                onCodiceFiscaleChange = viewModel::onCodiceFiscaleChange,
+                                onEtaChange = viewModel::onEtaChange,
+                                onPesoChange = viewModel::onPesoChange,
+                                onAltezzaChange = viewModel::onAltezzaChange
+                            )
 
-                                PrescrizioneStep.FARMACO -> FarmacoStep(
-                                    formState = formState,
-                                    onFrequenzaChange = viewModel::onFrequenzaChange,
-                                    onNumeroConfezioniChange = viewModel::onNumeroConfezioniChange,
-                                    onNoteChange = viewModel::onNoteChange
-                                )
+                            PrescrizioneStep.FARMACO -> FarmacoStep(
+                                formState = formState,
+                                onFrequenzaChange = viewModel::onFrequenzaChange,
+                                onNumeroConfezioniChange = viewModel::onNumeroConfezioniChange,
+                                onNoteChange = viewModel::onNoteChange
+                            )
 
-                                PrescrizioneStep.RIEPILOGO -> RiepilogoStep(formState = formState)
-                            }
-
-                            Spacer(Modifier.height(8.dp))
+                            PrescrizioneStep.RIEPILOGO -> RiepilogoStep(formState = formState)
                         }
                     }
+                    item { Spacer(Modifier.height(8.dp)) }
                 }
 
-                // NAVIGATION BUTTONS — fisso
                 NavigationButtons(
                     currentStep = currentStep,
                     salvataggioState = salvataggioState,
@@ -361,6 +319,8 @@ private fun NavigationButtons(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        // Bottone Indietro — nascosto/disabilitato solo se si vuole sul primo step.
+        // Qui resta visibile ma cliccabile solo se non siamo già al primo step.
         if (currentStep != PrescrizioneStep.PAZIENTE) {
             Button(
                 onClick = onBack,
@@ -371,13 +331,15 @@ private fun NavigationButtons(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Indietro",
-                    tint = MaterialTheme.colorScheme.onPrimary,
+                    tint = MaterialTheme.colorScheme.onPrimary ,
                     modifier = Modifier.size(18.dp)
                 )
+
                 Spacer(modifier = Modifier.size(6.dp))
+
                 Text(
                     text = "Indietro",
-                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onPrimary)
+                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onPrimary )
                 )
             }
         } else {
@@ -394,13 +356,13 @@ private fun NavigationButtons(
                 ) {
                     Text(
                         text = "Avanti",
-                        style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onPrimary)
+                        style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onPrimary )
                     )
                     Spacer(modifier = Modifier.size(6.dp))
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary,
+                        tint = MaterialTheme.colorScheme.onPrimary ,
                         modifier = Modifier.size(18.dp)
                     )
                 }
@@ -409,7 +371,7 @@ private fun NavigationButtons(
                 Button(
                     onClick = onConferma,
                     enabled = salvataggioState !is SalvataggioState.Loading,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)), // verde
                     shape = RoundedCornerShape(24.dp),
                     modifier = Modifier.height(50.dp)
                 ) {
