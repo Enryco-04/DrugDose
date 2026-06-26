@@ -1,7 +1,6 @@
 package com.example.drugdose.ui.screens.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -18,14 +16,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.ui.res.painterResource
-import com.example.drugdose.R
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,8 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,16 +38,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.drugdose.di.ViewModelFactory
 import com.example.drugdose.ui.components.HomeCard  // ← importato da components
-import com.example.drugdose.ui.components.ProfileDropdownMenu
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = ViewModelFactory()),
     onMenuItemClick: (HomeMenuItem) -> Unit = {},
-    onSessioneNonValida: () -> Unit = {},
-    onVaiAPrescrizioniClick: () -> Unit ={},
-    onLogoutClick: () -> Unit = {}
+    onSessioneNonValida: () -> Unit = {}
 
 ) {
     LaunchedEffect(viewModel.sessioneNonValida) {
@@ -70,8 +56,6 @@ fun HomeScreen(
     val pagerState = rememberPagerState(
         pageCount = { pages.size.coerceAtLeast(1) }
     )
-    // Stato del menu a discesa del profilo
-    var profileMenuExpanded by remember { mutableStateOf(false) }
 
     Surface(
         color = MaterialTheme.colorScheme.background,

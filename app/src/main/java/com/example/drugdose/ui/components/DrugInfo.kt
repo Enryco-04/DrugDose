@@ -26,11 +26,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -39,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.drugdose.data.model.Farmaco
 import com.example.drugdose.data.model.Rcp
 import com.example.drugdose.ui.theme.DrugDoseTheme
@@ -66,7 +63,7 @@ fun DrugInfo(
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // HEADER FISSO — non scrolla
+                // Header fisso (non scrollabile)
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -129,7 +126,7 @@ fun DrugInfo(
                     }
                 }
 
-                // CONTENUTO SCROLLABILE — weight(1f) occupa lo spazio rimanente tra header e bottone
+                // Contenuto Scrollabile
                 LazyColumn(
                     modifier = Modifier
                         .weight(1f)
@@ -274,7 +271,7 @@ fun DrugInfo(
                     item { Spacer(Modifier.height(4.dp)) }
                 }
 
-                // BOTTONE FISSO — fuori dalla LazyColumn, sempre visibile
+                // Bottone crea prescrizione
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

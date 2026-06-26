@@ -178,7 +178,7 @@ fun CreatePrescriptionScreen(
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
-                // INDICATORE STEP — fisso
+                // Indicatore dello step (non cliccabile) sarà Paziente/Farmaco/Riepilogo
                 StepIndicator(
                     currentStep = currentStep,
                     modifier = Modifier.padding(horizontal = 24.dp)
@@ -186,7 +186,7 @@ fun CreatePrescriptionScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // CONTENUTO DELLO STEP — unica parte animata.
+                // Content di Step
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -251,7 +251,7 @@ fun CreatePrescriptionScreen(
                     }
                 }
 
-                // NAVIGATION BUTTONS — fisso
+                // NAVIGATION BUTTONS fisso
                 NavigationButtons(
                     currentStep = currentStep,
                     salvataggioState = salvataggioState,

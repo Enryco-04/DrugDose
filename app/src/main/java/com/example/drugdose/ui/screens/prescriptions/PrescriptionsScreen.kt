@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,8 +24,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -46,28 +43,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.drugdose.R
 import com.example.drugdose.data.model.Prescrizione
 import com.example.drugdose.di.ViewModelFactory
 import com.example.drugdose.ui.components.PrescriptionCard
 import com.example.drugdose.ui.components.PrescriptionInfo
-import com.example.drugdose.ui.components.ProfileDropdownMenu
 
-// Eccezione: PrescrizioniViewModel non è iniettato dalla factory ma deve essere gestito in AppNavigation.kt per il backstack
-// Così si può avere un backstack con dentro Home e Prescrizioni
+
 @Composable
 fun PrescriptionsScreen(
     modifier: Modifier = Modifier,
     viewModel: PrescriptionsViewModel = viewModel(factory = ViewModelFactory()),
-    onLogoutClick: () -> Unit = {},
-    onHomeClick: () -> Unit ={}
 ) {
     LaunchedEffect(Unit) {
         viewModel.refreshPrescrizioni()
@@ -86,7 +77,6 @@ fun PrescriptionsScreen(
 
     val filtriAttivi = filtroPaziente.isNotBlank() || filtroFarmaco.isNotBlank() || filtroStatus != FiltroStatus.TUTTI
 
-    var profileMenuExpanded by remember { mutableStateOf(false) }
 
     Surface(
         shape = RoundedCornerShape(0.dp),
@@ -137,7 +127,7 @@ fun PrescriptionsScreen(
                     }
                 }
 
-                // Riga risultati — sempre visibile, sopra ai filtri collassabili
+                // Riga risultati, sempre visibile, sopra ai filtri collassabili
                 Text(
                     text = "Trovate ${prescrizioni.size} prescrizioni",
                     style = TextStyle(fontSize = 13.sp),
@@ -145,7 +135,7 @@ fun PrescriptionsScreen(
                     modifier = Modifier.padding(top = 4.dp, bottom = 12.dp)
                 )
 
-                // Box filtri — collassabile
+                // Box filtri collassabile
                 AnimatedVisibility(
                     visible = filtriAperti,
                     enter = fadeIn() + expandVertically(),
@@ -211,7 +201,7 @@ fun PrescriptionsScreen(
                     }
                 }
 
-                // Lista prescrizioni — occupa tutto lo spazio rimanente
+                // Lista prescrizioni  occupa tutto lo spazio rimanente
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -267,7 +257,7 @@ private fun StatusDropdown(
             enabled = false
         )
 
-        // overlay clickable — il campo è disabled, serve per intercettare il tap
+        // il campo è disabled, serve per intercettare il tap
         Box(
             modifier = Modifier
                 .fillMaxWidth()

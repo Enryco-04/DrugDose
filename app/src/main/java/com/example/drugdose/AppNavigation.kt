@@ -2,25 +2,25 @@ package com.example.drugdose
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.drugdose.di.ViewModelFactory
 import com.example.drugdose.ui.screens.home.HomeAction
 import com.example.drugdose.ui.screens.create.CreatePrescriptionScreen
-import com.example.drugdose.ui.screens.home.HomeScreen
 import com.example.drugdose.ui.screens.loading.LoadingScreen
 import com.example.drugdose.ui.screens.login.LoginScreen
-import com.example.drugdose.ui.screens.prescriptions.PrescriptionsViewModel
 import com.example.drugdose.ui.screens.register.RegisterScreen
 import com.example.drugdose.ui.screens.search.DrugSearchScreen
 import com.example.drugdose.ui.components.MainTab
 import com.example.drugdose.ui.screens.main.MainScreen
 
+
 // AppNavigation.kt
+
+//Mini classe per gestire le route (stringhe)
 sealed class Screen(val route: String) {
     object Loading : Screen("loading")
     object Login : Screen("login")
@@ -28,11 +28,19 @@ sealed class Screen(val route: String) {
     object DrugSearchList : Screen("drugdose")
 
     object Creazione : Screen("creazione/{farmacoId}") {
+
+        //Utili per passare parametri tra le route
         fun createRoute(farmacoId: String) = "creazione/$farmacoId"
+        fun farmacoId(backStackEntry: NavBackStackEntry) =
+            backStackEntry.arguments?.getString("farmacoId")
     }
 
     object Main : Screen("main?tab={tab}") {
         fun createRoute(tab: String = "home") = "main?tab=$tab"
+        fun initialTab(backStackEntry: NavBackStackEntry): MainTab {
+            val tab = backStackEntry.arguments?.getString("tab")
+            return if (tab == "prescrizioni") MainTab.PRESCRIZIONI else MainTab.HOME
+        }
     }
 }
 
@@ -40,6 +48,7 @@ sealed class Screen(val route: String) {
 @SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun AppNavigation() {
+
     val navController = rememberNavController()
 
 
@@ -57,8 +66,11 @@ fun AppNavigation() {
             LoginScreen(
                 onLoginSuccesso = {
                     navController.navigate(Screen.Main.route) {
-                        popUpTo(Screen.Login.route) { inclusive = true }
-                    } },
+                        popUpTo(0) {
+                            inclusive = true
+                        }
+                    }
+                                  },
                 onVaiRegistrazione = { navController.navigate(Screen.Register.route) }
             )
         }
@@ -66,23 +78,17 @@ fun AppNavigation() {
             RegisterScreen(
                 onRegistrazioneSuccesso = {
                     navController.navigate(Screen.Main.createRoute()) {
-                        popUpTo(Screen.Login.route) {
-                            inclusive = true
-                        }
+                        popUpTo(0) { inclusive = true }
+
                     }
                 },
                 onVaiLogin = { navController.popBackStack() }
             )
         }
-        // composable Main — legge il tab dall'argomento
+        // composable Main legge il tab dall'argomento
         composable(
             route = Screen.Main.route,
-            arguments = listOf(
-                navArgument("tab") {
-                    type = NavType.StringType
-                    defaultValue = "home"
-                }
-            )
+            arguments = listOf(navArgument("tab") { defaultValue = "home" })
         ) { backStackEntry ->
             val tabArg = backStackEntry.arguments?.getString("tab")
             val initialTab = if (tabArg == "prescrizioni") MainTab.PRESCRIZIONI else MainTab.HOME
@@ -104,8 +110,11 @@ fun AppNavigation() {
                         popUpTo(Screen.Loading.route) { inclusive = true }
                     }
                 }
+
             )
         }
+
+
         composable(Screen.DrugSearchList.route) {
             DrugSearchScreen(
                 onBack = { navController.popBackStack() },
@@ -118,12 +127,14 @@ fun AppNavigation() {
                 }
             )
         }
+
+
+
         composable(
             route = Screen.Creazione.route,
             arguments = listOf(navArgument("farmacoId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val farmacoId = backStackEntry.arguments?.getString("farmacoId")
-            if (farmacoId != null) {
+            val farmacoId = Screen.Creazione.farmacoId(backStackEntry) ?: return@composable
                 CreatePrescriptionScreen(
                     farmacoId = farmacoId,
                     onBack = { navController.popBackStack() },
@@ -138,6 +149,7 @@ fun AppNavigation() {
                     }
                 )
             }
-        }
+
+
     }
 }

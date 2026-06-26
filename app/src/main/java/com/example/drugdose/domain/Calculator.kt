@@ -1,7 +1,6 @@
 package com.example.drugdose.domain
 
 import com.example.drugdose.data.model.Farmaco
-import com.example.drugdose.domain.RisultatoCalcolo
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.roundToInt
@@ -16,7 +15,7 @@ object Calculator {
         etaAnni: Int
     ): RisultatoCalcolo {
 
-        // — validazione —
+        // Dovrà impedire il medico di procedere
         val erroriCalcolo = mutableListOf<String>()
 
         val minPeso = farmaco.pesoMinimoKg ?: 0.0
@@ -39,7 +38,7 @@ object Calculator {
             )
         }
 
-        // — calcolo dose reale —
+        // calcolo dose reale
         val doseRealeMg = when (farmaco.tipoFormula) {
 
             "PER_KG" -> {

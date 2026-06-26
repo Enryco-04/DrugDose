@@ -1,6 +1,5 @@
 package com.example.drugdose.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,8 +8,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,7 +27,7 @@ fun PrescriptionInfo(
     onAnnulla: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Formatter per le date (definito una volta sola)
+    // Formatter per le date (da TimeStamp firestore a String)
     val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     fun formatDate(timestamp: Timestamp?) =
         timestamp?.toDate()?.let { formatter.format(it) } ?: "-"
@@ -49,7 +46,7 @@ fun PrescriptionInfo(
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // ========== HEADER FISSO (non scrolla) ==========
+                // Header fisso
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -71,7 +68,7 @@ fun PrescriptionInfo(
                     }
                 }
 
-                // ========== CONTENUTO SCROLLABILE ==========
+                // Contenuto scrollabile (Tutte le prescrizioni, anche filtrate)
                 LazyColumn(
                     modifier = Modifier
                         .weight(1f)
@@ -79,7 +76,7 @@ fun PrescriptionInfo(
                         .padding(horizontal = 20.dp),
                     verticalArrangement = Arrangement.spacedBy(0.dp) // gestiamo gli spazi manualmente
                 ) {
-                    // ---- Farmaco e stato ----
+                    // Farmaco e stato
                     item {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -114,7 +111,7 @@ fun PrescriptionInfo(
                     }
                     item { Spacer(modifier = Modifier.height(16.dp)) }
 
-                    // ---- Dosaggio ----
+                    //  Dosaggio
                     item {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -150,7 +147,7 @@ fun PrescriptionInfo(
                     }
                     item { Spacer(modifier = Modifier.height(16.dp)) }
 
-                    // ---- Dati paziente ----
+                    //  Dati paziente
                     item {
                         Text(
                             text = "Dati Paziente",
@@ -187,7 +184,7 @@ fun PrescriptionInfo(
                     }
                     item { Spacer(modifier = Modifier.height(16.dp)) }
 
-                    // ---- Date ----
+                    //  Date
                     item {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -218,7 +215,7 @@ fun PrescriptionInfo(
                     item { Spacer(modifier = Modifier.height(8.dp)) }
                 }
 
-                // ========== BOTTONE FISSO (solo se ATTIVA) ==========
+                //Button annulla solo se attiva
                 if (prescrizione.statoVisualizzato() == "ATTIVA") {
                     Box(
                         modifier = Modifier
@@ -237,13 +234,13 @@ fun PrescriptionInfo(
                     }
                 }
                 // Se non è attiva, non mostriamo il bottone e la LazyColumn
-                // occupa tutto lo spazio rimanente (nessuno spazio vuoto in basso)
+                // occupa tutto lo spazio rimanente (per non avere nessuno spazio vuoto in basso)
             }
         }
     }
 }
 
-// ==================== FUNZIONI HELPER (INVARIATE) ====================
+// Helper
 
 @Composable
 private fun InfoColumn(label: String, value: String) {
@@ -263,34 +260,6 @@ private fun InfoColumn(label: String, value: String) {
     }
 }
 
-@Composable
-private fun StatusBadge(stato: String) {
-    val background = when (stato) {
-        "ATTIVA" -> Color(0xffdcfce7)
-        "SCADUTA" -> Color(0xfffff3e0)
-        else -> Color(0xffffebee)
-    }
-    val textColor = when (stato) {
-        "ATTIVA" -> Color(0xff016630)
-        "SCADUTA" -> Color(0xffe65100)
-        else -> Color(0xffc62828)
-    }
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(background)
-            .padding(horizontal = 10.dp, vertical = 4.dp)
-    ) {
-        Text(
-            text = stato.lowercase().replaceFirstChar { it.uppercase() },
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium,
-            color = textColor
-        )
-    }
-}
-
-// ==================== PREVIEW ====================
 
 @Preview(showBackground = true)
 @Composable

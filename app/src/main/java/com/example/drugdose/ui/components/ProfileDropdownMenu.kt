@@ -5,11 +5,8 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -24,7 +21,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +28,9 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.drugdose.di.ViewModelFactory
+import com.example.drugdose.ui.screens.logout.AuthViewModel
 import com.example.drugdose.ui.theme.DrugDoseTheme
 import com.example.drugdose.ui.theme.LocalThemeController
 
@@ -41,6 +40,7 @@ fun ProfileDropdownMenu(
     onAvatarClick: () -> Unit,
     onDismiss: () -> Unit,
     onLogoutClick: () -> Unit,
+    viewModel: AuthViewModel = viewModel(factory = ViewModelFactory()),
     modifier: Modifier = Modifier
 ) {
     val themeViewModel = LocalThemeController.current
@@ -49,15 +49,15 @@ fun ProfileDropdownMenu(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
-        // Pillola bianca: avatar in cima + bottone logout sotto, visibile solo se expanded
+        // Colonna sempre bianca di sfondo: avatar in cima + bottone logout sotto + bottone darkThemeToggle, visibile solo se expanded
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .shadow(elevation = 8.dp, shape = CircleShape)
                 .clip(CircleShape)
-                .background(Color.White) //Scellta estetica di @author Tia-04
+                .background(Color.White) //Scelta estetica di @author Tia-04
         ) {
-            // Avatar — sempre visibile, click apre/chiude il menu
+            // Avatar sempre visibile, click apre/chiude il menu
             Box(
                 modifier = Modifier
                     .padding(4.dp)
@@ -103,7 +103,7 @@ fun ProfileDropdownMenu(
                         .size(40.dp)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.secondaryContainer)
-                        .clickable { onLogoutClick() },
+                        .clickable {  viewModel.logout() ; onLogoutClick();},
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -118,7 +118,7 @@ fun ProfileDropdownMenu(
         }
 
 
-        // X separata sotto la pillola — chiude il menu, visibile solo se expanded
+        // X separata sotto la pillola chiude il menu, visibile solo se expanded
         AnimatedVisibility(
             visible = expanded,
             enter = fadeIn() + expandVertically(),

@@ -51,7 +51,7 @@ fun AppBottomBar(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier.clickable { onHomeClick() }
+            modifier = Modifier.clickable { onHomeClick() } // cambiera la tab
         ) {
             Icon(
                 imageVector = Icons.Default.Home,

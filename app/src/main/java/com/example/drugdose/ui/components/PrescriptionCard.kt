@@ -1,10 +1,8 @@
 package com.example.drugdose.ui.components
 import com.google.firebase.Timestamp
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,7 +31,7 @@ fun PrescriptionCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
-    //TODO da mettere in ViewModel
+    // Convertitore
     val dateFormatter = remember {
         SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     }
@@ -124,46 +121,6 @@ fun PrescriptionCard(
     }
 }
 
-@Composable
-private fun StatusBadge(
-    stato: String
-) {
-    val background = when(stato) {
-        "ATTIVA" -> Color(0xffdcfce7)
-        "SCADUTA" -> Color(0xfffff3e0)
-        else -> Color(0xffffebee)
-    }
-
-    val textColor = when(stato) {
-        "ATTIVA" -> Color(0xff016630)
-        "SCADUTA" -> Color(0xffe65100)
-        else -> Color(0xffc62828)
-    }
-
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(background)
-            .border(
-                width = 1.dp,
-                color = textColor.copy(alpha = 0.25f),
-                shape = RoundedCornerShape(8.dp)
-            )
-            .padding(
-                horizontal = 10.dp,
-                vertical = 4.dp
-            )
-    ) {
-        Text(
-            text = stato.lowercase()
-                .replaceFirstChar { it.uppercase() },
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium,
-            color = textColor
-        )
-    }
-
-}
 @Preview(showBackground = true)
 @Composable
 fun PrescriptionCardPreview() {

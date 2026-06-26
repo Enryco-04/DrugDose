@@ -3,7 +3,7 @@ package com.example.drugdose.data.model
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Exclude
 
-
+// Copia del modello in Firestore
 data class Prescrizione(
     @get:Exclude //per non mettere id dentro il DB ma solo come identificatore di documento
     val id: String = "",

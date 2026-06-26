@@ -22,13 +22,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
@@ -124,19 +121,6 @@ fun LoginScreen(
                             Icon(imageVector = image, contentDescription = if (viewModel.passwordVisible) "Hide password" else "Show password")
                         }
                     },
-                )
-            }
-
-
-            //TODO Delete maybe, too long to setup
-            TextButton(
-                onClick = { viewModel.forgotPassword() },
-                modifier = Modifier.align(Alignment.Start)
-            ) {
-                Text(
-                    text = "Hai dimenticato la password?",
-                    color = MaterialTheme.colorScheme.primary,
-                    style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Medium)
                 )
             }
 

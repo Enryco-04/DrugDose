@@ -67,7 +67,7 @@ class HomeViewModel(
                 HomeMenuItem(7, "Vaccini", MenuIcon.Resource(R.drawable.ic_vaccini)),
                 HomeMenuItem(8, "Linee di Langer", MenuIcon.Resource(R.drawable.ic_lineedilanger)),
                 HomeMenuItem(9, "Temperatura", MenuIcon.Resource(R.drawable.ic_term)),
-                HomeMenuItem(10, "Add", MenuIcon.Resource(R.drawable.ic_plus))
+                HomeMenuItem(10, "Aggiungi", MenuIcon.Resource(R.drawable.ic_plus))
         )
     }
 

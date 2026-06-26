@@ -1,5 +1,6 @@
 package com.example.drugdose.ui.screens.main
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
@@ -24,27 +25,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.drugdose.di.ViewModelFactory
 import com.example.drugdose.ui.components.AppBottomBar
 import com.example.drugdose.ui.components.MainTab
 import com.example.drugdose.ui.components.ProfileDropdownMenu
 import com.example.drugdose.ui.screens.home.HomeScreen
-import com.example.drugdose.ui.screens.prescriptions.PrescriptionsViewModel
 import com.example.drugdose.ui.screens.home.HomeMenuItem
 import com.example.drugdose.ui.screens.prescriptions.PrescriptionsScreen
 
 @Composable
 fun MainScreen(
     initialTab: MainTab = MainTab.HOME,
-    onMenuItemClick: (HomeMenuItem) -> Unit = {},
+    onMenuItemClick: (HomeMenuItem) -> Unit = {}, //Queste funzioni vengono da AppNav e si passano ai rispettivi HomeScreen e PrescriptionsScreen
     onLogoutClick: () -> Unit = {},
     onSessioneNonValida: () -> Unit = {}
 ) {
+    //Questa variabile gestisce la navigazione interna, AnimatedContent quando cambia questa variabile cambia il contenuto
     var currentTab by remember { mutableStateOf(initialTab) }
     var profileMenuExpanded by remember { mutableStateOf(false) }
 
-    val prescriptionsViewModel: PrescriptionsViewModel = viewModel(factory = ViewModelFactory())
+    BackHandler { /*Intercetta il backHandler, (non fa niente) */ }
 
     Box(modifier = Modifier.fillMaxSize()) {
         AnimatedContent(
@@ -82,9 +81,6 @@ fun MainScreen(
                 )
                 MainTab.PRESCRIZIONI -> PrescriptionsScreen(
                     modifier = Modifier.fillMaxSize(),
-                    viewModel = prescriptionsViewModel,
-                    onLogoutClick = onLogoutClick,
-                    onHomeClick = { currentTab = MainTab.HOME }
                 )
             }
         }
@@ -119,6 +115,8 @@ fun MainScreen(
                 }
             )
         }
+        //La navigazione interna è gestita da qui, AppBottomBar definisce le funzioni
+        // cambiando currentTab, che fa cambiare il contenuto animato
 
         AppBottomBar(
             currentTab = currentTab,

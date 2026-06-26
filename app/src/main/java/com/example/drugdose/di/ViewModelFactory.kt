@@ -11,16 +11,17 @@ import com.example.drugdose.data.repository.PrescrizioniRepositoryImpl
 import com.example.drugdose.ui.screens.create.CreatePrescriptionViewModel
 import com.example.drugdose.ui.screens.home.HomeViewModel
 import com.example.drugdose.ui.screens.login.LoginViewModel
+import com.example.drugdose.ui.screens.logout.AuthViewModel
 import com.example.drugdose.ui.screens.prescriptions.PrescriptionsViewModel
 import com.example.drugdose.ui.screens.register.RegisterViewModel
 import com.example.drugdose.ui.screens.search.DrugSearchViewModel
 import com.example.drugdose.ui.theme.ThemeViewModel
-
+// Provvede a gestire le dipendenze tra i ViewModel
 class ViewModelFactory(
     private val authRepo: AuthRepository = AuthRepositoryImpl(),
     private val farmaciRepo: FarmaciRepository = FarmaciRepositoryImpl(),
     private val prescrizioniRepo: PrescrizioniRepository = PrescrizioniRepositoryImpl(),
-    // ↓ parametro extra, usato SOLO quando si crea un CreatePrescriptionViewModel.
+    // parametro extra, usato SOLO quando si crea un CreatePrescriptionViewModel.
     // Per tutti gli altri ViewModel resta null e viene ignorato.
     private val farmacoId: String? = null
 ) : ViewModelProvider.Factory {
@@ -52,6 +53,10 @@ class ViewModelFactory(
 
             ThemeViewModel::class.java ->
                 ThemeViewModel() as T
+
+            AuthViewModel::class.java ->
+                AuthViewModel(authRepo) as T
+
 
             else -> throw IllegalArgumentException("ViewModel non riconosciuto: ${modelClass.name}")
         }
