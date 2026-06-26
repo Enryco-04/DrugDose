@@ -44,7 +44,6 @@ sealed class Screen(val route: String) {
     }
 }
 
-//TODO come gestire 3 viewModel in uno screen
 @SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun AppNavigation() {

@@ -77,14 +77,14 @@ fun AppBottomBar(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_stethoscope),
-                contentDescription = "Prescriptions",
+                contentDescription = "Prescrizioni",
                 tint = if (currentTab == MainTab.PRESCRIZIONI)
                     MaterialTheme.colorScheme.primary
                 else MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(24.dp)
             )
             Text(
-                text = "Prescriptions",
+                text = "Prescrizioni",
                 color = if (currentTab == MainTab.PRESCRIZIONI)
                     MaterialTheme.colorScheme.primary
                 else MaterialTheme.colorScheme.onSurfaceVariant,
