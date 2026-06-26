@@ -46,7 +46,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -54,18 +53,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.drugdose.R
 import com.example.drugdose.data.model.Prescrizione
 import com.example.drugdose.di.ViewModelFactory
 import com.example.drugdose.ui.components.PrescriptionCard
 import com.example.drugdose.ui.components.PrescriptionInfo
-import com.example.drugdose.ui.screens.register.RegisterViewModel
+import com.example.drugdose.ui.components.ProfileDropdownMenu
 
 // Eccezione: PrescrizioniViewModel non è iniettato dalla factory ma deve essere gestito in AppNavigation.kt per il backstack
 // Così si può avere un backstack con dentro Home e Prescrizioni
 @Composable
 fun PrescriptionsScreen(
     modifier: Modifier = Modifier,
-    viewModel: PrescriptionsViewModel = viewModel(factory = ViewModelFactory())
+    viewModel: PrescriptionsViewModel = viewModel(factory = ViewModelFactory()),
+    onLogoutClick: () -> Unit = {},
+    onHomeClick: () -> Unit ={}
 ) {
     LaunchedEffect(Unit) {
         viewModel.refreshPrescrizioni()
@@ -92,17 +94,6 @@ fun PrescriptionsScreen(
         modifier = modifier.fillMaxSize()
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-
-            // Top bar
-            Icon(
-                imageVector = Icons.Default.Menu,
-                contentDescription = "Menu",
-                tint = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier
-                    .padding(start = 23.dp, top = 42.dp)
-                    .requiredSize(27.dp)
-            )
-
 
             // Content
             Column(
@@ -238,25 +229,6 @@ fun PrescriptionsScreen(
                 }
             }
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.Start),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 33.dp, end = 26.dp)
-            ) {
-
-                ProfileDropdownMenu(
-                    expanded = profileMenuExpanded,
-                    onAvatarClick = { profileMenuExpanded = !profileMenuExpanded },
-                    onDismiss = { profileMenuExpanded = false },
-                    onLogoutClick = {
-                        profileMenuExpanded = false
-                        onLogoutClick()
-                    }
-                )
-
-            }
 
             // Bottom Navigation Bar — identica a HomeScreen, "Prescriptions" evidenziato
             Row(

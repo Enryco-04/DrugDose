@@ -81,14 +81,7 @@ fun HomeScreen(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            Icon(
-                imageVector = Icons.Default.Menu,
-                contentDescription = "Menu",
-                tint = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier
-                    .padding(start = 23.dp, top = 42.dp)
-                    .requiredSize(size = 27.dp)
-            )
+
 
             // Content
             Column(
@@ -178,25 +171,6 @@ fun HomeScreen(
                         )
                     }
                 }
-            }
-
-            // Top Bar
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.Start),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .align(alignment = Alignment.TopEnd)
-                    .padding(top = 33.dp, end = 26.dp)
-            ) {
-                ProfileDropdownMenu(
-                    expanded = profileMenuExpanded,
-                    onAvatarClick = { profileMenuExpanded = !profileMenuExpanded },
-                    onDismiss = { profileMenuExpanded = false },
-                    onLogoutClick = {
-                        profileMenuExpanded = false
-                        onLogoutClick()
-                    }
-                )
             }
 
             // Bottom Navigation Bar

@@ -2,15 +2,12 @@ package com.example.drugdose.ui.screens.main
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -18,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,13 +27,10 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.drugdose.di.ViewModelFactory
 import com.example.drugdose.ui.components.AppBottomBar
-import com.example.drugdose.ui.components.AppTopBar
 import com.example.drugdose.ui.components.MainTab
 import com.example.drugdose.ui.components.ProfileDropdownMenu
 import com.example.drugdose.ui.screens.home.HomeScreen
-import com.example.drugdose.ui.screens.home.HomeViewModel
 import com.example.drugdose.ui.screens.prescriptions.PrescriptionsViewModel
-import com.example.drugdose.ui.screens.home.HomeAction
 import com.example.drugdose.ui.screens.home.HomeMenuItem
 import com.example.drugdose.ui.screens.prescriptions.PrescriptionsScreen
 
@@ -89,7 +82,9 @@ fun MainScreen(
                 )
                 MainTab.PRESCRIZIONI -> PrescriptionsScreen(
                     modifier = Modifier.fillMaxSize(),
-                    viewModel = prescriptionsViewModel
+                    viewModel = prescriptionsViewModel,
+                    onLogoutClick = onLogoutClick,
+                    onHomeClick = { currentTab = MainTab.HOME }
                 )
             }
         }
