@@ -1,4 +1,4 @@
-# 💊 DrugDose
+# DrugDose
 
 Progetto realizzato per il corso di Programmazione di Dispositivi Mobili 
 
@@ -10,7 +10,5 @@ L'applicazione nasce con l'obiettivo di supportare il medico nella gestione dei 
 Per la progettazione delle schermate è stato usato Figma https://www.figma.com/design/kOe13U2O3pwPuA4dS07CBz/Drug-Dose?node-id=0-1&m=dev
 (Autore @Tia-04)
 
-
-#Sezione
 
 Per avviare l'applicazione tramite Android Studio è necessario aggiungere il file google-services.json nella cartella app per avere un DB già popolato
