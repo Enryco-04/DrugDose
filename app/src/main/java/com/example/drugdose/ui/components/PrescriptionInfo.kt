@@ -89,7 +89,8 @@ fun PrescriptionInfo(
                                 modifier = Modifier.weight(1f),
                                 text = prescrizione.nomeFarmaco,
                                 fontSize = 24.sp,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onPrimary
                             )
                             StatusBadge(stato = prescrizione.statoVisualizzato())
                         }
@@ -99,7 +100,7 @@ fun PrescriptionInfo(
                         Text(
                             text = prescrizione.nomeCommercialeFarmaco,
                             fontSize = 16.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
 
@@ -251,12 +252,12 @@ private fun InfoColumn(label: String, value: String) {
             text = label,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xff364153)
+            color = MaterialTheme.colorScheme.onPrimary
         )
         Text(
             text = value,
             fontSize = 14.sp,
-            color = Color(0xff4a5565),
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(top = 4.dp)
         )
     }
