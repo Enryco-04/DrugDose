@@ -90,7 +90,7 @@ fun DrugSearchScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 40.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
+                        .padding(top = 45.dp, start = 16.dp, end = 16.dp, bottom = 20.dp)
                 ) {
 
                     // Pulsante Home
@@ -119,11 +119,8 @@ fun DrugSearchScreen(
                     // Titolo
                     Text(
                         text = "DrugDose",
-                        style = TextStyle(
-                            fontSize = 35.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = MaterialTheme.colorScheme.primary
-                        ),
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
